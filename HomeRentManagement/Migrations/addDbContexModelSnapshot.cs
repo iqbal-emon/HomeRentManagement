@@ -65,8 +65,7 @@ namespace HomeRentManagement.Migrations
 
                     b.HasKey("HouseID");
 
-                    b.HasIndex("OwnerId")
-                        .IsUnique();
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Houses");
                 });
@@ -249,8 +248,8 @@ namespace HomeRentManagement.Migrations
             modelBuilder.Entity("HomeRentManagement.Model.House", b =>
                 {
                     b.HasOne("HomeRentManagement.Model.User", "Owner")
-                        .WithOne("Houses")
-                        .HasForeignKey("HomeRentManagement.Model.House", "OwnerId")
+                        .WithMany("Houses")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -335,8 +334,7 @@ namespace HomeRentManagement.Migrations
 
             modelBuilder.Entity("HomeRentManagement.Model.User", b =>
                 {
-                    b.Navigation("Houses")
-                        .IsRequired();
+                    b.Navigation("Houses");
                 });
 #pragma warning restore 612, 618
         }

@@ -13,7 +13,7 @@ namespace HomeRentManagement.Model
         public string Address { get; set; }
         public string Role { get; set; }
 
-        public virtual House Houses { get; set; }
+        public virtual ICollection<House> Houses { get; set; }
     }
 
 }

@@ -14,7 +14,6 @@ namespace HomeRentManagement.Model
         public virtual Floor Floor { get; set; }
 
         public virtual ICollection<Tenant> Tenants { get; set; }
-
     }
 
 }

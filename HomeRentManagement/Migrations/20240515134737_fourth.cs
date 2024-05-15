@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HomeRentManagement.Migrations
 {
     /// <inheritdoc />
-    public partial class first : Migration
+    public partial class fourth : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -196,8 +196,7 @@ namespace HomeRentManagement.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Houses_OwnerId",
                 table: "Houses",
-                column: "OwnerId",
-                unique: true);
+                column: "OwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_TenantID",
