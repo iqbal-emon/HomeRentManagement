@@ -1,0 +1,243 @@
+﻿@page "/House-Owner"
+@using HomeRentManagement.Data;
+@inject UserService userservice;
+
+<div class="container mt-5">
+        <div class="d-flex justify-content-between">
+   <h3>HouseOwner</h3>
+        <button class="btn btn-primary" @onclick="showModel">Add Owner</button>
+        </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Address</th>
+                    <th>Phone</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Users != null && Users.Any())
+                {
+                    @foreach (var user in Users)
+                    {
+                        <tr>
+                            <td>@user.Username</td>
+                            <td>@user.Email</td>
+                            <td>@user.Password</td>
+                            <td>@user.Address</td>
+               
+                            <td>@user.Phone</td>
+
+                            <td>
+                                <button class="btn btn-danger btn-sm mr-1" @onclick="() => DeleteOwner(user.UserId)">Delete</button>
+                                <button class="btn btn-primary btn-sm" @onclick="()=>UpdateOwner(user)">Edit</button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6">No members found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal px-5" tabindex="-1" style="@ModalStyle">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Home Owner</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="HideModal"></button>
+            </div>
+            <div class="modal-body">
+                <form @onsubmit="SaveMember">
+                    <div class="form-group">
+                        <label for="UserName">User Name:</label>
+                        <input type="text" class="form-control" @bind="owners.Username" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="Password">Password:</label>
+                        <input type="text" class="form-control" @bind="owners.Password" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="Phone">Phone:</label>
+                        <input type="text" class="form-control" id="Phone" @bind="owners.Phone" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="Email">Email:</label>
+                        <input type="email" class="form-control" id="Email" @bind="owners.Email" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="Address">Address:</label>
+                        <input type="text" class="form-control" id="Address" @bind="owners.Address" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                </form>
+            </div>
+
+         
+        </div>
+    </div>
+</div>
+
+
+<div class="modal px-5" tabindex="-1" style="@EditModalStyle">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Home Owner</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
+            </div>
+            <div class="modal-body">
+                <form @onsubmit="UpdateHomeOwner">
+                    <div class="form-group">
+                        <label for="UserName">User Name:</label>
+                        <input type="text" class="form-control" @bind="updateUser.Username" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="Password">Password:</label>
+                        <input type="text" class="form-control" @bind="updateUser.Password" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="Phone">Phone:</label>
+                        <input type="text" class="form-control" id="Phone" @bind="updateUser.Phone" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="Email">Email:</label>
+                        <input type="email" class="form-control" id="Email" @bind="updateUser.Email" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="Address">Address:</label>
+                        <input type="text" class="form-control" id="Address" @bind="updateUser.Address" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Update</button>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="modal" tabindex="-1" style="@DeleteModalStyle">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal Title</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="hideDelete"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Modal Content Goes Here -->
+                Are you sure you want to proceed?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="hideDelete">Cancel</button>
+                <button type="button" class="btn btn-danger" @onclick="DeleteConfirmed">Yes, Proceed</button>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    public List<User> Users;
+    bool showModal = false;
+    bool DeleteModel = false;
+    bool EditModal= false;
+    private int userIdToDelete;
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Users = await userservice.GetMembersAsync();
+
+    }
+
+
+    public User owners=new User();  
+    public async void SaveMember()
+    {
+
+        showModal = false;
+        Users.Add(owners);
+        await userservice.AddOwner(owners);
+
+        owners = new User();
+
+
+    }
+
+    void HideModal()
+    {
+        showModal = false;
+    }
+    void hideDelete()
+    {
+        DeleteModel = false;
+    }
+
+    void hideUpdate()
+    {
+        EditModal = false;
+
+    }
+    void showModel()
+    {
+        showModal = true;
+    }
+    public User updateUser = new User();
+
+    void UpdateOwner(User user)
+    {
+        updateUser = user;
+        EditModal = true;
+    }
+
+    protected async Task DeleteOwner(int userId)
+    {
+        userIdToDelete = userId;
+        DeleteModel = true;
+    }
+
+    private async Task DeleteConfirmed()
+    {
+        await userservice.DeleteUserByIdAsync(userIdToDelete);
+
+
+        Users.RemoveAll(user => user.UserId == userIdToDelete);
+
+
+        // Reset variables
+        userIdToDelete = 0;
+        DeleteModel = false;
+    }
+    private async Task UpdateHomeOwner()
+    {
+        EditModal = false;
+        await userservice.UpdateOwner(updateUser);
+    }
+    string ModalStyle => showModal ? "display: block;" : "display: none;";
+    string DeleteModalStyle => DeleteModel ? "display: block;" : "display: none;";
+    string EditModalStyle => EditModal ? "display: block;" : "display: none;";
+
+
+
+}

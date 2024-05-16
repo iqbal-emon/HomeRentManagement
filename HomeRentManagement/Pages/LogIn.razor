@@ -27,17 +27,16 @@
 </div>
 @code {
 
-    private class Model
+    public class Login
     {
         public string Name { get; set; }
         public string Password { get; set; }
     }
-    Model model = new Model();
+    Login model = new Login();
 
     private async Task Authenticate()
     {
         var memberAccount = UserService.GetByUserName(model.Name);
-        Console.WriteLine("Member data is", memberAccount);
         if (memberAccount == null ||(memberAccount.Password != model.Password &&(memberAccount.Email != model.Name || memberAccount.Username != model.Name)))
         {
             await js.InvokeVoidAsync("alert", "Invalid User Name or Password");
