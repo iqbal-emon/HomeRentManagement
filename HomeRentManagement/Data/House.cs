@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 
-namespace HomeRentManagement.Model
+namespace HomeRentManagement.Data
 {
     public class House
     {

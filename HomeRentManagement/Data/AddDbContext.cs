@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
-namespace HomeRentManagement.Model
+namespace HomeRentManagement.Data
 {
     public class addDbContex : DbContext
     {

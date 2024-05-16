@@ -1,6 +1,7 @@
+using HomeRentManagement.Authentication;
 using HomeRentManagement.Data;
-using HomeRentManagement.Model;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddSingleton<addDbContex>();
+builder.Services.AddSingleton<UserService>();
+
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 
 
 var app = builder.Build();

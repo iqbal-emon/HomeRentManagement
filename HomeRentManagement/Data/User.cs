@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace HomeRentManagement.Model
+namespace HomeRentManagement.Data
 {
     public class User
     {

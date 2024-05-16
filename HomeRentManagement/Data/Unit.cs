@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace HomeRentManagement.Model
+namespace HomeRentManagement.Data
 {
     public class Unit
     {

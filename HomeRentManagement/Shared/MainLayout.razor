@@ -3,17 +3,48 @@
 <PageTitle>HomeRentManagement</PageTitle>
 
 <div class="page">
+
+
+    <AuthorizeView>
+            <Authorized>
     <div class="sidebar">
         <NavMenu />
-    </div>
+        <div class="">
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+      
         </div>
+    </div>
+        </Authorized>
 
-        <article class="content px-4">
-            @Body
-        </article>
+    </AuthorizeView>
+
+
+
+
+
+
+
+
+
+
+  
+    <main>
+
+        <AuthorizeView>
+            <Authorized>
+                <!-- You can add sidebar-specific content here if needed -->
+                <article class="content px-4">
+                    @Body
+                </article>
+            </Authorized>
+            <NotAuthorized>
+
+                <HomeRentManagement.Pages.LogIn />
+
+            </NotAuthorized>
+        </AuthorizeView>
     </main>
 </div>
+@code {
+  
+}

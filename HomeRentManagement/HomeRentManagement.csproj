@@ -16,4 +16,8 @@
     <PackageReference Include="System.Diagnostics.Tools" Version="4.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,8 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using HomeRentManagement.Authentication
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
+@inject IJSRuntime js
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">HomeRentManagement</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -9,19 +13,34 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
+        <AuthorizeView Roles="Admin">
+            <Authorized>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
         </div>
+
+            </Authorized>
+        </AuthorizeView>
+        <AuthorizeView Roles="Owner">
+            <Authorized>
+
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="counter">
                 <span class="oi oi-plus" aria-hidden="true"></span> Counter
             </NavLink>
         </div>
+            </Authorized>
+        </AuthorizeView>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="fetchdata">
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" >
+                <button class="btn btn-danger" @onclick="Logout">Log out</button>
             </NavLink>
         </div>
     </nav>
@@ -35,5 +54,13 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private async Task Logout()
+    {
+        var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
+        await customAuthStateProvider.UpdateAuthenticationState(null);
+        await js.InvokeVoidAsync("localStorage.clear");
+        navManager.NavigateTo("/", true);
     }
 }
