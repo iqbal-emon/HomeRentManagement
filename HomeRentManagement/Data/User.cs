@@ -13,13 +13,13 @@ namespace HomeRentManagement.Data
         public string Password { get; set; }
         public string Address { get; set; }
 
-        public int RoleID { get; set; } = 3;
+        public int RoleID { get; set; } = 2;
 
         [ForeignKey("RoleID")]
         public virtual Role Role { get; set; } // Change to Role, not ICollection<Role>
         public int StatusId { get; set; } = 1;
         [ForeignKey("StatusId")]
-        public virtual Status Status { get; set; }
+        public virtual Status? Status { get; set; }
         public virtual ICollection<House> Houses { get; set; }
     }
 

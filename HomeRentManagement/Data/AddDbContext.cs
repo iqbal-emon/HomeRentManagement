@@ -26,6 +26,26 @@ namespace HomeRentManagement.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Status> Statuss { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Role>()
+                .HasOne(r => r.statuss)
+                .WithMany()
+                .HasForeignKey(r => r.StatusId)
+                .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Role)
+                .WithMany()
+                .HasForeignKey(u => u.RoleID)
+                .OnDelete(DeleteBehavior.Cascade); // This can remain Cascade if needed
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Status)
+                .WithMany()
+                .HasForeignKey(u => u.StatusId)
+                .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
+        }
 
     }
 }

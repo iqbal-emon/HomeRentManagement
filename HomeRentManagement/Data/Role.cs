@@ -7,8 +7,11 @@ namespace HomeRentManagement.Data
         public int Id { get; set; }
         public string Title { get; set; }
         public string ShortForm { get; set; }
-        public int StatusId { get; set; } = 1; // Change to int, assuming it's a foreign key to the Status entity
-   
+        public int StatusId { get; set; } = 1;
+
+        [ForeignKey("StatusId")]
+        public virtual Status? statuss { get; set; }
+
 
 
     }

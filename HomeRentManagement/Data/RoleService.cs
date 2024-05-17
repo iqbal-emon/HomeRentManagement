@@ -13,7 +13,7 @@ namespace HomeRentManagement.Data
 
         public async Task<List<Role>> GetRoles()
         {
-            return await _dbContext.Roles.ToListAsync();
+            return await _dbContext.Roles.Include(role=>role.statuss).ToListAsync();
         }
 
         public async Task AddRole(Role role)

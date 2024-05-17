@@ -6,26 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HomeRentManagement.Migrations
 {
     /// <inheritdoc />
-    public partial class fourth : Migration
+    public partial class editeddd : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Roles",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ShortForm = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StatusId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Roles", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Statuss",
                 columns: table => new
@@ -57,6 +42,27 @@ namespace HomeRentManagement.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ShortForm = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StatusId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Roles_Statuss_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Statuss",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -84,7 +90,7 @@ namespace HomeRentManagement.Migrations
                         column: x => x.StatusId,
                         principalTable: "Statuss",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -259,6 +265,11 @@ namespace HomeRentManagement.Migrations
                 name: "IX_Rentals_UnitID",
                 table: "Rentals",
                 column: "UnitID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Roles_StatusId",
+                table: "Roles",
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TenantUnit_UnitID1",

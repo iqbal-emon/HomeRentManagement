@@ -152,6 +152,8 @@ namespace HomeRentManagement.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("StatusId");
+
                     b.ToTable("Roles");
                 });
 
@@ -345,6 +347,17 @@ namespace HomeRentManagement.Migrations
                     b.Navigation("Unit");
                 });
 
+            modelBuilder.Entity("HomeRentManagement.Data.Role", b =>
+                {
+                    b.HasOne("HomeRentManagement.Data.Status", "statuss")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("statuss");
+                });
+
             modelBuilder.Entity("HomeRentManagement.Data.Unit", b =>
                 {
                     b.HasOne("HomeRentManagement.Data.Floor", "Floor")
@@ -367,7 +380,7 @@ namespace HomeRentManagement.Migrations
                     b.HasOne("HomeRentManagement.Data.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Role");

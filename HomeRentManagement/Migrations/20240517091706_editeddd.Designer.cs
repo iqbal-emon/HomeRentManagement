@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeRentManagement.Migrations
 {
     [DbContext(typeof(addDbContex))]
-    [Migration("20240517081340_fourth")]
-    partial class fourth
+    [Migration("20240517091706_editeddd")]
+    partial class editeddd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -154,6 +154,8 @@ namespace HomeRentManagement.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StatusId");
 
                     b.ToTable("Roles");
                 });
@@ -348,6 +350,17 @@ namespace HomeRentManagement.Migrations
                     b.Navigation("Unit");
                 });
 
+            modelBuilder.Entity("HomeRentManagement.Data.Role", b =>
+                {
+                    b.HasOne("HomeRentManagement.Data.Status", "statuss")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("statuss");
+                });
+
             modelBuilder.Entity("HomeRentManagement.Data.Unit", b =>
                 {
                     b.HasOne("HomeRentManagement.Data.Floor", "Floor")
@@ -370,7 +383,7 @@ namespace HomeRentManagement.Migrations
                     b.HasOne("HomeRentManagement.Data.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Role");
