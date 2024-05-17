@@ -24,5 +24,8 @@ namespace HomeRentManagement.Data
         public DbSet<Tenant> Tenants { get; set; }
         public DbSet<Rental> Rentals { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Status> Statuss { get; set; }
+
     }
 }

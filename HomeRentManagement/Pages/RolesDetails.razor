@@ -1,0 +1,267 @@
+﻿@page "/Roles"
+@using HomeRentManagement.Data;
+@inject RoleService roleservice;
+
+@code {
+
+}
+
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between">
+        <h3>RolesDetails</h3>
+        <button class="btn btn-primary" @onclick="showModel">Add Owner</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>ShortForm</th>
+                    <th>Status</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @if (roles != null && roles.Any())
+                {
+                    @foreach (var role in roles)
+                    {
+                        <tr>
+                            <td>@role.Title</td>
+                            <td>@role.ShortForm</td>
+                            <td>@role.StatusId</td>
+
+                            <td>
+                                @if (role.StatusId == 3)
+                                {
+
+                                    <button disabled class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteRole(role.Id)">Delete</button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteRole(role.Id)">Delete</button>
+
+                                }
+                                <button class="btn btn-primary btn-sm" @onclick="()=>UpdateRole(role.Id)">Edit</button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6">No members found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal px-5" tabindex="-1" style="@ModalStyle">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Home Owner</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="HideModal"></button>
+            </div>
+            <div class="modal-body">
+                <form @onsubmit="SaveRole">
+                    <div class="form-group">
+                        <label for="Title">Title:</label>
+                        <input type="text" class="form-control" @bind="role.Title" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="ShortForm">ShortForm:</label>
+                        <input type="text" class="form-control" @bind="role.ShortForm" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="Role">Phone:</label>
+                        <input type="text" class="form-control" id="Phone" @bind="role.StatusId" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+@if (updateRole != null)
+{
+    <div class="modal px-5" tabindex="-1" style="@EditModalStyle">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Home Owner</h5>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
+                </div>
+                <div class="modal-body">
+                    <form @onsubmit="UpdateRoles">
+                        <div class="form-group">
+                            <label for="Title">Role Title:</label>
+                            <input type="text" class="form-control" @bind=@updateRole.Title required />
+                        </div>
+                        <div class="form-group">
+                            <label for="ShortForm">ShortForm:</label>
+                            <input type="text" class="form-control" @bind=@updateRole.ShortForm required />
+                        </div>
+                        <div class="form-group">
+                            <label for="Status">Status:</label>
+                            <input type="text" class="form-control" id="statusId" @bind=@updateRole.StatusId required />
+                        </div>
+                      
+                        <button type="submit" class="btn btn-primary mt-3">Update</button>
+                    </form>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="modal" tabindex="-1" style="@DeleteModalStyle">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal Title</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="hideDelete"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Modal Content Goes Here -->
+                Are you sure you want to proceed?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="hideDelete">Cancel</button>
+                <button type="button" class="btn btn-danger" @onclick="DeleteConfirmed">Yes, Proceed</button>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    public List<Role> roles;
+    bool showModal = false;
+    bool DeleteModel = false;
+    bool EditModal = false;
+    private int roleToDelete;
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        roles = await roleservice.GetRoles();
+
+    }
+
+
+    public Role role = new Role();
+    private Role updateRole = new Role();
+
+    public async void SaveRole()
+    {
+
+        showModal = false;
+        roles.Add(role);
+        await roleservice.AddRole(role);
+
+        role = new Role();
+
+
+    }
+
+    void HideModal()
+    {
+        showModal = false;
+    }
+    void hideDelete()
+    {
+        DeleteModel = false;
+    }
+
+    void hideUpdate()
+    {
+        EditModal = false;
+
+    }
+    void showModel()
+    {
+        showModal = true;
+    }
+
+    async Task UpdateRole(int roleId)
+    {
+        // Call the service method with the parsed memberId
+        var roleMember = await roleservice.GetRoleById(roleId);
+
+        EditModal = true;
+        if (roleMember != null)
+        {
+            updateRole = new Role()
+                {
+                    Id = roleMember.Id,
+            Title = roleMember.Title,
+                    ShortForm = roleMember.ShortForm,
+                    StatusId = roleMember.StatusId,
+                   
+                };
+
+            // Additional code to update the user, e.g., save to the database, if necessary
+        }
+        else
+        {
+            // Handle the case where the member with the given ID is not found
+            // For example, you can log the error, redirect the user to an error page, or display a message
+            // This depends on your application's requirements
+        }
+    }
+
+
+
+
+
+
+
+    protected async Task DeleteRole(int roleId)
+    {
+        roleToDelete = roleId;
+        DeleteModel = true;
+    }
+
+    private async Task DeleteConfirmed()
+    {
+        await roleservice.deleteAsync(roleToDelete);
+        roles = await roleservice.GetRoles();
+
+
+        // Reset variables
+        roleToDelete = 0;
+        DeleteModel = false;
+    }
+
+    private async Task UpdateRoles()
+    {
+        EditModal = false;
+
+
+        await roleservice.updatedateRole(updateRole);
+    }
+    string ModalStyle => showModal ? "display: block;" : "display: none;";
+    string DeleteModalStyle => DeleteModel ? "display: block;" : "display: none;";
+    string EditModalStyle => EditModal ? "display: block;" : "display: none;";
+
+
+
+}

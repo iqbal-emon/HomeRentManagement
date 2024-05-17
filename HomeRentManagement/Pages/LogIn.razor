@@ -37,7 +37,8 @@
     private async Task Authenticate()
     {
         var memberAccount = UserService.GetByUserName(model.Name);
-        if (memberAccount == null ||(memberAccount.Password != model.Password &&(memberAccount.Email != model.Name || memberAccount.Username != model.Name)))
+        
+        if (memberAccount == null || (memberAccount.Password != model.Password && (memberAccount.Email != model.Name || memberAccount.Username != model.Name)))
         {
             await js.InvokeVoidAsync("alert", "Invalid User Name or Password");
             return;
@@ -47,13 +48,22 @@
         await customAuthStateProvider.UpdateAuthenticationState(new UserSession
             {
                 Name = memberAccount.Username,
-                Role = memberAccount.Role
+                Role = memberAccount.Role.Title
             });
 
         var userId = memberAccount.UserId.ToString();
 
         await js.InvokeVoidAsync("localStorage.setItem", "id", userId);
-        navManager.NavigateTo("/", true);
+        if (memberAccount.Role.Title == "Admin")
+        {
+            navManager.NavigateTo("./House-Owner", true);
+
+        }
+        else
+        {
+            navManager.NavigateTo("/", true);
+
+        }
 
 
     }
