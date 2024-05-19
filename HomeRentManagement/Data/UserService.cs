@@ -56,6 +56,10 @@ namespace HomeRentManagement.Data
             return await _dbContext.Users.FirstOrDefaultAsync(m => m.UserId == memberId);
         }
 
+        public async Task<bool> GetEmailCheck(string email)
+        {
+            return await _dbContext.Users.AnyAsync(user => user.Email == email);
+        }
         public async Task updatedateUser(User updateUser)
         {
             var existingUser = await _dbContext.Users.FindAsync(updateUser.UserId);

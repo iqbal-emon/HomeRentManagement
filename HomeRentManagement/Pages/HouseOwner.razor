@@ -1,6 +1,7 @@
 ﻿@page "/House-Owner"
 @using HomeRentManagement.Data;
 @inject UserService userservice;
+@inject IJSRuntime JS;
 
 <div class="container mt-5">
         <div class="d-flex justify-content-between">
@@ -214,14 +215,24 @@
     public User owner=new User();
     private User updateUser = new User();
 
-    public async void SaveMember()
+     async Task SaveMember()
     {
+
+            var existigEmail = await userservice.GetEmailCheck(owner.Email);
+        if (existigEmail == true)
+        {
 
         showModal = false;
         Users.Add(owner);
         await userservice.AddOwner(owner);
 
         owner = new User();
+        }
+        else{
+            await JS.InvokeVoidAsync("alert", "Invalid Email");
+
+        }
+
 
 
     }
