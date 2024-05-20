@@ -71,17 +71,18 @@
                <EditForm Model="@owner" OnValidSubmit="@SaveMember">
                     @if (mailCheck == true)
                     {
-                    <div class="alert alert-danger" role="alert">
-                        Change the Email
-                    </div>
-                        
-                    }
+                        <div class="alert alert-danger" role="alert">
+                            Change the Email
+                        </div>
 
+                    }
+    <DataAnnotationsValidator />
+    <ValidationSummary />
 
     <div class="form-group">
         <label for="UserName">User Name:</label>
         <InputText id="UserName" class="form-control" @bind-Value="owner.Username" />
-   
+        <ValidationMessage For="@(() => owner.Username)" />
     </div>
     <div class="form-group">
         <label for="Password">Password:</label>
@@ -91,17 +92,17 @@
     <div class="form-group">
         <label for="Phone">Phone:</label>
         <InputText id="Phone" class="form-control" @bind-Value="owner.Phone" />
-
+        <ValidationMessage For="@(() => owner.Phone)" />
     </div>
     <div class="form-group">
         <label for="Email">Email:</label>
         <InputText id="Email" type="email" class="form-control" @bind-Value="owner.Email" />
- 
+        <ValidationMessage For="@(() => owner.Email)" />
     </div>
     <div class="form-group">
         <label for="Address">Address:</label>
         <InputText id="Address" class="form-control" @bind-Value="owner.Address" />
-  
+        <ValidationMessage For="@(() => owner.Address)" />
     </div>
     <div class="form-group">
         <label for="Status">Status:</label>
@@ -111,7 +112,7 @@
                 <option value="@status.Id">@status.Name</option>
             }
         </InputSelect>
-    
+        <ValidationMessage For="@(() => owner.StatusId)" />
     </div>
     <button type="submit" class="btn btn-primary mt-3">Submit</button>
 </EditForm>
