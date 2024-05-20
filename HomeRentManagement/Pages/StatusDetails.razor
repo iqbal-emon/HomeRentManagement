@@ -35,7 +35,7 @@
                              
                                     <button class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteRole(role.Id)">Delete</button>
 
-                                <button class="btn btn-primary btn-sm" @onclick="()=>UpdateRole(role.Id)">Edit</button>
+                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdateRole(role.Id)">Edit</button>
                             </td>
                         </tr>
                     }
@@ -171,6 +171,8 @@
     void HideModal()
     {
         showModal = false;
+        status = new Status();
+
     }
     void hideDelete()
     {

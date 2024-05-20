@@ -45,7 +45,7 @@
                                     <button class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteOwner(user.UserId)">Delete</button>
 
                                 }
-                                <button class="btn btn-primary btn-sm" @onclick="()=>UpdateOwnerAsync(user.UserId)">Edit</button>
+                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdateOwnerAsync(user.UserId)">Edit</button>
                             </td>
                         </tr>
                     }
@@ -133,40 +133,61 @@
                     <h5 class="modal-title">Update Home Owner</h5>
                     <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
                 </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Home Owner</h5>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
+                </div>
                 <div class="modal-body">
-                    <form @onsubmit="UpdateHomeOwner">
+                    <EditForm Model="@updateUser" OnValidSubmit="@UpdateHomeOwner">
+                         @if (updatedMailCheck == true)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            Change the Email
+                        </div>
+
+                    }
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
                         <div class="form-group">
                             <label for="UserName">User Name:</label>
-                            <input type="text" class="form-control" @bind=@updateUser.Username required />
+                            <InputText id="UserName" class="form-control" @bind-Value="updateUser.Username" />
+                            <ValidationMessage For="@(() => updateUser.Username)" />
                         </div>
                         <div class="form-group">
                             <label for="Password">Password:</label>
-                            <input type="text" class="form-control" @bind=@updateUser.Password required />
+                            <InputText id="Password" class="form-control" @bind-Value="updateUser.Password" />
+                            <ValidationMessage For="@(() => updateUser.Password)" />
                         </div>
                         <div class="form-group">
                             <label for="Phone">Phone:</label>
-                            <input type="text" class="form-control" id="Phone" @bind=@updateUser.Phone required />
+                            <InputText id="Phone" class="form-control" @bind-Value="updateUser.Phone" />
+                            <ValidationMessage For="@(() => updateUser.Phone)" />
                         </div>
                         <div class="form-group">
                             <label for="Email">Email:</label>
-                            <input type="email" class="form-control" id="Email" @bind="@updateUser.Email" required />
+                            <InputText id="Email" type="email" class="form-control" @bind-Value="updateUser.Email" />
+                            <ValidationMessage For="@(() => updateUser.Email)" />
                         </div>
                         <div class="form-group">
                             <label for="Address">Address:</label>
-                            <input type="text" class="form-control" id="Address" @bind="@updateUser.Address" required />
+                            <InputText id="Address" class="form-control" @bind-Value="updateUser.Address" />
+                            <ValidationMessage For="@(() => updateUser.Address)" />
                         </div>
                         <div class="form-group">
                             <label for="Status">Status:</label>
-                            <select class="form-control" @bind="@updateUser.StatusId" required>
+                            <InputSelect id="Status" class="form-control" @bind-Value="updateUser.StatusId">
                                 @foreach (var status in statusOptions)
                                 {
                                     <option value="@status.Id">@status.Name</option>
                                 }
-                            </select>
+                            </InputSelect>
+                            <ValidationMessage For="@(() => updateUser.StatusId)" />
                         </div>
                         <button type="submit" class="btn btn-primary mt-3">Update</button>
-                    </form>
+                    </EditForm>
                 </div>
+
 
 
             </div>
@@ -211,6 +232,7 @@
     private int userIdToDelete;
     private List<Status> statusOptions = new List<Status>();
     bool mailCheck;
+    bool updatedMailCheck;
 
     protected override async Task OnInitializedAsync()
     {
@@ -248,6 +270,7 @@
     void HideModal()
     {
         showModal = false;
+        owner = new User();
     }
     void hideDelete()
     {
@@ -284,9 +307,9 @@
                     Address = dbMember.Address,
                     StatusId=dbMember.StatusId
                 };
-          
+
             statusOptions = await userservice.GetStatusOptionsAsync();
-  
+
             // Additional code to update the user, e.g., save to the database, if necessary
         }
         else
@@ -297,7 +320,7 @@
         }
     }
 
-  
+
 
 
 
@@ -322,10 +345,20 @@
 
     private async Task UpdateHomeOwner()
     {
-        EditModal = false;
-       
+        var existigEmail = await userservice.GetEmailCheck(updateUser.Email);
+        if (existigEmail == false)
+        {
+            EditModal = false;
 
-        await userservice.updatedateUser(updateUser);
+
+            await userservice.updatedateUser(updateUser);
+            updatedMailCheck = false;
+        }
+        else
+        {
+            updatedMailCheck = true;
+
+        }
     }
     string ModalStyle => showModal ? "display: block;" : "display: none;";
     string DeleteModalStyle => DeleteModel ? "display: block;" : "display: none;";

@@ -13,7 +13,7 @@
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between">
-        <h3>Home Details</h3>"
+        <h3>Home Details</h3>
         <button class="btn btn-primary" @onclick="showModel">Add House</button>
     </div>
     <div class="table-responsive">
@@ -52,7 +52,7 @@
                                     <button class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteHouse(house.HouseID)">Delete</button>
 
                                 }
-                                <button class="btn btn-primary btn-sm" @onclick="()=>UpdateHouse(house.HouseID)">Edit</button>
+                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdateHouse(house.HouseID)">Edit</button>
                             </td>
                         </tr>
                     }
@@ -225,6 +225,8 @@
     void HideModal()
     {
         showModal = false;
+        house = new House();
+
     }
     void hideDelete()
     {
