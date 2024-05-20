@@ -40,7 +40,7 @@ namespace HomeRentManagement.Data
                 .HasForeignKey(u => u.RoleID)
                 .OnDelete(DeleteBehavior.Cascade); // This can remain Cascade if needed
 
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<House>()
                 .HasOne(u => u.Status)
                 .WithMany()
                 .HasForeignKey(u => u.StatusId)

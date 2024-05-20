@@ -12,7 +12,9 @@ namespace HomeRentManagement.Data
         public string HouseAddress { get; set; }
 
         public int OwnerId { get; set; }
-
+        public int StatusId { get; set; } = 1;
+        [ForeignKey("StatusId")]
+        public virtual Status? Status { get; set; }
         [ForeignKey("OwnerId")]
         public virtual User Owner { get; set; }
 

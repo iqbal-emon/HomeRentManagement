@@ -14,6 +14,7 @@ builder.Services.AddSingleton<addDbContex>();
 builder.Services.AddSingleton<UserService>();
 builder.Services.AddSingleton<RoleService>();
 builder.Services.AddSingleton<StatusService>();
+builder.Services.AddSingleton<HomeService>();
 
 
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();

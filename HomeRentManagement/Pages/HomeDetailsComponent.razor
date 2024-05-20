@@ -1,22 +1,26 @@
-﻿@page "/Roles"
+﻿@page "/HomeDetails"
+
+
 @using HomeRentManagement.Data;
-@inject RoleService roleservice;
+@inject HomeService homeservice;
 @inject UserService userservice;
+@inject IJSRuntime js
+
 
 
 
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between">
-        <h3>RolesDetails</h3>
-        <button class="btn btn-primary" @onclick="showModel">Add Role</button>
+        <h3>Home Details</h3>"
+        <button class="btn btn-primary" @onclick="showModel">Add House</button>
     </div>
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>ShortForm</th>
+                    <th>Home Name</th>
+                    <th>Home Details</th>
                     <th>Status</th>
                     <th>Action</th>
 
@@ -24,27 +28,28 @@
                 </tr>
             </thead>
             <tbody>
-                @if (roles != null && roles.Any())
+                @if (houses != null && houses.Any())
                 {
-                    @foreach (var role in roles)
+                    @foreach (var house in houses)
                     {
                         <tr>
-                            <td>@role.Title</td>
-                            <td>@role.ShortForm</td>
-                            <td>@role.statuss.Name</td>
+                            <td>@house.HouseName</td>
+                            <td>@house.HouseAddress</td>
+                            <td>@house.Status?.Name </td>
+
 
                             <td>
-                                @if (role.StatusId == 3)
+                                @if (house.StatusId == 3)
                                 {
 
-                                    <button disabled class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteRole(role.Id)">Delete</button>
+                                    <button disabled class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteHouse(house.HouseID)">Delete</button>
                                 }
                                 else
                                 {
-                                    <button class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteRole(role.Id)">Delete</button>
+                                    <button class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteHouse(house.HouseID)">Delete</button>
 
                                 }
-                                <button class="btn btn-primary btn-sm" @onclick="()=>UpdateRole(role.Id)">Edit</button>
+                                <button class="btn btn-primary btn-sm" @onclick="()=>UpdateHouse(house.HouseID)">Edit</button>
                             </td>
                         </tr>
                     }
@@ -63,22 +68,22 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add Home Owner</h5>
+                <h5 class="modal-title">Add House</h5>
                 <button type="button" class="btn-close" aria-label="Close" @onclick="HideModal"></button>
             </div>
             <div class="modal-body">
-                <form @onsubmit="SaveRole">
+                <form @onsubmit="SaveHouse">
                     <div class="form-group">
-                        <label for="Title">Title:</label>
-                        <input type="text" class="form-control" @bind="role.Title" required />
+                        <label for="HouseName">HouseName:</label>
+                        <input type="text" class="form-control" @bind="house.HouseName" required />
                     </div>
                     <div class="form-group">
-                        <label for="ShortForm">ShortForm:</label>
-                        <input type="text" class="form-control" @bind="role.ShortForm" required />
+                        <label for="HouseAddress">HouseAddress:</label>
+                        <input type="text" class="form-control" @bind="house.HouseAddress" required />
                     </div>
                     <div class="form-group">
                         <label for="Status">Status:</label>
-                        <select class="form-control" @bind="@updateRole.StatusId" required>
+                        <select class="form-control" @bind="@house.StatusId" required>
                             @foreach (var status in statusOptions)
                             {
                                 <option value="@status.Id">@status.Name</option>
@@ -94,7 +99,7 @@
     </div>
 </div>
 
-@if (updateRole != null)
+@if (UpdateHouse != null)
 {
     <div class="modal px-5" tabindex="-1" style="@EditModalStyle">
         <div class="modal-dialog">
@@ -104,25 +109,25 @@
                     <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
                 </div>
                 <div class="modal-body">
-                    <form @onsubmit="UpdateRoles">
+                    <form @onsubmit="UpdateHouseBtn">
                         <div class="form-group">
                             <label for="Title">Role Title:</label>
-                            <input type="text" class="form-control" @bind=@updateRole.Title required />
+                            <input type="text" class="form-control" @bind=@updateHouse.HouseName required />
                         </div>
                         <div class="form-group">
                             <label for="ShortForm">ShortForm:</label>
-                            <input type="text" class="form-control" @bind=@updateRole.ShortForm required />
+                            <input type="text" class="form-control" @bind=@updateHouse.HouseAddress required />
                         </div>
                         <div class="form-group">
                             <label for="Status">Status:</label>
-                            <select class="form-control" @bind="@updateRole.StatusId" required>
+                            <select class="form-control" @bind="@updateHouse.StatusId" required>
                                 @foreach (var status in statusOptions)
                                 {
                                     <option value="@status.Id">@status.Name</option>
                                 }
                             </select>
                         </div>
-                      
+
                         <button type="submit" class="btn btn-primary mt-3">Update</button>
                     </form>
                 </div>
@@ -163,33 +168,34 @@
     </div>
 </div>
 @code {
-    public List<Role> roles;
+    public List<House> houses;
     bool showModal = false;
     bool DeleteModel = false;
     bool EditModal = false;
     private int roleToDelete;
     private List<Status> statusOptions = new List<Status>();
 
-
-
+    public string userId;
     protected override async Task OnInitializedAsync()
     {
-        roles = await roleservice.GetRoles();
+        userId = await js.InvokeAsync<string>("localStorage.getItem", "id");
+        houses = await homeservice.GetHouses(Int32.Parse(userId));
 
     }
 
 
-    public Role role = new Role();
-    private Role updateRole = new Role();
+    public House house = new House();
+    private House updateHouse = new House();
 
-    public async void SaveRole()
+    public async void SaveHouse()
     {
 
         showModal = false;
-        roles.Add(role);
-        await roleservice.AddRole(role);
+        house.OwnerId = Int32.Parse(userId);
+        houses.Add(house);
+        await homeservice.AddHouse(house);
 
-        role = new Role();
+        house = new House();
 
 
     }
@@ -215,23 +221,23 @@
         showModal = true;
     }
 
-    async Task UpdateRole(int roleId)
+    async Task UpdateHouse(int roleId)
     {
         // Call the service method with the parsed memberId
-        var roleMember = await roleservice.GetRoleById(roleId);
+        var roleMember = await homeservice.GetRoleById(roleId);
 
         EditModal = true;
         if (roleMember != null)
         {
-            updateRole = new Role()
+            updateHouse = new House()
                 {
-                    Id = roleMember.Id,
-                    Title = roleMember.Title,
-                    ShortForm = roleMember.ShortForm,
+                    HouseID = roleMember.HouseID,
+                    HouseName = roleMember.HouseName,
+                    HouseAddress = roleMember.HouseAddress,
                     StatusId = roleMember.StatusId,
 
                 };
-                    statusOptions = await userservice.GetStatusOptionsAsync();
+            statusOptions = await userservice.GetStatusOptionsAsync();
 
             // Additional code to update the user, e.g., save to the database, if necessary
         }
@@ -249,7 +255,7 @@
 
 
 
-    protected async Task DeleteRole(int roleId)
+    protected async Task DeleteHouse(int roleId)
     {
         roleToDelete = roleId;
         DeleteModel = true;
@@ -257,8 +263,8 @@
 
     private async Task DeleteConfirmed()
     {
-        await roleservice.deleteAsync(roleToDelete);
-        roles = await roleservice.GetRoles();
+        await homeservice.deleteAsync(roleToDelete);
+        houses = await homeservice.GetHouses(Int32.Parse(userId));
 
 
         // Reset variables
@@ -266,12 +272,12 @@
         DeleteModel = false;
     }
 
-    private async Task UpdateRoles()
+    private async Task UpdateHouseBtn()
     {
         EditModal = false;
 
 
-        await roleservice.updatedateRole(updateRole);
+        await homeservice.updatedateHouse(updateHouse);
     }
     string ModalStyle => showModal ? "display: block;" : "display: none;";
     string DeleteModalStyle => DeleteModel ? "display: block;" : "display: none;";
