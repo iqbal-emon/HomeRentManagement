@@ -4,6 +4,7 @@ using HomeRentManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeRentManagement.Migrations
 {
     [DbContext(typeof(addDbContex))]
-    partial class addDbContexModelSnapshot : ModelSnapshot
+    [Migration("20240520114923_neMigrationdddfdd")]
+    partial class neMigrationdddfdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -225,7 +228,7 @@ namespace HomeRentManagement.Migrations
                     b.Property<int>("FlolorNu")
                         .HasColumnType("int");
 
-                    b.Property<int>("OwnerId")
+                    b.Property<int>("OwnerI")
                         .HasColumnType("int");
 
                     b.Property<int>("Rent")
@@ -243,7 +246,7 @@ namespace HomeRentManagement.Migrations
 
                     b.HasKey("UnitID");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("OwnerI");
 
                     b.HasIndex("StatusId");
 
@@ -391,8 +394,8 @@ namespace HomeRentManagement.Migrations
             modelBuilder.Entity("HomeRentManagement.Data.Unit", b =>
                 {
                     b.HasOne("HomeRentManagement.Data.User", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId")
+                        .WithMany("Units")
+                        .HasForeignKey("OwnerI")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -450,6 +453,8 @@ namespace HomeRentManagement.Migrations
             modelBuilder.Entity("HomeRentManagement.Data.User", b =>
                 {
                     b.Navigation("Houses");
+
+                    b.Navigation("Units");
                 });
 #pragma warning restore 612, 618
         }

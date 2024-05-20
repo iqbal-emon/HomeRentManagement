@@ -4,6 +4,7 @@ using HomeRentManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeRentManagement.Migrations
 {
     [DbContext(typeof(addDbContex))]
-    partial class addDbContexModelSnapshot : ModelSnapshot
+    [Migration("20240520115048_errrosd")]
+    partial class errrosd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -225,13 +228,13 @@ namespace HomeRentManagement.Migrations
                     b.Property<int>("FlolorNu")
                         .HasColumnType("int");
 
-                    b.Property<int>("OwnerId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Rent")
                         .HasColumnType("int");
 
                     b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.Property<int>("WashRoom")
@@ -243,9 +246,9 @@ namespace HomeRentManagement.Migrations
 
                     b.HasKey("UnitID");
 
-                    b.HasIndex("OwnerId");
-
                     b.HasIndex("StatusId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Units");
                 });
@@ -390,19 +393,15 @@ namespace HomeRentManagement.Migrations
 
             modelBuilder.Entity("HomeRentManagement.Data.Unit", b =>
                 {
-                    b.HasOne("HomeRentManagement.Data.User", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("HomeRentManagement.Data.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Owner");
+                    b.HasOne("HomeRentManagement.Data.User", null)
+                        .WithMany("Units")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Status");
                 });
@@ -450,6 +449,8 @@ namespace HomeRentManagement.Migrations
             modelBuilder.Entity("HomeRentManagement.Data.User", b =>
                 {
                     b.Navigation("Houses");
+
+                    b.Navigation("Units");
                 });
 #pragma warning restore 612, 618
         }

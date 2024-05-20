@@ -13,6 +13,12 @@ namespace HomeRentManagement.Data
         public int Rent { get; set; }
         public int FlolorNu { get; set; }
 
+        public int StatusId { get; set; } = 1;
+        [ForeignKey("StatusId")]
+        public virtual Status? Status { get; set; }
+        public int OwnerId { get; set; }
+        [ForeignKey("OwnerId")]
+        public virtual User Owner { get; set; }
         public virtual ICollection<Tenant> Tenants { get; set; }
     }
 

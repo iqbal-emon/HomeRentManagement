@@ -4,6 +4,7 @@ using HomeRentManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeRentManagement.Migrations
 {
     [DbContext(typeof(addDbContex))]
-    partial class addDbContexModelSnapshot : ModelSnapshot
+    [Migration("20240520115150_errrosdd")]
+    partial class errrosdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -225,9 +228,6 @@ namespace HomeRentManagement.Migrations
                     b.Property<int>("FlolorNu")
                         .HasColumnType("int");
 
-                    b.Property<int>("OwnerId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Rent")
                         .HasColumnType("int");
 
@@ -242,8 +242,6 @@ namespace HomeRentManagement.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UnitID");
-
-                    b.HasIndex("OwnerId");
 
                     b.HasIndex("StatusId");
 
@@ -390,19 +388,11 @@ namespace HomeRentManagement.Migrations
 
             modelBuilder.Entity("HomeRentManagement.Data.Unit", b =>
                 {
-                    b.HasOne("HomeRentManagement.Data.User", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("HomeRentManagement.Data.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Owner");
 
                     b.Navigation("Status");
                 });

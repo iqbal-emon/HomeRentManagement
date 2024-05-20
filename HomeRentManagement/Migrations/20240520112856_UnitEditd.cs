@@ -5,7 +5,7 @@
 namespace HomeRentManagement.Migrations
 {
     /// <inheritdoc />
-    public partial class newt : Migration
+    public partial class UnitEditd : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

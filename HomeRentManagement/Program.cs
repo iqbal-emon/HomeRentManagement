@@ -16,6 +16,8 @@ builder.Services.AddSingleton<RoleService>();
 builder.Services.AddSingleton<StatusService>();
 builder.Services.AddSingleton<HomeService>();
 builder.Services.AddScoped<UserIdDecrypt>();
+builder.Services.AddScoped<UnitService>();
+
 
 
 

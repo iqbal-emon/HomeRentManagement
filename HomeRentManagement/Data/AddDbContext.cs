@@ -32,19 +32,33 @@ namespace HomeRentManagement.Data
                 .HasOne(r => r.statuss)
                 .WithMany()
                 .HasForeignKey(r => r.StatusId)
-                .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
+                .OnDelete(DeleteBehavior.Restrict); // Restrict delete behavior
 
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Role)
                 .WithMany()
                 .HasForeignKey(u => u.RoleID)
-                .OnDelete(DeleteBehavior.Cascade); // This can remain Cascade if needed
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete behavior for roles
 
             modelBuilder.Entity<House>()
+                .HasOne(h => h.Status)
+                .WithMany()
+                .HasForeignKey(h => h.StatusId)
+                .OnDelete(DeleteBehavior.Restrict); // Restrict delete behavior
+
+            modelBuilder.Entity<Unit>()
                 .HasOne(u => u.Status)
                 .WithMany()
                 .HasForeignKey(u => u.StatusId)
-                .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
+                .OnDelete(DeleteBehavior.Restrict); // Restrict delete behavior
+
+            modelBuilder.Entity<Unit>()
+                .HasOne(u => u.Owner)
+                .WithMany()
+                .HasForeignKey(u => u.OwnerId)
+                .OnDelete(DeleteBehavior.Restrict); // Restrict delete behavior
+
+
         }
 
     }

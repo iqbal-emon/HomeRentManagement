@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeRentManagement.Migrations
 {
     [DbContext(typeof(addDbContex))]
-    [Migration("20240520110534_newt")]
-    partial class newt
+    [Migration("20240520113944_UnitEditddddfasddfasdf")]
+    partial class UnitEditddddfasddfasdf
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -228,7 +228,13 @@ namespace HomeRentManagement.Migrations
                     b.Property<int>("FlolorNu")
                         .HasColumnType("int");
 
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Rent")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatusId")
                         .HasColumnType("int");
 
                     b.Property<int>("WashRoom")
@@ -239,6 +245,10 @@ namespace HomeRentManagement.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UnitID");
+
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("StatusId");
 
                     b.ToTable("Units");
                 });
@@ -379,6 +389,25 @@ namespace HomeRentManagement.Migrations
                         .IsRequired();
 
                     b.Navigation("statuss");
+                });
+
+            modelBuilder.Entity("HomeRentManagement.Data.Unit", b =>
+                {
+                    b.HasOne("HomeRentManagement.Data.User", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HomeRentManagement.Data.Status", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+
+                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("HomeRentManagement.Data.User", b =>

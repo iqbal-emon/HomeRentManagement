@@ -1,8 +1,324 @@
 ﻿@page "/Unit"
-<h3>Unit Details</h3>
+@using HomeRentManagement.Data;
+@inject UnitService unitservice;
+@inject UserService userservice;
+@inject IJSRuntime js
+@inject UserIdDecrypt useriddecrypt
 
+
+
+
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between">
+        <h3>Unit Details</h3>"
+        <button class="btn btn-primary" @onclick="showModel">Add House</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Unit Name</th>
+                    <th>BedRoom</th>
+                    <th>WashRoom</th>
+                    <th>Rent</th>
+                    <th>Floor</th>
+                    <th>Status</th>
+
+
+                    <th>Action</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @if (units != null && units.Any())
+                {
+                    @foreach (var unit in units)
+                    {
+                        <tr>
+                            <td>@unit.unitName</td>
+                            <td>@unit.BedRoom</td>
+                            <td>@unit.WashRoom</td>
+                            <td>@unit.Rent</td>
+                            <td>@unit.FlolorNu</td>
+                            <td>@unit.Status?.Name</td>
+
+
+
+                            <td>
+                                @if (unit.StatusId == 3)
+                                {
+
+                                    <button disabled class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteUnit(unit.UnitID)">Delete</button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-danger btn-sm mr-3" @onclick="() =>DeleteUnit(unit.UnitID)">Delete</button>
+
+                                }
+                                <button class="btn btn-primary btn-sm" @onclick="()=>UpdateUnit(unit.UnitID)">Edit</button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6">No members found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="modal px-5" tabindex="-1" style="@ModalStyle">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Unit</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="HideModal"></button>
+            </div>
+            <div class="modal-body">
+                <form @onsubmit="SaveUnit">
+                    <div class="form-group">
+                        <label for="UnitName">Unit Name:</label>
+                        <input type="text" class="form-control" @bind="unit.unitName" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="BedRoom">Bed Room:</label>
+                        <input type="number" class="form-control" @bind="unit.BedRoom" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="WashRoom">Wash Room:</label>
+                        <input type="number" class="form-control" @bind="unit.WashRoom" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="Rent">Rent:</label>
+                        <input type="number" class="form-control" @bind="unit.Rent" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="FloorNu">Floor Number:</label>
+                        <input type="number" class="form-control" @bind="unit.FlolorNu" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="Status">Status:</label>
+                        <select class="form-control" @bind="@unit.StatusId" required>
+                            @foreach (var status in statusOptions)
+                            {
+                                <option value="@status.Id">@status.Name</option>
+                            }
+                        </select>
+                    </div>
+                 
+                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (updateUnit != null)
+{
+    <div class="modal px-5" tabindex="-1" style="@EditModalStyle">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Unit</h5>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
+                </div>
+                <div class="modal-body">
+                    <form @onsubmit="UpdateUnitBtn">
+                        <div class="form-group">
+                            <label for="UnitName">Unit Name:</label>
+                            <input type="text" class="form-control" @bind="updateUnit.unitName" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="BedRoom">Bed Room:</label>
+                            <input type="number" class="form-control" @bind="updateUnit.BedRoom" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="WashRoom">Wash Room:</label>
+                            <input type="number" class="form-control" @bind="updateUnit.WashRoom" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="Rent">Rent:</label>
+                            <input type="number" class="form-control" @bind="updateUnit.Rent" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="FloorNu">Floor Number:</label>
+                            <input type="number" class="form-control" @bind="updateUnit.FlolorNu" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="Status">Status:</label>
+                            <select class="form-control" @bind="updateUnit.StatusId" required>
+                                @foreach (var status in statusOptions)
+                                {
+                                    <option value="@status.Id">@status.Name</option>
+                                }
+                            </select>
+                        </div>
+                   
+                        <button type="submit" class="btn btn-primary mt-3">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+
+
+
+
+
+
+
+<div class="modal" tabindex="-1" style="@DeleteModalStyle">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal Title</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="hideDelete"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Modal Content Goes Here -->
+                Are you sure you want to proceed?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="hideDelete">Cancel</button>
+                <button type="button" class="btn btn-danger" @onclick="DeleteConfirmed">Yes, Proceed</button>
+            </div>
+        </div>
+    </div>
+</div>
 @code {
+    public List<Unit> units;
 
+    bool showModal = false;
+    bool DeleteModel = false;
+    bool EditModal = false;
+    private int roleToDelete;
+    private List<Status> statusOptions = new List<Status>();
+
+    public string userId;
+    protected override async Task OnInitializedAsync()
+    {
+        userId = await useriddecrypt.GetDecryptedUserId();
+        units = await unitservice.GetUnit(Int32.Parse(userId));
+
+    }
+
+
+    public Unit unit = new Unit();
+    private Unit updateUnit = new Unit();
+
+
+    public async void SaveUnit()
+    {
+
+        showModal = false;
+        unit.OwnerId = Int32.Parse(userId);
+   
+
+        units.Add(unit);
+        await unitservice.AddUnit(unit);
+
+        unit = new Unit();
+
+
+    }
+
+    void HideModal()
+    {
+        showModal = false;
+    }
+    void hideDelete()
+    {
+        DeleteModel = false;
+    }
+
+    void hideUpdate()
+    {
+        EditModal = false;
+
+    }
+    async Task showModel()
+    {
+        statusOptions = await userservice.GetStatusOptionsAsync();
+
+        showModal = true;
+    }
+
+    async Task UpdateUnit(int unitId)
+    {
+        // Call the service method with the parsed memberId
+        var roleMember = await unitservice.GetUnitById(unitId);
+
+        EditModal = true;
+        if (roleMember != null)
+        {
+            updateUnit = new Unit()
+                {
+                    UnitID = roleMember.UnitID,
+                    unitName = roleMember.unitName,
+                    WashRoom = roleMember.WashRoom,
+                    BedRoom=roleMember.BedRoom,
+                    Rent = roleMember.Rent,
+
+                    StatusId = roleMember.StatusId,
+
+                };
+            statusOptions = await userservice.GetStatusOptionsAsync();
+
+            // Additional code to update the user, e.g., save to the database, if necessary
+        }
+        else
+        {
+            // Handle the case where the member with the given ID is not found
+            // For example, you can log the error, redirect the user to an error page, or display a message
+            // This depends on your application's requirements
+        }
+    }
+
+
+
+
+
+
+
+    protected async Task DeleteUnit(int roleId)
+    {
+        roleToDelete = roleId;
+        DeleteModel = true;
+    }
+
+    private async Task DeleteConfirmed()
+    {
+        await unitservice.deleteAsync(roleToDelete);
+        units = await unitservice.GetUnit(Int32.Parse(userId));
+
+
+        // Reset variables
+        roleToDelete = 0;
+        DeleteModel = false;
+    }
+
+    private async Task UpdateUnitBtn()
+    {
+        EditModal = false;
+
+
+        await unitservice.updatedateUnit(updateUnit);
+    }
+    string ModalStyle => showModal ? "display: block;" : "display: none;";
+    string DeleteModalStyle => DeleteModel ? "display: block;" : "display: none;";
+    string EditModalStyle => EditModal ? "display: block;" : "display: none;";
 
 
 
