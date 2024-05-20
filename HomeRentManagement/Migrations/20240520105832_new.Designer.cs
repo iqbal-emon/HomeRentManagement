@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeRentManagement.Migrations
 {
     [DbContext(typeof(addDbContex))]
-    [Migration("20240520103337_UnitDetailsds")]
-    partial class UnitDetailsds
+    [Migration("20240520105832_new")]
+    partial class @new
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,15 +39,10 @@ namespace HomeRentManagement.Migrations
                     b.Property<int>("HouseID")
                         .HasColumnType("int");
 
-                    b.Property<int>("UnitsUnitID")
-                        .HasColumnType("int");
-
                     b.HasKey("FloorID");
 
                     b.HasIndex("HouseID")
                         .IsUnique();
-
-                    b.HasIndex("UnitsUnitID");
 
                     b.ToTable("Floors");
                 });
@@ -315,15 +310,7 @@ namespace HomeRentManagement.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HomeRentManagement.Data.Unit", "Units")
-                        .WithMany()
-                        .HasForeignKey("UnitsUnitID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("House");
-
-                    b.Navigation("Units");
                 });
 
             modelBuilder.Entity("HomeRentManagement.Data.House", b =>

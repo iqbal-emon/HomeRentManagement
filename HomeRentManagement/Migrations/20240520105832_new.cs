@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HomeRentManagement.Migrations
 {
     /// <inheritdoc />
-    public partial class UnitDetailsd : Migration
+    public partial class @new : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -226,8 +226,7 @@ namespace HomeRentManagement.Migrations
                     FloorID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FloorNumber = table.Column<int>(type: "int", nullable: false),
-                    HouseID = table.Column<int>(type: "int", nullable: false),
-                    UnitsUnitID = table.Column<int>(type: "int", nullable: false)
+                    HouseID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -238,12 +237,6 @@ namespace HomeRentManagement.Migrations
                         principalTable: "Houses",
                         principalColumn: "HouseID",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Floors_Units_UnitsUnitID",
-                        column: x => x.UnitsUnitID,
-                        principalTable: "Units",
-                        principalColumn: "UnitID",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -251,11 +244,6 @@ namespace HomeRentManagement.Migrations
                 table: "Floors",
                 column: "HouseID",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Floors_UnitsUnitID",
-                table: "Floors",
-                column: "UnitsUnitID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Houses_OwnerId",

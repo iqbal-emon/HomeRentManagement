@@ -36,15 +36,10 @@ namespace HomeRentManagement.Migrations
                     b.Property<int>("HouseID")
                         .HasColumnType("int");
 
-                    b.Property<int>("UnitsUnitID")
-                        .HasColumnType("int");
-
                     b.HasKey("FloorID");
 
                     b.HasIndex("HouseID")
                         .IsUnique();
-
-                    b.HasIndex("UnitsUnitID");
 
                     b.ToTable("Floors");
                 });
@@ -312,15 +307,7 @@ namespace HomeRentManagement.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HomeRentManagement.Data.Unit", "Units")
-                        .WithMany()
-                        .HasForeignKey("UnitsUnitID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("House");
-
-                    b.Navigation("Units");
                 });
 
             modelBuilder.Entity("HomeRentManagement.Data.House", b =>

@@ -13,8 +13,6 @@ namespace HomeRentManagement.Data
         public int Rent { get; set; }
         public int FlolorNu { get; set; }
 
-
-
         public virtual ICollection<Tenant> Tenants { get; set; }
     }
 
