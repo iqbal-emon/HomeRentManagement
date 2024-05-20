@@ -23,6 +23,7 @@ namespace HomeRentManagement.Data
             _dbContext.Houses.Add(house);
             await _dbContext.SaveChangesAsync();
         }
+
         public async Task<bool> deleteAsync(int houseToDelete)
         {
             var houseTo = await _dbContext.Houses.FindAsync(houseToDelete);
@@ -51,9 +52,9 @@ namespace HomeRentManagement.Data
             if (existingHouse != null)
             {
                 // Update the properties of the existing member with the new values
-                existingHouse.HouseName = existingHouse.HouseName;
-                existingHouse.HouseAddress = existingHouse.HouseAddress;
-                existingHouse.StatusId = existingHouse.StatusId;
+                existingHouse.HouseName = updateHouse.HouseName;
+                existingHouse.HouseAddress = updateHouse.HouseAddress;
+                existingHouse.StatusId = updateHouse.StatusId;
 
 
                 // Use UpdateAsync instead of Update

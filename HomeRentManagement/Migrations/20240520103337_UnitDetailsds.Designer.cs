@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeRentManagement.Migrations
 {
     [DbContext(typeof(addDbContex))]
-    [Migration("20240517091706_editeddd")]
-    partial class editeddd
+    [Migration("20240520103337_UnitDetailsds")]
+    partial class UnitDetailsds
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,10 +39,15 @@ namespace HomeRentManagement.Migrations
                     b.Property<int>("HouseID")
                         .HasColumnType("int");
 
+                    b.Property<int>("UnitsUnitID")
+                        .HasColumnType("int");
+
                     b.HasKey("FloorID");
 
                     b.HasIndex("HouseID")
                         .IsUnique();
+
+                    b.HasIndex("UnitsUnitID");
 
                     b.ToTable("Floors");
                 });
@@ -66,9 +71,14 @@ namespace HomeRentManagement.Migrations
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
                     b.HasKey("HouseID");
 
                     b.HasIndex("OwnerId");
+
+                    b.HasIndex("StatusId");
 
                     b.ToTable("Houses");
                 });
@@ -217,17 +227,23 @@ namespace HomeRentManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UnitID"));
 
-                    b.Property<int>("FloorID")
+                    b.Property<int>("BedRoom")
                         .HasColumnType("int");
 
-                    b.Property<string>("UnitNumber")
+                    b.Property<int>("FlolorNu")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rent")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WashRoom")
+                        .HasColumnType("int");
+
+                    b.Property<string>("unitName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UnitID");
-
-                    b.HasIndex("FloorID")
-                        .IsUnique();
 
                     b.ToTable("Units");
                 });
@@ -254,7 +270,8 @@ namespace HomeRentManagement.Migrations
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
 
                     b.Property<int>("RoleID")
                         .HasColumnType("int");
@@ -298,7 +315,15 @@ namespace HomeRentManagement.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("HomeRentManagement.Data.Unit", "Units")
+                        .WithMany()
+                        .HasForeignKey("UnitsUnitID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("House");
+
+                    b.Navigation("Units");
                 });
 
             modelBuilder.Entity("HomeRentManagement.Data.House", b =>
@@ -309,7 +334,15 @@ namespace HomeRentManagement.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("HomeRentManagement.Data.Status", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Owner");
+
+                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("HomeRentManagement.Data.Payment", b =>
@@ -361,17 +394,6 @@ namespace HomeRentManagement.Migrations
                     b.Navigation("statuss");
                 });
 
-            modelBuilder.Entity("HomeRentManagement.Data.Unit", b =>
-                {
-                    b.HasOne("HomeRentManagement.Data.Floor", "Floor")
-                        .WithOne("Units")
-                        .HasForeignKey("HomeRentManagement.Data.Unit", "FloorID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Floor");
-                });
-
             modelBuilder.Entity("HomeRentManagement.Data.User", b =>
                 {
                     b.HasOne("HomeRentManagement.Data.Role", "Role")
@@ -383,7 +405,7 @@ namespace HomeRentManagement.Migrations
                     b.HasOne("HomeRentManagement.Data.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Role");
@@ -403,12 +425,6 @@ namespace HomeRentManagement.Migrations
                         .WithMany()
                         .HasForeignKey("UnitID1")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("HomeRentManagement.Data.Floor", b =>
-                {
-                    b.Navigation("Units")
                         .IsRequired();
                 });
 

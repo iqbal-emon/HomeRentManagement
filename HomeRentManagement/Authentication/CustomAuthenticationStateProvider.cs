@@ -36,7 +36,7 @@ namespace HomeRentManagement.Authentication
 
                 var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, userSession.Name),
+                    new Claim(ClaimTypes.Name, userSession.Id),
                     new Claim(ClaimTypes.Role, userSession.Role)
                 }, "CustomAuth"));
 
@@ -61,7 +61,7 @@ namespace HomeRentManagement.Authentication
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(userSession != null ?
                 new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, userSession.Name),
+                    new Claim(ClaimTypes.Name, userSession.Id),
                     new Claim(ClaimTypes.Role, userSession.Role)
                 })) : _anonymous)));
         }

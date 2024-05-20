@@ -47,13 +47,13 @@
         var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
         await customAuthStateProvider.UpdateAuthenticationState(new UserSession
             {
-                Name = memberAccount.Username,
+                Id = memberAccount.UserId.ToString(),
                 Role = memberAccount.Role.Title
             });
 
         var userId = memberAccount.UserId.ToString();
 
-        await js.InvokeVoidAsync("localStorage.setItem", "id", userId);
+  
         if (memberAccount.Role.Title == "Admin")
         {
             navManager.NavigateTo("./House-Owner", true);

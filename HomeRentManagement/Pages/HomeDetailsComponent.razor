@@ -5,6 +5,7 @@
 @inject HomeService homeservice;
 @inject UserService userservice;
 @inject IJSRuntime js
+@inject UserIdDecrypt useriddecrypt
 
 
 
@@ -22,6 +23,8 @@
                     <th>Home Name</th>
                     <th>Home Details</th>
                     <th>Status</th>
+                    <th>Floors</th>
+
                     <th>Action</th>
 
 
@@ -36,7 +39,7 @@
                             <td>@house.HouseName</td>
                             <td>@house.HouseAddress</td>
                             <td>@house.Status?.Name </td>
-
+                            <td>@house.Floors?.FloorNumber</td>
 
                             <td>
                                 @if (house.StatusId == 3)
@@ -82,6 +85,13 @@
                         <input type="text" class="form-control" @bind="house.HouseAddress" required />
                     </div>
                     <div class="form-group">
+                        <label for="Floor ">Floor:</label>
+                        <input type="text" class="form-control" @bind="newFloor.FloorNumber" required />
+                    </div>
+
+
+
+                    <div class="form-group">
                         <label for="Status">Status:</label>
                         <select class="form-control" @bind="@house.StatusId" required>
                             @foreach (var status in statusOptions)
@@ -111,13 +121,16 @@
                 <div class="modal-body">
                     <form @onsubmit="UpdateHouseBtn">
                         <div class="form-group">
-                            <label for="Title">Role Title:</label>
+                            <label for="HouseName">HouseName:</label>
                             <input type="text" class="form-control" @bind=@updateHouse.HouseName required />
                         </div>
                         <div class="form-group">
-                            <label for="ShortForm">ShortForm:</label>
+                            <label for="HouseAddress">HouseAddress:</label>
                             <input type="text" class="form-control" @bind=@updateHouse.HouseAddress required />
                         </div>
+
+
+
                         <div class="form-group">
                             <label for="Status">Status:</label>
                             <select class="form-control" @bind="@updateHouse.StatusId" required>
@@ -169,6 +182,7 @@
 </div>
 @code {
     public List<House> houses;
+
     bool showModal = false;
     bool DeleteModel = false;
     bool EditModal = false;
@@ -178,7 +192,7 @@
     public string userId;
     protected override async Task OnInitializedAsync()
     {
-        userId = await js.InvokeAsync<string>("localStorage.getItem", "id");
+        userId = await useriddecrypt.GetDecryptedUserId();
         houses = await homeservice.GetHouses(Int32.Parse(userId));
 
     }
@@ -186,12 +200,19 @@
 
     public House house = new House();
     private House updateHouse = new House();
+    public Floor newFloor = new Floor();
 
     public async void SaveHouse()
     {
 
         showModal = false;
         house.OwnerId = Int32.Parse(userId);
+        house.Floors = new Floor
+            {
+                FloorNumber = newFloor.FloorNumber,
+                HouseID = house.HouseID
+    };
+
         houses.Add(house);
         await homeservice.AddHouse(house);
 
