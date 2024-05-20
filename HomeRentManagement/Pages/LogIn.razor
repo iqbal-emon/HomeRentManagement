@@ -38,7 +38,7 @@
     {
         var memberAccount = UserService.GetByUserName(model.Name);
         
-        if (memberAccount == null || (memberAccount.Password != model.Password && (memberAccount.Email != model.Name || memberAccount.Username != model.Name)))
+        if (memberAccount == null || memberAccount.StatusId != 1 || (memberAccount.Password != model.Password && (memberAccount.Email != model.Name || memberAccount.Username != model.Name)))
         {
             await js.InvokeVoidAsync("alert", "Invalid User Name or Password");
             return;

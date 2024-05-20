@@ -139,13 +139,7 @@
                 </div>
                 <div class="modal-body">
                     <EditForm Model="@updateUser" OnValidSubmit="@UpdateHomeOwner">
-                         @if (updatedMailCheck == true)
-                    {
-                        <div class="alert alert-danger" role="alert">
-                            Change the Email
-                        </div>
-
-                    }
+                     
                         <DataAnnotationsValidator />
                         <ValidationSummary />
 
@@ -166,7 +160,7 @@
                         </div>
                         <div class="form-group">
                             <label for="Email">Email:</label>
-                            <InputText id="Email" type="email" class="form-control" @bind-Value="updateUser.Email" />
+                            <InputText id="Email" type="email" class="form-control" @bind-Value="updateUser.Email" disabled />
                             <ValidationMessage For="@(() => updateUser.Email)" />
                         </div>
                         <div class="form-group">
@@ -345,20 +339,11 @@
 
     private async Task UpdateHomeOwner()
     {
-        var existigEmail = await userservice.GetEmailCheck(updateUser.Email);
-        if (existigEmail == false)
-        {
             EditModal = false;
 
 
             await userservice.updatedateUser(updateUser);
-            updatedMailCheck = false;
-        }
-        else
-        {
-            updatedMailCheck = true;
-
-        }
+       
     }
     string ModalStyle => showModal ? "display: block;" : "display: none;";
     string DeleteModalStyle => DeleteModel ? "display: block;" : "display: none;";
