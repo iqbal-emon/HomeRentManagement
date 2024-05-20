@@ -39,7 +39,7 @@
                             <td>@house.HouseName</td>
                             <td>@house.HouseAddress</td>
                             <td>@house.Status?.Name </td>
-                            <td>@house.Floors?.FloorNumber</td>
+                            <td>@house.floorNumber</td>
 
                             <td>
                                 @if (house.StatusId == 3)
@@ -86,7 +86,7 @@
                     </div>
                     <div class="form-group">
                         <label for="Floor ">Floor:</label>
-                        <input type="text" class="form-control" @bind="newFloor.FloorNumber" required />
+                        <input type="number" class="form-control" @bind="house.floorNumber" required />
                     </div>
 
 
@@ -128,8 +128,11 @@
                             <label for="HouseAddress">HouseAddress:</label>
                             <input type="text" class="form-control" @bind=@updateHouse.HouseAddress required />
                         </div>
-
-
+                        <div class="form-group">
+                            <label for="Floor ">Floor:</label>
+                            <input type="number" class="form-control" @bind="updateHouse.floorNumber" required />
+                        </div>
+                      
 
                         <div class="form-group">
                             <label for="Status">Status:</label>
@@ -201,17 +204,15 @@
     public House house = new House();
     private House updateHouse = new House();
     public Floor newFloor = new Floor();
+    public Floor updatedFloor = new Floor();
+
 
     public async void SaveHouse()
     {
 
         showModal = false;
         house.OwnerId = Int32.Parse(userId);
-        house.Floors = new Floor
-            {
-                FloorNumber = newFloor.FloorNumber,
-                HouseID = house.HouseID
-    };
+
 
         houses.Add(house);
         await homeservice.AddHouse(house);
@@ -256,6 +257,7 @@
                     HouseName = roleMember.HouseName,
                     HouseAddress = roleMember.HouseAddress,
                     StatusId = roleMember.StatusId,
+                    floorNumber = roleMember.floorNumber
 
                 };
             statusOptions = await userservice.GetStatusOptionsAsync();

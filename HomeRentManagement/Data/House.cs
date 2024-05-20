@@ -12,13 +12,14 @@ namespace HomeRentManagement.Data
         public string HouseAddress { get; set; }
 
         public int StatusId { get; set; } = 1;
+        public int floorNumber { get; set; }
         [ForeignKey("StatusId")]
         public virtual Status? Status { get; set; }
         public int OwnerId { get; set; }
         [ForeignKey("OwnerId")]
         public virtual User Owner { get; set; }
 
-        public virtual Floor Floors { get; set; }
+       
     }
 
 }

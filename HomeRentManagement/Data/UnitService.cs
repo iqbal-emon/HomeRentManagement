@@ -25,13 +25,13 @@ namespace HomeRentManagement.Data
 
         public async Task<bool> deleteAsync(int unitToDelete)
         {
-            var unitTo = await _dbContext.Houses.FindAsync(unitToDelete);
+            var unitTo = await _dbContext.Units.FindAsync(unitToDelete);
 
             if (unitTo != null)
             {
                 // Update the StatusId here
                 unitTo.StatusId = 3;
-                _dbContext.Houses.Update(unitTo);
+                _dbContext.Units.Update(unitTo);
                 // Save changes to the database
                 await _dbContext.SaveChangesAsync();
 

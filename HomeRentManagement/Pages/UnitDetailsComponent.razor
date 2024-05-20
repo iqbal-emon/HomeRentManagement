@@ -11,8 +11,8 @@
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between">
-        <h3>Unit Details</h3>"
-        <button class="btn btn-primary" @onclick="showModel">Add House</button>
+        <h3>Unit Details</h3>
+        <button class="btn btn-primary" @onclick="showModel">Add Unit</button>
     </div>
     <div class="table-responsive">
         <table class="table table-striped">
@@ -57,7 +57,7 @@
                                     <button class="btn btn-danger btn-sm mr-3" @onclick="() =>DeleteUnit(unit.UnitID)">Delete</button>
 
                                 }
-                                <button class="btn btn-primary btn-sm" @onclick="()=>UpdateUnit(unit.UnitID)">Edit</button>
+                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdateUnit(unit.UnitID)">Edit</button>
                             </td>
                         </tr>
                     }
