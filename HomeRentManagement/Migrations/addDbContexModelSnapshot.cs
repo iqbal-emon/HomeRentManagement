@@ -197,9 +197,15 @@ namespace HomeRentManagement.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
 
                     b.Property<string>("TenantName")
                         .IsRequired()
@@ -209,6 +215,12 @@ namespace HomeRentManagement.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("TenantID");
+
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("StatusId");
+
+                    b.HasIndex("UnitID");
 
                     b.ToTable("Tenants");
                 });
@@ -296,21 +308,6 @@ namespace HomeRentManagement.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("TenantUnit", b =>
-                {
-                    b.Property<int>("UnitID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UnitID1")
-                        .HasColumnType("int");
-
-                    b.HasKey("UnitID", "UnitID1");
-
-                    b.HasIndex("UnitID1");
-
-                    b.ToTable("TenantUnit");
-                });
-
             modelBuilder.Entity("HomeRentManagement.Data.Floor", b =>
                 {
                     b.HasOne("HomeRentManagement.Data.House", "House")
@@ -346,13 +343,13 @@ namespace HomeRentManagement.Migrations
                     b.HasOne("HomeRentManagement.Data.Tenant", "Tenant")
                         .WithMany()
                         .HasForeignKey("TenantID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("HomeRentManagement.Data.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Tenant");
@@ -365,13 +362,13 @@ namespace HomeRentManagement.Migrations
                     b.HasOne("HomeRentManagement.Data.Tenant", "Tenant")
                         .WithMany()
                         .HasForeignKey("TenantID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("HomeRentManagement.Data.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Tenant");
@@ -388,6 +385,33 @@ namespace HomeRentManagement.Migrations
                         .IsRequired();
 
                     b.Navigation("statuss");
+                });
+
+            modelBuilder.Entity("HomeRentManagement.Data.Tenant", b =>
+                {
+                    b.HasOne("HomeRentManagement.Data.User", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HomeRentManagement.Data.Status", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HomeRentManagement.Data.Unit", "Unit")
+                        .WithMany("Tenants")
+                        .HasForeignKey("UnitID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+
+                    b.Navigation("Status");
+
+                    b.Navigation("Unit");
                 });
 
             modelBuilder.Entity("HomeRentManagement.Data.Unit", b =>
@@ -428,19 +452,9 @@ namespace HomeRentManagement.Migrations
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("TenantUnit", b =>
+            modelBuilder.Entity("HomeRentManagement.Data.Unit", b =>
                 {
-                    b.HasOne("HomeRentManagement.Data.Tenant", null)
-                        .WithMany()
-                        .HasForeignKey("UnitID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HomeRentManagement.Data.Unit", null)
-                        .WithMany()
-                        .HasForeignKey("UnitID1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Tenants");
                 });
 
             modelBuilder.Entity("HomeRentManagement.Data.User", b =>

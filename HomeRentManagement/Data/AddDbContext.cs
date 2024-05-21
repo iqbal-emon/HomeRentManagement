@@ -57,8 +57,37 @@ namespace HomeRentManagement.Data
                 .WithMany()
                 .HasForeignKey(u => u.OwnerId)
                 .OnDelete(DeleteBehavior.Restrict); // Restrict delete behavior
+            modelBuilder.Entity<Tenant>()
+            .HasOne(u => u.Status)
+            .WithMany()
+            .HasForeignKey(u => u.StatusId)
+            .OnDelete(DeleteBehavior.Restrict); // Restrict delete behavior
 
-
+            modelBuilder.Entity<Tenant>()
+                .HasOne(u => u.Owner)
+                .WithMany()
+                .HasForeignKey(u => u.OwnerId)
+                .OnDelete(DeleteBehavior.Restrict); // Restrict delete behavior
+            modelBuilder.Entity<Payment>()
+               .HasOne(u => u.Unit)
+               .WithMany()
+               .HasForeignKey(u => u.UnitID)
+               .OnDelete(DeleteBehavior.Restrict); // Restrict delete behavior
+            modelBuilder.Entity<Payment>()
+               .HasOne(u => u.Tenant)
+               .WithMany()
+               .HasForeignKey(u => u.TenantID)
+               .OnDelete(DeleteBehavior.Restrict); // Restrict delete behavior
+            modelBuilder.Entity<Rental>()
+              .HasOne(u => u.Unit)
+              .WithMany()
+              .HasForeignKey(u => u.UnitID)
+              .OnDelete(DeleteBehavior.Restrict); // Restrict delete behavior
+            modelBuilder.Entity<Rental>()
+               .HasOne(u => u.Tenant)
+               .WithMany()
+               .HasForeignKey(u => u.TenantID)
+               .OnDelete(DeleteBehavior.Restrict); // Restrict delete behavior
         }
 
     }
