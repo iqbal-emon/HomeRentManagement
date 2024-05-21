@@ -244,7 +244,9 @@
 
         showModal = false;
         tenant.OwnerId = Int32.Parse(userId);
-
+if(tenant.UnitID==0){
+tenant.UnitID=1;
+}
 
         tenants.Add(tenant);
         await tenantservice.AddTenant(tenant);
