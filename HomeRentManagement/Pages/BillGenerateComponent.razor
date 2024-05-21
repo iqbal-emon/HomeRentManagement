@@ -16,8 +16,8 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Tenant Name</th>
-                    <th>PhoneNumber</th>
+                    <th>Unit Name</th>
+                  
                     <th>Floor</th>
                     <th>Unit Name</th>
                     <th>Rent</th>
@@ -35,8 +35,8 @@
                     @foreach (var Bge in Bg)
                     {
                         <tr>
-                            <td>@Bge.Tenant?.TenantName</td>
-                            <td>@Bge.Tenant?.PhoneNumber</td>
+                            <td>@Bge.Tenant?.Unit.unitName</td>
+                          
                             <td>@Bge.Tenant?.Unit.FlolorNu</td>
                             <td>@Bge.Tenant?.Unit.UnitID</td>
                             <td>@Bge.Tenant?.Unit.Rent</td>
@@ -110,7 +110,7 @@
 
 
 @code {
-    public List<BillGenerate> Bg;
+    public List<BillGenerate> Bg=new List<BillGenerate>();
     int newTenant;
     bool showModal = false;
     bool DeleteModel = false;
@@ -139,13 +139,16 @@
 
         if (newTenant == 0)
         {
-          
+            newTenant = unitOptions[0].UnitID;
         }
         await billservice.AddBill(bill,newTenant);
 
+        Bg = new List<BillGenerate>();
+        Bg = await billservice.GetAllBill(Int32.Parse(userId));
+ 
         bill = new BillGenerate();
 
-
+        StateHasChanged();
     }
     async Task showModel()
     {
