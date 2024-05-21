@@ -7,9 +7,9 @@ namespace HomeRentManagement.Data
     {
         [Key]
         public int TenantID { get; set; }
-        public string TenantName { get; set; }
-        public string PhoneNumber { get; set; }
-        public string IdCardNumber { get; set; }
+        public string? TenantName { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? IdCardNumber { get; set; }
         public int StatusId { get; set; } = 1;
         [ForeignKey("StatusId")]
         public virtual Status? Status { get; set; }
@@ -17,9 +17,9 @@ namespace HomeRentManagement.Data
         [ForeignKey("OwnerId")]
         public int UnitID { get; set; }
         [ForeignKey("UnitID")]
-        public virtual User Owner { get; set; }
+        public virtual User? Owner { get; set; }
 
-        public virtual Unit Unit { get; set; }
+        public virtual Unit? Unit { get; set; }
 
     }
 

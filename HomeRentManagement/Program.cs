@@ -18,6 +18,8 @@ builder.Services.AddSingleton<HomeService>();
 builder.Services.AddScoped<UserIdDecrypt>();
 builder.Services.AddScoped<UnitService>();
 builder.Services.AddScoped<TenantService>();
+builder.Services.AddScoped<BillGenerateService>();
+
 
 
 

@@ -1,0 +1,164 @@
+﻿@page "/BillGenerate"
+@using HomeRentManagement.Data;
+@inject BillGenerateService billservice;
+@inject UserService userservice;
+@inject IJSRuntime js
+@inject UserIdDecrypt useriddecrypt
+<h3>BillGenerateComponent</h3>
+
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between">
+        <h3>Unit Details</h3>
+        <button class="btn btn-primary" @onclick="showModel">Add Unit</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tenant Name</th>
+                    <th>PhoneNumber</th>
+                    <th>Floor</th>
+                    <th>Unit Name</th>
+                    <th>Rent</th>
+                    <th>Electricity Billl</th>
+                    <th>Gas Bill</th>
+                    <th>Service Charge</th>
+                    <th>Action</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @if (Bg != null && Bg.Any())
+                {
+                    @foreach (var Bge in Bg)
+                    {
+                        <tr>
+                            <td>@Bge.Tenant?.TenantName</td>
+                            <td>@Bge.Tenant?.PhoneNumber</td>
+                            <td>@Bge.Tenant?.Unit.FlolorNu</td>
+                            <td>@Bge.Tenant?.Unit.UnitID</td>
+                            <td>@Bge.Tenant?.Unit.Rent</td>
+                            <td>@Bge.ElectricityBill</td>
+                            <td>@Bge.GasBill</td>
+
+                            <td>@Bge.ServiceCharge</td>
+
+
+
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6">No members found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal px-5" tabindex="-1" style="@ModalStyle">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Bill</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="HideModal"></button>
+            </div>
+            <div class="modal-body">
+                <form @onsubmit="SaveBill">
+                    <div class="form-group">
+                        <label for="ElectricityBill">Electricity Bill:</label>
+                        <input type="number" class="form-control" @bind="bill.ElectricityBill" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="GasBill">Gas Bill:</label>
+                        <input type="number" class="form-control" @bind="bill.GasBill" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="ServiceCharge">Service Charge:</label>
+                        <input type="number" class="form-control" @bind="bill.ServiceCharge" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Tenant">Tenant:</label>
+                        <select class="form-control" @bind="newTenant" required>
+                            @foreach (var unit in unitOptions)
+                            {
+                                <option value="@unit.UnitID">@unit.unitName</option>
+                            }
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+@code {
+    public List<BillGenerate> Bg;
+    int newTenant;
+    bool showModal = false;
+    bool DeleteModel = false;
+    bool EditModal = false;
+    private int roleToDelete;
+    private List<Unit> unitOptions = new List<Unit>();
+
+
+    public string userId;
+    protected override async Task OnInitializedAsync()
+    {
+        userId = await useriddecrypt.GetDecryptedUserId();
+        Bg = await billservice.GetAllBill(Int32.Parse(userId));
+        unitOptions = await billservice.GetBillOptionsAsync(Int32.Parse(userId));
+
+
+    }
+
+    public BillGenerate bill = new BillGenerate();
+    private BillGenerate updateUnit = new BillGenerate();
+    public async void SaveBill()
+    {
+
+        showModal = false;
+
+
+        if (newTenant == 0)
+        {
+          
+        }
+        await billservice.AddBill(bill,newTenant);
+
+        bill = new BillGenerate();
+
+
+    }
+    async Task showModel()
+    {
+   
+
+        showModal = true;
+    }
+    void HideModal()
+    {
+        showModal = false;
+        bill = new BillGenerate();
+
+    }
+    string ModalStyle => showModal ? "display: block;" : "display: none;";
+
+}

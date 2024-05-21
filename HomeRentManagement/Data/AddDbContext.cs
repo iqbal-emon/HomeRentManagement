@@ -26,6 +26,7 @@ namespace HomeRentManagement.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Status> Statuss { get; set; }
+        public DbSet<BillGenerate>BillGenerates { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Role>()
