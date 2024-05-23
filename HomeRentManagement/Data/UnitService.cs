@@ -20,8 +20,9 @@ namespace HomeRentManagement.Data
             return await _dbContext.Units.Where(unit => unit.OwnerId == userId).ToListAsync();
         }
 
-        public async Task AddUnit(Unit unit)
+        public async Task AddUnit(Unit unit,int newHome)
         {
+            unit.HomeId = newHome;
             _dbContext.Units.Add(unit);
             await _dbContext.SaveChangesAsync();
         }
@@ -47,7 +48,11 @@ namespace HomeRentManagement.Data
         {
             return await _dbContext.Units.FirstOrDefaultAsync(h => h.UnitID == unitId);
         }
-        public async Task updatedateUnit(Unit updateUnit)
+        public async Task<List<House>> getAllHouse(int userId)
+        {
+            return await _dbContext.Houses.Where(house=>house.OwnerId== userId).ToListAsync();
+        }
+        public async Task updatedateUnit(Unit updateUnit,int newHome)
         {
             var existingUnit = await _dbContext.Units.FindAsync(updateUnit.UnitID);
 
@@ -59,7 +64,7 @@ namespace HomeRentManagement.Data
                 existingUnit.WashRoom = updateUnit.WashRoom;
                 existingUnit.BedRoom = updateUnit.BedRoom;
                 existingUnit.Rent = updateUnit.Rent;
-
+                existingUnit.HomeId = newHome;
                 existingUnit.StatusId = updateUnit.StatusId;
 
 

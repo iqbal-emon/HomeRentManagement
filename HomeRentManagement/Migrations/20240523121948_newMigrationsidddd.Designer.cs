@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeRentManagement.Migrations
 {
     [DbContext(typeof(addDbContex))]
-    [Migration("20240523064749_newRental")]
-    partial class newRental
+    [Migration("20240523121948_newMigrationsidddd")]
+    partial class newMigrationsidddd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,6 +47,9 @@ namespace HomeRentManagement.Migrations
 
                     b.Property<int>("TenantID")
                         .HasColumnType("int");
+
+                    b.Property<decimal?>("TotalRent")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("BillingID");
 
@@ -143,27 +146,21 @@ namespace HomeRentManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RentID"));
 
-                    b.Property<decimal>("ElectricityBill")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("GasBill")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Rent")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<DateTime>("RentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("ServiceCharge")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("UnitID")
+                    b.Property<int>("StatusId")
                         .HasColumnType("int");
+
+                    b.Property<int>("TenantID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("totalRent")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("RentID");
 
-                    b.HasIndex("UnitID");
+                    b.HasIndex("TenantID");
 
                     b.ToTable("Rentals");
                 });
@@ -266,6 +263,9 @@ namespace HomeRentManagement.Migrations
                     b.Property<int>("FlolorNu")
                         .HasColumnType("int");
 
+                    b.Property<int>("HomeId")
+                        .HasColumnType("int");
+
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
@@ -283,6 +283,8 @@ namespace HomeRentManagement.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UnitID");
+
+                    b.HasIndex("HomeId");
 
                     b.HasIndex("OwnerId");
 
@@ -405,13 +407,13 @@ namespace HomeRentManagement.Migrations
 
             modelBuilder.Entity("HomeRentManagement.Data.Rental", b =>
                 {
-                    b.HasOne("HomeRentManagement.Data.Unit", "Unit")
+                    b.HasOne("HomeRentManagement.Data.Tenant", "Tenant")
                         .WithMany()
-                        .HasForeignKey("UnitID")
+                        .HasForeignKey("TenantID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Unit");
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("HomeRentManagement.Data.Role", b =>
@@ -454,6 +456,12 @@ namespace HomeRentManagement.Migrations
 
             modelBuilder.Entity("HomeRentManagement.Data.Unit", b =>
                 {
+                    b.HasOne("HomeRentManagement.Data.House", "House")
+                        .WithMany()
+                        .HasForeignKey("HomeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("HomeRentManagement.Data.User", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
@@ -465,6 +473,8 @@ namespace HomeRentManagement.Migrations
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("House");
 
                     b.Navigation("Owner");
 

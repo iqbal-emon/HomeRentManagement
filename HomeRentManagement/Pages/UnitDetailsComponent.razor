@@ -103,6 +103,20 @@
                         <label for="FloorNu">Floor Number:</label>
                         <input type="number" class="form-control" @bind="unit.FlolorNu" required />
                     </div>
+
+                    <div class="form-group">
+                        <label for="Status">Status:</label>
+                        <select class="form-control" @bind="@newHome" required>
+                            @foreach (var home in allhome)
+                            {
+                                <option value="@home.HouseID">@home.HouseName</option>
+                            }
+                        </select>
+                    </div>
+
+
+
+
                     <div class="form-group">
                         <label for="Status">Status:</label>
                         <select class="form-control" @bind="@unit.StatusId" required>
@@ -153,6 +167,15 @@
                         </div>
                         <div class="form-group">
                             <label for="Status">Status:</label>
+                            <select class="form-control" @bind="@updateHome" required>
+                                @foreach (var home in allhome)
+                                {
+                                    <option value="@home.HouseID">@home.HouseName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="Status">Status:</label>
                             <select class="form-control" @bind="updateUnit.StatusId" required>
                                 @foreach (var status in statusOptions)
                                 {
@@ -199,18 +222,20 @@
 </div>
 @code {
     public List<Unit> units;
-
+    int newHome;
     bool showModal = false;
     bool DeleteModel = false;
     bool EditModal = false;
     private int roleToDelete;
     private List<Status> statusOptions = new List<Status>();
-
+    private List<House> allhome = new List<House>();
+    int updateHome;
     public string userId;
     protected override async Task OnInitializedAsync()
     {
         userId = await useriddecrypt.GetDecryptedUserId();
         units = await unitservice.GetUnit(Int32.Parse(userId));
+        allhome = await unitservice.getAllHouse(Int32.Parse(userId));
 
     }
 
@@ -219,15 +244,21 @@
     private Unit updateUnit = new Unit();
 
 
+
     public async void SaveUnit()
     {
 
         showModal = false;
         unit.OwnerId = Int32.Parse(userId);
-   
+        if (newHome == 0)
+        {
+            newHome = allhome[0].HouseID;
+
+        }
+
 
         units.Add(unit);
-        await unitservice.AddUnit(unit);
+        await unitservice.AddUnit(unit,newHome);
 
         unit = new Unit();
 
@@ -253,7 +284,6 @@
     async Task showModel()
     {
         statusOptions = await userservice.GetStatusOptionsAsync();
-
         showModal = true;
     }
 
@@ -261,6 +291,7 @@
     {
         // Call the service method with the parsed memberId
         var roleMember = await unitservice.GetUnitById(unitId);
+        updateHome = roleMember.HomeId;
 
         EditModal = true;
         if (roleMember != null)
@@ -316,7 +347,7 @@
         EditModal = false;
 
 
-        await unitservice.updatedateUnit(updateUnit);
+        await unitservice.updatedateUnit(updateUnit, updateHome);
     }
     string ModalStyle => showModal ? "display: block;" : "display: none;";
     string DeleteModalStyle => DeleteModel ? "display: block;" : "display: none;";

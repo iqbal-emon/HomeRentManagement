@@ -260,6 +260,9 @@ namespace HomeRentManagement.Migrations
                     b.Property<int>("FlolorNu")
                         .HasColumnType("int");
 
+                    b.Property<int>("HomeId")
+                        .HasColumnType("int");
+
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
@@ -277,6 +280,8 @@ namespace HomeRentManagement.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UnitID");
+
+                    b.HasIndex("HomeId");
 
                     b.HasIndex("OwnerId");
 
@@ -448,6 +453,12 @@ namespace HomeRentManagement.Migrations
 
             modelBuilder.Entity("HomeRentManagement.Data.Unit", b =>
                 {
+                    b.HasOne("HomeRentManagement.Data.House", "House")
+                        .WithMany()
+                        .HasForeignKey("HomeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("HomeRentManagement.Data.User", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
@@ -459,6 +470,8 @@ namespace HomeRentManagement.Migrations
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("House");
 
                     b.Navigation("Owner");
 

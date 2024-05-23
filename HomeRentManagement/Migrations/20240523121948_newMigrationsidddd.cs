@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HomeRentManagement.Migrations
 {
     /// <inheritdoc />
-    public partial class @new : Migration
+    public partial class newMigrationsidddd : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -107,37 +107,6 @@ namespace HomeRentManagement.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Units",
-                columns: table => new
-                {
-                    UnitID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    unitName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BedRoom = table.Column<int>(type: "int", nullable: false),
-                    WashRoom = table.Column<int>(type: "int", nullable: false),
-                    Rent = table.Column<int>(type: "int", nullable: false),
-                    FlolorNu = table.Column<int>(type: "int", nullable: false),
-                    StatusId = table.Column<int>(type: "int", nullable: false),
-                    OwnerId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Units", x => x.UnitID);
-                    table.ForeignKey(
-                        name: "FK_Units_Statuss_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "Statuss",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Units_Users_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Floors",
                 columns: table => new
                 {
@@ -155,6 +124,44 @@ namespace HomeRentManagement.Migrations
                         principalTable: "Houses",
                         principalColumn: "HouseID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Units",
+                columns: table => new
+                {
+                    UnitID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    unitName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BedRoom = table.Column<int>(type: "int", nullable: false),
+                    WashRoom = table.Column<int>(type: "int", nullable: false),
+                    Rent = table.Column<int>(type: "int", nullable: false),
+                    FlolorNu = table.Column<int>(type: "int", nullable: false),
+                    StatusId = table.Column<int>(type: "int", nullable: false),
+                    OwnerId = table.Column<int>(type: "int", nullable: false),
+                    HomeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Units", x => x.UnitID);
+                    table.ForeignKey(
+                        name: "FK_Units_Houses_HomeId",
+                        column: x => x.HomeId,
+                        principalTable: "Houses",
+                        principalColumn: "HouseID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Units_Statuss_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Statuss",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Units_Users_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -203,7 +210,8 @@ namespace HomeRentManagement.Migrations
                     GasBill = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ServiceCharge = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TenantID = table.Column<int>(type: "int", nullable: false),
-                    StatusId = table.Column<int>(type: "int", nullable: false)
+                    StatusId = table.Column<int>(type: "int", nullable: false),
+                    TotalRent = table.Column<decimal>(type: "decimal(18,2)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -254,12 +262,9 @@ namespace HomeRentManagement.Migrations
                 {
                     RentID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UnitID = table.Column<int>(type: "int", nullable: false),
                     TenantID = table.Column<int>(type: "int", nullable: false),
-                    ElectricityBill = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    GasBill = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ServiceCharge = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Rent = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    StatusId = table.Column<int>(type: "int", nullable: false),
+                    totalRent = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     RentDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -270,13 +275,7 @@ namespace HomeRentManagement.Migrations
                         column: x => x.TenantID,
                         principalTable: "Tenants",
                         principalColumn: "TenantID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Rentals_Units_UnitID",
-                        column: x => x.UnitID,
-                        principalTable: "Units",
-                        principalColumn: "UnitID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -320,11 +319,6 @@ namespace HomeRentManagement.Migrations
                 column: "TenantID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rentals_UnitID",
-                table: "Rentals",
-                column: "UnitID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Roles_StatusId",
                 table: "Roles",
                 column: "StatusId");
@@ -343,6 +337,11 @@ namespace HomeRentManagement.Migrations
                 name: "IX_Tenants_UnitID",
                 table: "Tenants",
                 column: "UnitID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Units_HomeId",
+                table: "Units",
+                column: "HomeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Units_OwnerId",
@@ -381,13 +380,13 @@ namespace HomeRentManagement.Migrations
                 name: "Rentals");
 
             migrationBuilder.DropTable(
-                name: "Houses");
-
-            migrationBuilder.DropTable(
                 name: "Tenants");
 
             migrationBuilder.DropTable(
                 name: "Units");
+
+            migrationBuilder.DropTable(
+                name: "Houses");
 
             migrationBuilder.DropTable(
                 name: "Users");
