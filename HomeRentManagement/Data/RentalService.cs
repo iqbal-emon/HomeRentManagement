@@ -59,7 +59,7 @@ namespace HomeRentManagement.Data
                 existingRent.ElectricityBill = updateRent.ElectricityBill;
                 existingRent.GasBill = updateRent.GasBill;
                 existingRent.ServiceCharge = updateRent.ServiceCharge;
-                existingRent.Rent = updateRent.Rent;
+                existingRent.ServiceCharge = updateRent.ServiceCharge;
 
                 existingRent.RentDate = updateRent.RentDate;
 

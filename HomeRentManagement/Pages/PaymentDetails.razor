@@ -55,7 +55,7 @@
                                     <button class="btn btn-danger btn-sm mr-3" @onclick="() =>DeleteRent(re.RentID)">Delete</button>
 
                                 }
-                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdateRent(re.RentID)">Edit</button>
+                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdatedRent()">Edit</button>
                             </td>
 
 
@@ -275,11 +275,12 @@
 
 
     }
-    async Task UpdateRent(int rentId)
+    int newUnitId;
+    async Task UpdateRent(int rentId,int unitId)
     {
         // Call the service method with the parsed memberId
         var billMember = await rentservice.GetRentById(rentId);
-
+        newUnitId = unitId;
         EditModal = true;
         if (billMember != null)
         {

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 
 namespace HomeRentManagement.Data
 {
@@ -17,6 +18,17 @@ namespace HomeRentManagement.Data
         [ForeignKey("StatusId")]
         public virtual Status? Status { get; set; }
         [ForeignKey("TenantID")]
+        public decimal? TotalRent { get; set; }
+
+        public decimal Total
+        {
+            get
+            {
+                return ElectricityBill + GasBill + ServiceCharge + Tenant.Unit.Rent;
+            }
+            // Since Total is a read-only property, it won't be mapped to a column in the database
+            // Hence, there is no need for a setter here.
+        }
         public virtual Tenant? Tenant { get; set; }
     }
 }

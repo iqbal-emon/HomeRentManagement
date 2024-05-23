@@ -19,6 +19,7 @@ namespace HomeRentManagement.Data
 
             var tenantTo = await _dbContext.Tenants.FirstOrDefaultAsync(tenant => tenant.UnitID == unitId);
             billgenrate.TenantID = tenantTo.TenantID;
+            billgenrate.TotalRent = (billgenrate.ElectricityBill + billgenrate.GasBill + billgenrate.ServiceCharge + tenantTo.Unit.Rent);
             _dbContext.BillGenerates.Add(billgenrate);
             await _dbContext.SaveChangesAsync();
         }
@@ -49,9 +50,11 @@ namespace HomeRentManagement.Data
         {
             return await _dbContext.BillGenerates.FirstOrDefaultAsync(h => h.BillingID == billId);
         }
-        public async Task updatedateBill(BillGenerate updateBill)
+        public async Task updatedateBill(BillGenerate updateBill,int UnitId)
         {
+            var tenantTo = await _dbContext.Tenants.FirstOrDefaultAsync(tenant => tenant.UnitID == UnitId);
             var existingBill = await _dbContext.BillGenerates.FindAsync(updateBill.BillingID);
+           
 
             if (existingBill != null)
             {
@@ -60,6 +63,7 @@ namespace HomeRentManagement.Data
                 existingBill.GasBill = updateBill.GasBill;
                 existingBill.ServiceCharge = updateBill.ServiceCharge;
                 existingBill.StatusId = updateBill.StatusId;
+               existingBill.TotalRent=(updateBill.ElectricityBill+updateBill.GasBill+updateBill.ServiceCharge+tenantTo.Unit.Rent);
 
 
 

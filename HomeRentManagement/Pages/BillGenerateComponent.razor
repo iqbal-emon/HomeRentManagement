@@ -16,13 +16,14 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Floot Name</th>
-                    <th>Floor</th>
+                    <th>Tenant Name</th>
                     <th>Unit Name</th>
                     <th>Rent</th>
                     <th>Electricity Billl</th>
                     <th>Gas Bill</th>
                     <th>Service Charge</th>
+                    <th>Total</th>
+
                     <th>Action</th>
 
 
@@ -34,14 +35,16 @@
                     @foreach (var Bge in Bg)
                     {
                         <tr>
+                          
+                            <td>@Bge.Tenant?.TenantName</td>
                             <td>@Bge.Tenant?.Unit.unitName</td>
                           
-                            <td>@Bge.Tenant?.Unit.FlolorNu</td>
-                            <td>@Bge.Tenant?.Unit.UnitID</td>
                             <td>@Bge.Tenant?.Unit.Rent</td>
                             <td>@Bge.ElectricityBill</td>
                             <td>@Bge.GasBill</td>
                             <td>@Bge.ServiceCharge</td>
+                            <td>@Bge.TotalRent</td>
+
                             <td>
                                 @if (Bge.StatusId == 3)
                                 {
@@ -53,7 +56,7 @@
                                     <button class="btn btn-danger btn-sm mr-3" @onclick="() =>DeleteBill(Bge.BillingID)">Delete</button>
 
                                 }
-                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdateBill(Bge.BillingID)">Edit</button>
+                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdateBill(Bge.BillingID,Bge.Tenant.UnitID)">Edit</button>
                             </td>
 
 
@@ -93,7 +96,7 @@
                         <input type="number" class="form-control" @bind="bill.ServiceCharge" />
                     </div>
                     <div class="form-group">
-                        <label for="Tenant">Tenant:</label>
+                        <label for="Unit Name">Unit Name:</label>
                         <select class="form-control" @bind="newTenant" required>
                             @foreach (var unit in unitOptions)
                             {
@@ -221,11 +224,12 @@
         {
             newTenant = unitOptions[0].UnitID;
         }
+
         await billservice.AddBill(bill,newTenant);
 
         Bg = new List<BillGenerate>();
         Bg = await billservice.GetAllBill(Int32.Parse(userId));
- 
+
         bill = new BillGenerate();
 
         StateHasChanged();
@@ -253,10 +257,12 @@
         bill = new BillGenerate();
 
     }
-    async Task UpdateBill(int billId)
+    public int newUnitId;
+    async Task UpdateBill(int billId,int unitId)
     {
         // Call the service method with the parsed memberId
         var billMember = await billservice.GetBillById(billId);
+         newUnitId = unitId;
 
         EditModal = true;
         if (billMember != null)
@@ -267,6 +273,7 @@
                     ElectricityBill = billMember.ElectricityBill,
                     GasBill = billMember.GasBill,
                     ServiceCharge = billMember.ServiceCharge,
+                    
 
 
                     StatusId = billMember.StatusId,
@@ -313,7 +320,7 @@
         EditModal = false;
 
 
-        await billservice.updatedateBill(updateBill);
+        await billservice.updatedateBill(updateBill, newUnitId);
     }
     string ModalStyle => showModal ? "display: block;" : "display: none;";
     string DeleteModalStyle => DeleteModel ? "display: block;" : "display: none;";
