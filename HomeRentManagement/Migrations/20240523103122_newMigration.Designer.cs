@@ -4,6 +4,7 @@ using HomeRentManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeRentManagement.Migrations
 {
     [DbContext(typeof(addDbContex))]
-    partial class addDbContexModelSnapshot : ModelSnapshot
+    [Migration("20240523103122_newMigration")]
+    partial class newMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,13 +146,25 @@ namespace HomeRentManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RentID"));
 
+                    b.Property<decimal>("ElectricityBill")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("GasBill")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Rent")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime>("RentDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal>("ServiceCharge")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TenantID")
+                    b.Property<int>("UnitID")
                         .HasColumnType("int");
 
                     b.Property<decimal>("totalRent")
@@ -157,7 +172,7 @@ namespace HomeRentManagement.Migrations
 
                     b.HasKey("RentID");
 
-                    b.HasIndex("TenantID");
+                    b.HasIndex("UnitID");
 
                     b.ToTable("Rentals");
                 });
@@ -399,13 +414,13 @@ namespace HomeRentManagement.Migrations
 
             modelBuilder.Entity("HomeRentManagement.Data.Rental", b =>
                 {
-                    b.HasOne("HomeRentManagement.Data.Tenant", "Tenant")
+                    b.HasOne("HomeRentManagement.Data.Unit", "Unit")
                         .WithMany()
-                        .HasForeignKey("TenantID")
+                        .HasForeignKey("UnitID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Tenant");
+                    b.Navigation("Unit");
                 });
 
             modelBuilder.Entity("HomeRentManagement.Data.Role", b =>

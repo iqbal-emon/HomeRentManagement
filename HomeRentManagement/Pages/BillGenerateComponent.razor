@@ -97,7 +97,7 @@
                     </div>
                     <div class="form-group">
                         <label for="Unit Name">Unit Name:</label>
-                        <select class="form-control" @bind="newTenant" required>
+                        <select class="form-control" @bind="newUnit" required>
                             @foreach (var unit in unitOptions)
                             {
                                 <option value="@unit.UnitID">@unit.unitName</option>
@@ -140,7 +140,7 @@
                         </div>
                         <div class="form-group">
                             <label for="Tenant">Tenant:</label>
-                            <select class="form-control" @bind="updateBill.TenantID" required>
+                            <select class="form-control" @bind="newUnitId" required>
                                 @foreach (var unit in unitOptions)
                                 {
                                     <option value="@unit.UnitID">@unit.unitName</option>
@@ -193,7 +193,7 @@
 
 @code {
     public List<BillGenerate> Bg=new List<BillGenerate>();
-    int newTenant;
+    int newUnit;
     bool showModal = false;
     bool DeleteModel = false;
     bool EditModal = false;
@@ -220,12 +220,12 @@
         showModal = false;
 
 
-        if (newTenant == 0)
+        if (newUnit == 0)
         {
-            newTenant = unitOptions[0].UnitID;
+            newUnit = unitOptions[0].UnitID;
         }
 
-        await billservice.AddBill(bill,newTenant);
+        await billservice.AddBill(bill, newUnit);
 
         Bg = new List<BillGenerate>();
         Bg = await billservice.GetAllBill(Int32.Parse(userId));
@@ -262,7 +262,7 @@
     {
         // Call the service method with the parsed memberId
         var billMember = await billservice.GetBillById(billId);
-         newUnitId = unitId;
+        newUnitId = billMember.Tenant.Unit.UnitID;
 
         EditModal = true;
         if (billMember != null)

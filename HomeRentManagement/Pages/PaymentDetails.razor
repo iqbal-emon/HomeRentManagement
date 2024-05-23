@@ -17,15 +17,12 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                
-                    <th>Unit Name</th>
-                    <th>Electricity Billl</th>
-                    <th>Gas Bill</th>
-                    <th>Service Charge</th>
-                    <th>Rent</th>
-                    <th>Rent Date</th>
+                    <th>Tenant Name</th>
 
+                    <th>Unit Name</th>
+                    <th>Total Rent</th>
                     <th>Action</th>
+
 
 
                 </tr>
@@ -36,13 +33,13 @@
                     @foreach (var re in rent)
                     {
                         <tr>
-                            <td>@re.Unit.unitName</td>
 
-                            <td>@re.ElectricityBill</td>
-                            <td>@re.GasBill</td>
-                            <td>@re.ServiceCharge</td>
-                            <td>@re.Rent</td>
-                            <td>@re.RentDate</td>
+                            <td>@re.Tenant?.TenantName</td>
+
+                            <td>@re.Tenant?.Unit.unitName</td>
+
+                            <td>@re.totalRent</td>
+                         
                           
                             <td>
                                 @if (re.StatusId == 3)
@@ -55,7 +52,7 @@
                                     <button class="btn btn-danger btn-sm mr-3" @onclick="() =>DeleteRent(re.RentID)">Delete</button>
 
                                 }
-                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdatedRent()">Edit</button>
+                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdatedRent(re.RentID)">Edit</button>
                             </td>
 
 
@@ -94,26 +91,14 @@
 
 
                     <div class="form-group">
-                        <label for="ElectricityBill"> ElectricityBill:</label>
-                        <input type="number" class="form-control" @bind="rental.ElectricityBill" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="GasBill">Gas Bill:</label>
-                        <input type="number" class="form-control" @bind="rental.GasBill" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="ServiceCharge">Service Charge:</label>
-                        <input type="number" class="form-control" @bind="rental.ServiceCharge" />
-                    </div>
-                    <div class="form-group">
-                        <label for="House Rent">House Rent:</label>
-                        <input type="number" class="form-control" @bind="rental.Rent" />
-                    </div>
-                    <div class="form-group">
-                        <label for="House Rent">House Rent:</label>
-                        <input type="date" class="form-control" @bind="rental.RentDate" />
+                        <label for="TotalRent"> Total Rent:</label>
+                        <input type="number" class="form-control" @bind="rental.totalRent" required />
                     </div>
 
+                    <div class="form-group">
+                        <label for="rentdate">Rent Date:</label>
+                        <input type="date" class="form-control" @bind="rental.RentDate" required />
+                    </div>
 
 
                     <button type="submit" class="btn btn-primary mt-3">Submit</button>
@@ -136,7 +121,7 @@
                     <form @onsubmit="UpdatedRent">
                         <div class="form-group">
                             <label for="Tenant">Tenant:</label>
-                            <select class="form-control" @bind="updateRent.UnitID" required>
+                            <select class="form-control" @bind="@newUnitId" required>
                                 @foreach (var unit in unitOptions)
                                 {
                                     <option value="@unit.UnitID">@unit.unitName</option>
@@ -144,34 +129,14 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="ElectricityBill">Electricity Bill:</label>
-                            <input type="number" class="form-control" @bind="updateRent.ElectricityBill" required />
+                            <label for="TotalRent">Total Rent:</label>
+                            <input type="number" class="form-control" @bind="updateRent.totalRent" required />
                         </div>
                         <div class="form-group">
-                            <label for="GasBill">Gas Bill:</label>
-                            <input type="number" class="form-control" @bind="updateRent.GasBill" required />
+                            <label for="rendate">Rent Date:</label>
+                            <input type="date" class="form-control" @bind="updateRent.RentDate" required />
                         </div>
-                        <div class="form-group">
-                            <label for="ServiceCharge">Service Charge:</label>
-                            <input type="number" class="form-control" @bind="updateRent.ServiceCharge" />
-                        </div>
-                        <div class="form-group">
-                            <label for="Rent">House Rent:</label>
-                            <input type="number" class="form-control" @bind="updateRent.Rent" />
-                        </div>
-                        <div class="form-group">
-                            <label for="Rent Date">Rent Date:</label>
-                            <input type="date" class="form-control" @bind="updateRent.RentDate" />
-                        </div>
-                        <div class="form-group">
-                            <label for="Status">Status:</label>
-                            <select class="form-control" @bind="updateRent.StatusId" required>
-                                @foreach (var status in statusOptions)
-                                {
-                                    <option value="@status.Id">@status.Name</option>
-                                }
-                            </select>
-                        </div>
+                      
 
                         <button type="submit" class="btn btn-primary mt-3">Update</button>
                     </form>
@@ -276,23 +241,21 @@
 
     }
     int newUnitId;
-    async Task UpdateRent(int rentId,int unitId)
+    async Task UpdatedRent(int rentId)
     {
         // Call the service method with the parsed memberId
         var billMember = await rentservice.GetRentById(rentId);
-        newUnitId = unitId;
+        newUnitId = billMember.Tenant.Unit.UnitID;
+
         EditModal = true;
         if (billMember != null)
         {
             updateRent = new Rental()
                 {
                     RentID = billMember.RentID,
-                    ElectricityBill = billMember.ElectricityBill,
-                    GasBill = billMember.GasBill,
-                    Rent = billMember.Rent,
-
-                    ServiceCharge = billMember.ServiceCharge,
-                    StatusId = billMember.StatusId,
+                    totalRent = billMember.totalRent,
+                  RentDate=billMember.RentDate,
+                   
 
                 };
             statusOptions = await userservice.GetStatusOptionsAsync();
@@ -338,7 +301,7 @@
         EditModal = false;
 
 
-        await rentservice.updatedateRent(updateRent);
+        await rentservice.updatedateRent(updateRent, newUnitId);
     }
     string ModalStyle => showModal ? "display: block;" : "display: none;";
     string DeleteModalStyle => DeleteModel ? "display: block;" : "display: none;";

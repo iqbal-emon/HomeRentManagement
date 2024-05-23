@@ -15,7 +15,7 @@ namespace HomeRentManagement.Data
             return await _dbContext.BillGenerates.Include(bill => bill.Tenant.Unit).Where(bill=>bill.Tenant.OwnerId == userId).ToListAsync();
         }
         public async Task AddBill(BillGenerate billgenrate,int unitId)
-        {
+         {
 
             var tenantTo = await _dbContext.Tenants.FirstOrDefaultAsync(tenant => tenant.UnitID == unitId);
             billgenrate.TenantID = tenantTo.TenantID;
@@ -62,6 +62,7 @@ namespace HomeRentManagement.Data
                 existingBill.ElectricityBill = updateBill.ElectricityBill;
                 existingBill.GasBill = updateBill.GasBill;
                 existingBill.ServiceCharge = updateBill.ServiceCharge;
+                existingBill.TenantID = tenantTo.TenantID;
                 existingBill.StatusId = updateBill.StatusId;
                existingBill.TotalRent=(updateBill.ElectricityBill+updateBill.GasBill+updateBill.ServiceCharge+tenantTo.Unit.Rent);
 

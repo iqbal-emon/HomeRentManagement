@@ -12,13 +12,12 @@ namespace HomeRentManagement.Data
         }
         public async Task<List<Rental>> GetAllRent(int userId)
         {
-            return await _dbContext.Rentals.Include(rental =>rental.Unit).Where(rental =>rental.Unit.OwnerId == userId).ToListAsync();
+            return await _dbContext.Rentals.Include(rental =>rental.Tenant.Unit).Where(rental =>rental.Tenant.OwnerId == userId).ToListAsync();
         }
         public async Task AddRental(Rental rent, int unitId)
         {
-
-            
-            rent.UnitID = unitId;
+            var tenantTo = await _dbContext.Tenants.FirstOrDefaultAsync(tenant => tenant.UnitID == unitId);
+            rent.TenantID = tenantTo.TenantID;
             _dbContext.Rentals.Add(rent);
             await _dbContext.SaveChangesAsync();
         }
@@ -49,24 +48,20 @@ namespace HomeRentManagement.Data
         {
             return await _dbContext.Rentals.FirstOrDefaultAsync(r => r.RentID == rentId);
         }
-        public async Task updatedateRent(Rental updateRent)
+        public async Task updatedateRent(Rental updateRent,int newUnitId)
         {
+            var tenantTo = await _dbContext.Tenants.FirstOrDefaultAsync(tenant => tenant.UnitID == newUnitId);
             var existingRent = await _dbContext.Rentals.FindAsync(updateRent.RentID);
 
             if (existingRent != null)
             {
                 // Update the properties of the existing member with the new values
-                existingRent.ElectricityBill = updateRent.ElectricityBill;
-                existingRent.GasBill = updateRent.GasBill;
-                existingRent.ServiceCharge = updateRent.ServiceCharge;
-                existingRent.ServiceCharge = updateRent.ServiceCharge;
+                existingRent.totalRent = updateRent.totalRent;
+           
 
                 existingRent.RentDate = updateRent.RentDate;
-
-                existingRent.StatusId = updateRent.StatusId;
-
-
-
+                existingRent.TenantID = tenantTo.TenantID;
+                
 
                 // Use UpdateAsync instead of Update
                 _dbContext.Rentals.Update(existingRent);
