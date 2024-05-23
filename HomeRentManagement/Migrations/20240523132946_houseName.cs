@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HomeRentManagement.Migrations
 {
     /// <inheritdoc />
-    public partial class newMigrationsidddd : Migration
+    public partial class houseName : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -132,7 +132,7 @@ namespace HomeRentManagement.Migrations
                 {
                     UnitID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    unitName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    unitName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BedRoom = table.Column<int>(type: "int", nullable: false),
                     WashRoom = table.Column<int>(type: "int", nullable: false),
                     Rent = table.Column<int>(type: "int", nullable: false),
@@ -175,11 +175,18 @@ namespace HomeRentManagement.Migrations
                     IdCardNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StatusId = table.Column<int>(type: "int", nullable: false),
                     OwnerId = table.Column<int>(type: "int", nullable: false),
-                    UnitID = table.Column<int>(type: "int", nullable: false)
+                    UnitID = table.Column<int>(type: "int", nullable: false),
+                    HomeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tenants", x => x.TenantID);
+                    table.ForeignKey(
+                        name: "FK_Tenants_Houses_HomeId",
+                        column: x => x.HomeId,
+                        principalTable: "Houses",
+                        principalColumn: "HouseID",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Tenants_Statuss_StatusId",
                         column: x => x.StatusId,
@@ -322,6 +329,11 @@ namespace HomeRentManagement.Migrations
                 name: "IX_Roles_StatusId",
                 table: "Roles",
                 column: "StatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tenants_HomeId",
+                table: "Tenants",
+                column: "HomeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tenants_OwnerId",

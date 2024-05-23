@@ -95,8 +95,20 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="Home">Home:</label>
+                        <select class="form-control" id="Home" @onchange="OnHouseChanged">
+                            @foreach (var house in houseOption)
+                            {
+                                <option value="@house.HouseID">@house.HouseName</option>
+                            }
+                        </select>
+                    </div>
+
+
+
+                    <div class="form-group">
                         <label for="Unit">Unit:</label>
-                        <select class="form-control" @bind="@tenant.UnitID" required>
+                        <select class="form-control" @bind="@newHomeId" required>
                             @foreach (var unit in unitOption)
                             {
                                 <option value="@unit.UnitID">@unit.unitName</option>
@@ -220,26 +232,36 @@
 </div>
 @code {
     public List<Tenant> tenants;
-
+    public int newHouse;
     bool showModal = false;
     bool DeleteModel = false;
     bool EditModal = false;
     private int roleToDelete;
     private List<Status> statusOptions = new List<Status>();
     private List<Unit> unitOption = new List<Unit>();
+    private List<House> houseOption = new List<House>();
 
     public string userId;
     protected override async Task OnInitializedAsync()
     {
         userId = await useriddecrypt.GetDecryptedUserId();
         tenants = await tenantservice.GetTeant(Int32.Parse(userId));
-        unitOption = await unitservice.GetUnitAllUnit(Int32.Parse(userId));
+
+        houseOption = await unitservice.getAllHouse(Int32.Parse(userId));
+
 
     }
-
+    private int selectedHouseId;
     public Tenant tenant = new Tenant();
     private Tenant updatetenant = new Tenant();
-
+    public int newHomeId;
+    private async Task OnHouseChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out selectedHouseId))
+        {
+            await unitDropdown(selectedHouseId);
+        }
+    }
 
     public async void SaveTenant()
     {
@@ -256,12 +278,17 @@
         await tenantservice.AddTenant(tenant);
         userId = await useriddecrypt.GetDecryptedUserId();
         tenants = await tenantservice.GetTeant(Int32.Parse(userId));
-        unitOption = await unitservice.GetUnitAllUnit(Int32.Parse(userId));
+       
 
         tenant = new Tenant();
         StateHasChanged();
 
 
+    }
+
+    public async Task unitDropdown(int houseId)
+    {
+        unitOption = await unitservice.GetUnitAllUnit(Int32.Parse(userId),houseId);
     }
 
     void HideModal()
@@ -283,8 +310,12 @@
     }
     async Task showModel()
     {
+        if (newHomeId == 0)
+        {
+            newHomeId = unitOption[0].UnitID;
+        }
         statusOptions = await userservice.GetStatusOptionsAsync();
-        unitOption = await unitservice.GetUnitAllUnit(Int32.Parse(userId));
+    
 
         showModal = true;
     }
@@ -311,7 +342,7 @@
 
                 };
             statusOptions = await userservice.GetStatusOptionsAsync();
-            unitOption = await unitservice.GetUnitAllUnit(Int32.Parse(userId));
+          
 
             // Additional code to update the user, e.g., save to the database, if necessary
         }

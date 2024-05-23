@@ -18,6 +18,9 @@ namespace HomeRentManagement.Data
         public int UnitID { get; set; }
         [ForeignKey("UnitID")]
         public virtual User? Owner { get; set; }
+        public int HomeId { get; set; }
+        [ForeignKey("HomeId")]
+        public virtual House? House { get; set; }
 
         public virtual Unit? Unit { get; set; }
 

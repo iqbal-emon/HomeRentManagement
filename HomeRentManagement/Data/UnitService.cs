@@ -15,9 +15,9 @@ namespace HomeRentManagement.Data
         {
             return await _dbContext.Units.Include(user => user.Status).Where(unit => unit.OwnerId == userId).ToListAsync();
         }
-        public async Task<List<Unit>> GetUnitAllUnit(int userId)
+        public async Task<List<Unit>> GetUnitAllUnit(int userId,int houseId)
         {
-            return await _dbContext.Units.Where(unit => unit.OwnerId == userId).ToListAsync();
+            return await _dbContext.Units.Where(unit => unit.OwnerId == userId&&unit.HomeId== houseId).ToListAsync();
         }
 
         public async Task AddUnit(Unit unit,int newHome)

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeRentManagement.Migrations
 {
     [DbContext(typeof(addDbContex))]
-    [Migration("20240523121948_newMigrationsidddd")]
-    partial class newMigrationsidddd
+    [Migration("20240523132946_houseName")]
+    partial class houseName
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -220,6 +220,9 @@ namespace HomeRentManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TenantID"));
 
+                    b.Property<int>("HomeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("IdCardNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -239,6 +242,8 @@ namespace HomeRentManagement.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("TenantID");
+
+                    b.HasIndex("HomeId");
 
                     b.HasIndex("OwnerId");
 
@@ -279,7 +284,6 @@ namespace HomeRentManagement.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("unitName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UnitID");
@@ -429,6 +433,12 @@ namespace HomeRentManagement.Migrations
 
             modelBuilder.Entity("HomeRentManagement.Data.Tenant", b =>
                 {
+                    b.HasOne("HomeRentManagement.Data.House", "House")
+                        .WithMany()
+                        .HasForeignKey("HomeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("HomeRentManagement.Data.User", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
@@ -446,6 +456,8 @@ namespace HomeRentManagement.Migrations
                         .HasForeignKey("UnitID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("House");
 
                     b.Navigation("Owner");
 

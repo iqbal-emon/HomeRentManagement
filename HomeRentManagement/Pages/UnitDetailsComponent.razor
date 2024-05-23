@@ -18,6 +18,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th>House Name</th>
                     <th>Unit Name</th>
                     <th>BedRoom</th>
                     <th>WashRoom</th>
@@ -37,6 +38,8 @@
                     @foreach (var unit in units)
                     {
                         <tr>
+                            <td>@unit.House.HouseName</td>
+
                             <td>@unit.unitName</td>
                             <td>@unit.BedRoom</td>
                             <td>@unit.WashRoom</td>
