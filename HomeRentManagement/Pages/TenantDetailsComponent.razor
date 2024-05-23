@@ -166,7 +166,7 @@
 
                         <div class="form-group">
                             <label for="Unit">Unit:</label>
-                            <select class="form-control" @bind="@updatetenant.UnitID" required>
+                            <select disabled class="form-control" @bind="@updatetenant.UnitID" required>
                                 @foreach (var unit in unitOption)
                                 {
                                     <option value="@unit.UnitID">@unit.unitName</option>
@@ -248,6 +248,7 @@
         tenants = await tenantservice.GetTeant(Int32.Parse(userId));
 
         houseOption = await unitservice.getAllHouse(Int32.Parse(userId));
+        unitOption = await unitservice.GetUnitAllUnit(Int32.Parse(userId), houseOption[0].HouseID);
 
 
     }

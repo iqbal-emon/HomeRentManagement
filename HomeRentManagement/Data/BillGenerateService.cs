@@ -24,11 +24,17 @@ namespace HomeRentManagement.Data
             await _dbContext.SaveChangesAsync();
         }
 
-        
-             public async Task<List<Unit>> GetBillOptionsAsync(int userId)
+
+        public async Task<List<Tenant>> GetBillOptionsAsync(int userId)
         {
-            return await _dbContext.Units.Where(unit=>unit.OwnerId==userId).ToListAsync();
+            return await _dbContext.Tenants
+                .Where(unit => unit.OwnerId == userId)
+                
+                .ToListAsync();
         }
+
+
+
         public async Task<bool> deleteAsync(int BillToDelete)
         {
             var billTo = await _dbContext.BillGenerates.FindAsync(BillToDelete);

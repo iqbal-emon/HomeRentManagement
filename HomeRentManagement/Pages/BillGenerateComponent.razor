@@ -100,7 +100,7 @@
                         <select class="form-control" @bind="newUnit" required>
                             @foreach (var unit in unitOptions)
                             {
-                                <option value="@unit.UnitID">@unit.unitName</option>
+                                <option value="@unit.UnitID">@unit.Unit?.unitName</option>
                             }
                         </select>
                     </div>
@@ -143,7 +143,7 @@
                             <select class="form-control" @bind="newUnitId" required>
                                 @foreach (var unit in unitOptions)
                                 {
-                                    <option value="@unit.UnitID">@unit.unitName</option>
+                                    <option value="@unit.UnitID">@unit.Unit?.unitName</option>
                                 }
                             </select>
                         </div>
@@ -198,7 +198,8 @@
     bool DeleteModel = false;
     bool EditModal = false;
     private int roleToDelete;
-    private List<Unit> unitOptions = new List<Unit>();
+    private List<Tenant> unitOptions = new List<Tenant>();
+
     private List<Status> statusOptions = new List<Status>();
 
 
