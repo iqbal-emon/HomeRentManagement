@@ -268,14 +268,18 @@
 
         showModal = false;
         tenant.OwnerId = Int32.Parse(userId);
-    
+
 
         if (tenant.UnitID == 0)
         {
             tenant.UnitID = unitOption[0].UnitID;
         }
+        if (newHomeId == 0)
+        {
+            newHomeId = unitOption[0].UnitID;
+        }
 
-        await tenantservice.AddTenant(tenant);
+        await tenantservice.AddTenant(tenant, newHomeId);
         userId = await useriddecrypt.GetDecryptedUserId();
         tenants = await tenantservice.GetTeant(Int32.Parse(userId));
        
@@ -310,10 +314,9 @@
     }
     async Task showModel()
     {
-        if (newHomeId == 0)
-        {
-            newHomeId = unitOption[0].UnitID;
-        }
+       
+          
+        
         statusOptions = await userservice.GetStatusOptionsAsync();
     
 

@@ -18,8 +18,9 @@ namespace HomeRentManagement.Data
      
 
 
-        public async Task AddTenant(Tenant tenant)
+        public async Task AddTenant(Tenant tenant,int newHomeId)
         {
+            tenant.HomeId = newHomeId;
             _dbContext.Tenants.Add(tenant);
             await _dbContext.SaveChangesAsync();
         }
