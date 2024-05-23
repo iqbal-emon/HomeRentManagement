@@ -19,6 +19,7 @@ builder.Services.AddScoped<UserIdDecrypt>();
 builder.Services.AddScoped<UnitService>();
 builder.Services.AddScoped<TenantService>();
 builder.Services.AddScoped<BillGenerateService>();
+builder.Services.AddScoped<RentalService>();
 
 
 

@@ -12,15 +12,14 @@ namespace HomeRentManagement.Data
         [ForeignKey("UnitID")]
         public virtual Unit Unit { get; set; }
 
-        public int TenantID { get; set; }
-        [ForeignKey("TenantID")]
-        public virtual Tenant Tenant { get; set; }
+     
 
         public decimal ElectricityBill { get; set; }
         public decimal GasBill { get; set; }
         public decimal ServiceCharge { get; set; }
         public decimal Rent { get; set; }
-
+        public int StatusId { get; set; } = 1;
+        [ForeignKey("StatusId")]
         public decimal Total
         {
             get

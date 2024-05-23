@@ -4,6 +4,7 @@ using HomeRentManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeRentManagement.Migrations
 {
     [DbContext(typeof(addDbContex))]
-    partial class addDbContexModelSnapshot : ModelSnapshot
+    [Migration("20240523064749_newRental")]
+    partial class newRental
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,9 +157,6 @@ namespace HomeRentManagement.Migrations
 
                     b.Property<decimal>("ServiceCharge")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
 
                     b.Property<int>("UnitID")
                         .HasColumnType("int");
