@@ -15,13 +15,15 @@ namespace HomeRentManagement.Data
             return await _dbContext.Tenants.Include(tenant => tenant.Status).Include(Tenant=>Tenant.Unit).Where(tenant => tenant.OwnerId == userId).ToListAsync();
         }
 
+     
+
 
         public async Task AddTenant(Tenant tenant)
         {
             _dbContext.Tenants.Add(tenant);
             await _dbContext.SaveChangesAsync();
         }
-
+        
         public async Task<bool> deleteAsync(int tenantToDelete)
         {
             var tenantTo = await _dbContext.Tenants.FindAsync(tenantToDelete);

@@ -232,6 +232,7 @@
     {
         userId = await useriddecrypt.GetDecryptedUserId();
         tenants = await tenantservice.GetTeant(Int32.Parse(userId));
+        unitOption = await unitservice.GetUnitAllUnit(Int32.Parse(userId));
 
     }
 
@@ -244,14 +245,20 @@
 
         showModal = false;
         tenant.OwnerId = Int32.Parse(userId);
-if(tenant.UnitID==0){
-tenant.UnitID=1;
-}
+    
 
-        tenants.Add(tenant);
+        if (tenant.UnitID == 0)
+        {
+            tenant.UnitID = unitOption[0].UnitID;
+        }
+
         await tenantservice.AddTenant(tenant);
+        userId = await useriddecrypt.GetDecryptedUserId();
+        tenants = await tenantservice.GetTeant(Int32.Parse(userId));
+        unitOption = await unitservice.GetUnitAllUnit(Int32.Parse(userId));
 
         tenant = new Tenant();
+        StateHasChanged();
 
 
     }
