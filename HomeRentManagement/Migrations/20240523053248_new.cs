@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HomeRentManagement.Migrations
 {
     /// <inheritdoc />
-    public partial class newUnitdd : Migration
+    public partial class @new : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -163,9 +163,9 @@ namespace HomeRentManagement.Migrations
                 {
                     TenantID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TenantName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IdCardNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TenantName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IdCardNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StatusId = table.Column<int>(type: "int", nullable: false),
                     OwnerId = table.Column<int>(type: "int", nullable: false),
                     UnitID = table.Column<int>(type: "int", nullable: false)
@@ -191,6 +191,35 @@ namespace HomeRentManagement.Migrations
                         principalTable: "Users",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BillGenerates",
+                columns: table => new
+                {
+                    BillingID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ElectricityBill = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    GasBill = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ServiceCharge = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TenantID = table.Column<int>(type: "int", nullable: false),
+                    StatusId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BillGenerates", x => x.BillingID);
+                    table.ForeignKey(
+                        name: "FK_BillGenerates_Statuss_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Statuss",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BillGenerates_Tenants_TenantID",
+                        column: x => x.TenantID,
+                        principalTable: "Tenants",
+                        principalColumn: "TenantID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -249,6 +278,16 @@ namespace HomeRentManagement.Migrations
                         principalColumn: "UnitID",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BillGenerates_StatusId",
+                table: "BillGenerates",
+                column: "StatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BillGenerates_TenantID",
+                table: "BillGenerates",
+                column: "TenantID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Floors_HouseID",
@@ -329,6 +368,9 @@ namespace HomeRentManagement.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "BillGenerates");
+
             migrationBuilder.DropTable(
                 name: "Floors");
 

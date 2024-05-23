@@ -28,6 +28,54 @@ namespace HomeRentManagement.Data
         {
             return await _dbContext.Units.Where(unit=>unit.OwnerId==userId).ToListAsync();
         }
+        public async Task<bool> deleteAsync(int BillToDelete)
+        {
+            var billTo = await _dbContext.BillGenerates.FindAsync(BillToDelete);
+
+            if (billTo != null)
+            {
+                // Update the StatusId here
+                billTo.StatusId = 3;
+                _dbContext.BillGenerates.Update(billTo);
+                // Save changes to the database
+                await _dbContext.SaveChangesAsync();
+
+                return true;
+            }
+
+            return false;
+        }
+        public async Task<BillGenerate> GetBillById(int billId)
+        {
+            return await _dbContext.BillGenerates.FirstOrDefaultAsync(h => h.BillingID == billId);
+        }
+        public async Task updatedateBill(BillGenerate updateBill)
+        {
+            var existingBill = await _dbContext.BillGenerates.FindAsync(updateBill.BillingID);
+
+            if (existingBill != null)
+            {
+                // Update the properties of the existing member with the new values
+                existingBill.ElectricityBill = updateBill.ElectricityBill;
+                existingBill.GasBill = updateBill.GasBill;
+                existingBill.ServiceCharge = updateBill.ServiceCharge;
+                existingBill.StatusId = updateBill.StatusId;
+
+
+
+
+                // Use UpdateAsync instead of Update
+                _dbContext.BillGenerates.Update(existingBill);
+                // Save the changes to the database
+                await _dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                throw new InvalidOperationException("Member not found");
+            }
+        
 
     }
+
+}
 }

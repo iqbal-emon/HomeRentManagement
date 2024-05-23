@@ -4,20 +4,19 @@
 @inject UserService userservice;
 @inject IJSRuntime js
 @inject UserIdDecrypt useriddecrypt
-<h3>BillGenerateComponent</h3>
+
 
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between">
-        <h3>Unit Details</h3>
-        <button class="btn btn-primary" @onclick="showModel">Add Unit</button>
+        <h3>Bill Generate</h3>
+        <button class="btn btn-primary" @onclick="showModel">Add Bill</button>
     </div>
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Unit Name</th>
-                  
+                    <th>Floot Name</th>
                     <th>Floor</th>
                     <th>Unit Name</th>
                     <th>Rent</th>
@@ -42,9 +41,20 @@
                             <td>@Bge.Tenant?.Unit.Rent</td>
                             <td>@Bge.ElectricityBill</td>
                             <td>@Bge.GasBill</td>
-
                             <td>@Bge.ServiceCharge</td>
+                            <td>
+                                @if (Bge.StatusId == 3)
+                                {
 
+                                    <button disabled class="btn btn-danger btn-sm mr-3">Delete</button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-danger btn-sm mr-3" @onclick="() =>DeleteBill(Bge.BillingID)">Delete</button>
+
+                                }
+                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdateBill(Bge.BillingID)">Edit</button>
+                            </td>
 
 
                         </tr>
@@ -91,6 +101,9 @@
                             }
                         </select>
                     </div>
+                  
+
+
 
                     <button type="submit" class="btn btn-primary mt-3">Submit</button>
                 </form>
@@ -99,9 +112,75 @@
     </div>
 </div>
 
+@if (updateBill != null)
+{
+    <div class="modal px-5" tabindex="-1" style="@EditModalStyle">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Bill</h5>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
+                </div>
+                <div class="modal-body">
+                    <form @onsubmit="UpdatedBill">
+                        <div class="form-group">
+                            <label for="ElectricityBill">Electricity Bill:</label>
+                            <input type="number" class="form-control" @bind="updateBill.ElectricityBill" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="GasBill">Gas Bill:</label>
+                            <input type="number" class="form-control" @bind="updateBill.GasBill" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="ServiceCharge">Service Charge:</label>
+                            <input type="number" class="form-control" @bind="updateBill.ServiceCharge" />
+                        </div>
+                        <div class="form-group">
+                            <label for="Tenant">Tenant:</label>
+                            <select class="form-control" @bind="updateBill.TenantID" required>
+                                @foreach (var unit in unitOptions)
+                                {
+                                    <option value="@unit.UnitID">@unit.unitName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="Status">Status:</label>
+                            <select class="form-control" @bind="updateBill.StatusId" required>
+                                @foreach (var status in statusOptions)
+                                {
+                                    <option value="@status.Id">@status.Name</option>
+                                }
+                            </select>
+                        </div>
+                       
+                        <button type="submit" class="btn btn-primary mt-3">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 
-
+<div class="modal" tabindex="-1" style="@DeleteModalStyle">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal Title</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="hideDelete"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Modal Content Goes Here -->
+                Are you sure you want to proceed?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="hideDelete">Cancel</button>
+                <button type="button" class="btn btn-danger" @onclick="DeleteConfirmed">Yes, Proceed</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -117,6 +196,7 @@
     bool EditModal = false;
     private int roleToDelete;
     private List<Unit> unitOptions = new List<Unit>();
+    private List<Status> statusOptions = new List<Status>();
 
 
     public string userId;
@@ -130,7 +210,7 @@
     }
 
     public BillGenerate bill = new BillGenerate();
-    private BillGenerate updateUnit = new BillGenerate();
+    private BillGenerate updateBill = new BillGenerate();
     public async void SaveBill()
     {
 
@@ -152,7 +232,7 @@
     }
     async Task showModel()
     {
-   
+        statusOptions = await userservice.GetStatusOptionsAsync();
 
         showModal = true;
     }
@@ -162,6 +242,81 @@
         bill = new BillGenerate();
 
     }
+    void hideDelete()
+    {
+        DeleteModel = false;
+    }
+
+    void hideUpdate()
+    {
+        EditModal = false;
+        bill = new BillGenerate();
+
+    }
+    async Task UpdateBill(int billId)
+    {
+        // Call the service method with the parsed memberId
+        var billMember = await billservice.GetBillById(billId);
+
+        EditModal = true;
+        if (billMember != null)
+        {
+            updateBill = new BillGenerate()
+                {
+                    BillingID = billMember.BillingID,
+                    ElectricityBill = billMember.ElectricityBill,
+                    GasBill = billMember.GasBill,
+                    ServiceCharge = billMember.ServiceCharge,
+
+
+                    StatusId = billMember.StatusId,
+
+                };
+            statusOptions = await userservice.GetStatusOptionsAsync();
+            unitOptions = await billservice.GetBillOptionsAsync(Int32.Parse(userId));
+
+            // Additional code to update the user, e.g., save to the database, if necessary
+        }
+        else
+        {
+            // Handle the case where the member with the given ID is not found
+            // For example, you can log the error, redirect the user to an error page, or display a message
+            // This depends on your application's requirements
+        }
+    }
+
+
+
+
+
+    protected async Task DeleteBill(int roleId)
+    {
+        roleToDelete = roleId;
+        DeleteModel = true;
+    }
+
+    private async Task DeleteConfirmed()
+    {
+        await billservice.deleteAsync(roleToDelete);
+        Bg = await billservice.GetAllBill(Int32.Parse(userId));
+
+
+
+
+        // Reset variables
+        roleToDelete = 0;
+        DeleteModel = false;
+    }
+
+    private async Task UpdatedBill()
+    {
+        EditModal = false;
+
+
+        await billservice.updatedateBill(updateBill);
+    }
     string ModalStyle => showModal ? "display: block;" : "display: none;";
+    string DeleteModalStyle => DeleteModel ? "display: block;" : "display: none;";
+    string EditModalStyle => EditModal ? "display: block;" : "display: none;";
 
 }
