@@ -2,7 +2,7 @@
 @using HomeRentManagement.Data;
 @inject UserService userservice;
 @inject IJSRuntime JS;
-
+@if(load==true){
 <div class="container mt-5">
         <div class="d-flex justify-content-between">
    <h3>HouseOwner</h3>
@@ -217,7 +217,12 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
+}
+else
+{
+   <h2>Loading..</h2>
+}
 @code {
     public List<User> Users;
     bool showModal = false;
@@ -227,11 +232,12 @@
     private List<Status> statusOptions = new List<Status>();
     bool mailCheck;
     bool updatedMailCheck;
+    public bool load = false;
 
     protected override async Task OnInitializedAsync()
     {
         Users = await userservice.GetActiveMembersAsync();
-
+        load = true;
     }
 
 

@@ -5,7 +5,7 @@
 
 
 
-
+@if (load==true){
 <div class="container mt-5">
     <div class="d-flex justify-content-between">
         <h3>RolesDetails</h3>
@@ -161,7 +161,12 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
+}
+else
+{
+    <h2>Loading..</h2>
+}
 @code {
     public List<Role> roles;
     bool showModal = false;
@@ -169,13 +174,13 @@
     bool EditModal = false;
     private int roleToDelete;
     private List<Status> statusOptions = new List<Status>();
-
+    public bool load = false;
 
 
     protected override async Task OnInitializedAsync()
     {
         roles = await roleservice.GetRoles();
-
+        load = true;
     }
 
 

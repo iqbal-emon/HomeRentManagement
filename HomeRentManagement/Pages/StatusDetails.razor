@@ -3,6 +3,7 @@
 @inject StatusService statusservice;
 @inject UserService userservice;
 
+@if(load==true){
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between">
@@ -105,8 +106,12 @@
             </div>
         </div>
     </div>
+    }
 }
-
+else
+{
+    <h2>Loading..</h2>
+}
 
 
 
@@ -143,13 +148,12 @@
     bool EditModal = false;
     private int roleToDelete;
     private List<Status> statusOptions = new List<Status>();
-
-
+    public bool load = false;  
 
     protected override async Task OnInitializedAsync()
     {
         statusss = await statusservice.GetStatus();
-
+        load = true;
     }
 
 
