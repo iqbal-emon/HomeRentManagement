@@ -8,14 +8,14 @@
 @inject IJSRuntime js
 
 <div class="row">
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border mt-5">
     @if (mailCheck == true)
     {
         <div class="alert alert-danger" role="alert">
-            Change the Email
+            Invalid Email & Password
         </div>
 
     }
-    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border mt-5">
         <div class="mb-3 text-center">
             <h3>LOGIN</h3>
         </div>
@@ -45,7 +45,9 @@
     {
         var memberAccount = UserService.GetByUserName(model.Name);
 
-        if (memberAccount == null || memberAccount.StatusId != 1 || (memberAccount.Password != model.Password && (memberAccount.Email != model.Name || memberAccount.Username != model.Name)))
+        if (memberAccount == null || memberAccount.StatusId != 1 ||
+     (memberAccount.Password != model.Password ||
+     (memberAccount.Email != model.Name && memberAccount.Username != model.Name)))
         {
             mailCheck = true;
             return;
