@@ -1,4 +1,4 @@
-﻿@page "/BillDetails/{Id}"
+﻿@page "/BillGenerate/{Id}"
 @using HomeRentManagement.Data;
 
 @inject BillGenerateService billservice;
@@ -110,6 +110,10 @@
           <div class="col">Unit Name:</div>
           <div class="col text-end" id="tenant_address">@Bill.Tenant?.Unit?.unitName</div>
         </div>
+                <div class="row mb-3">
+                    <div class="col">Month Name:</div>
+                    <div class="col text-end" id="tenant_address">@Bill.MonthName</div>
+                </div>
         <div class="row mb-3">
           <div class="col">Monthly Rent:</div>
           <div class="col text-end" id="monthly_rent">@Bill.Tenant?.Unit?.Rent ৳</div>

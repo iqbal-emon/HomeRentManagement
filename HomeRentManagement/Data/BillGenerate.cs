@@ -13,6 +13,7 @@ namespace HomeRentManagement.Data
         [Required]
         public decimal GasBill { get; set; }
         public decimal ServiceCharge { get; set; }
+        public string? MonthName { get; set; }
         public int TenantID { get; set; }
         public int StatusId { get; set; } = 1;
         [ForeignKey("StatusId")]

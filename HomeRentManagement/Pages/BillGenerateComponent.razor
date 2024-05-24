@@ -19,6 +19,7 @@
                 <tr>
                     <th>Tenant Name</th>
                     <th>Unit Name</th>
+                    <th>Month Name</th>
                     <th>Rent</th>
                     <th>Electricity Billl</th>
                     <th>Gas Bill</th>
@@ -39,6 +40,7 @@
                           
                             <td>@Bge.Tenant?.TenantName</td>
                             <td>@Bge.Tenant?.Unit.unitName</td>
+                            <td>@Bge.MonthName</td>
                           
                             <td>@Bge.Tenant?.Unit.Rent</td>
                             <td>@Bge.ElectricityBill</td>
@@ -99,6 +101,10 @@
                         <input type="number" class="form-control" @bind="bill.ServiceCharge" />
                     </div>
                     <div class="form-group">
+                        <label for="ServiceCharge">Month Name:</label>
+                        <input type="text" class="form-control" @bind="bill.MonthName" />
+                    </div>
+                    <div class="form-group">
                         <label for="Unit Name">Unit Name:</label>
                         <select class="form-control" @bind="newUnit" required>
                             @foreach (var unit in unitOptions)
@@ -140,6 +146,10 @@
                         <div class="form-group">
                             <label for="ServiceCharge">Service Charge:</label>
                             <input type="number" class="form-control" @bind="updateBill.ServiceCharge" />
+                        </div>
+                        <div class="form-group">
+                            <label for="ServiceCharge">Month Name:</label>
+                            <input type="text" class="form-control" @bind="updateBill.MonthName" />
                         </div>
                         <div class="form-group">
                             <label for="Tenant">Tenant:</label>
@@ -277,7 +287,7 @@
                     ElectricityBill = billMember.ElectricityBill,
                     GasBill = billMember.GasBill,
                     ServiceCharge = billMember.ServiceCharge,
-                    
+                    MonthName=billMember.MonthName,
 
 
                     StatusId = billMember.StatusId,
@@ -329,7 +339,7 @@
     private void DetailsRent(int rentId)
     {
         // Navigate to the desired page
-        NavigationManager.NavigateTo($"./BillDetails/{rentId}");
+        NavigationManager.NavigateTo($"./BillGenerate/{rentId}");
     }
     string ModalStyle => showModal ? "display: block;" : "display: none;";
     string DeleteModalStyle => DeleteModel ? "display: block;" : "display: none;";

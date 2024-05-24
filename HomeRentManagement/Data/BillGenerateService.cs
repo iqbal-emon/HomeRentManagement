@@ -75,6 +75,7 @@ namespace HomeRentManagement.Data
                 existingBill.ServiceCharge = updateBill.ServiceCharge;
                 existingBill.TenantID = tenantTo.TenantID;
                 existingBill.StatusId = updateBill.StatusId;
+                existingBill.MonthName = updateBill.MonthName;
                existingBill.TotalRent=(updateBill.ElectricityBill+updateBill.GasBill+updateBill.ServiceCharge+tenantTo.Unit.Rent);
 
 
