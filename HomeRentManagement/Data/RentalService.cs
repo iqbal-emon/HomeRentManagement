@@ -14,6 +14,14 @@ namespace HomeRentManagement.Data
         {
             return await _dbContext.Rentals.Include(rental =>rental.Tenant.Unit).Where(rental =>rental.Tenant.OwnerId == userId).ToListAsync();
         }
+
+        
+
+
+             public async Task<List<BillGenerate>> GetTotal(int userId)
+        {
+            return await _dbContext.BillGenerates.Where(rental => rental.Tenant.OwnerId == userId).ToListAsync();
+        }
         public async Task AddRental(Rental rent, int tenant)
         {
   
@@ -57,7 +65,7 @@ namespace HomeRentManagement.Data
             {
                 // Update the properties of the existing member with the new values
                 existingRent.totalRent = updateRent.totalRent;
-           
+           existingRent.TenantID=updateRent.TenantID;
 
                 existingRent.RentDate = updateRent.RentDate;
                 

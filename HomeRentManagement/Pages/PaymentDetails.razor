@@ -21,6 +21,7 @@
 
                     <th>Unit Name</th>
                     <th>Total Rent</th>
+                    <th>Paid Status</th>
                     <th>Action</th>
 
 
@@ -39,8 +40,24 @@
                             <td>@re.Tenant?.Unit.unitName</td>
 
                             <td>@re.totalRent</td>
-                         
-                          
+                            @{
+                                bool paid = false;
+                            }
+                            @foreach(var b in bill)
+                            {
+                                
+                                if (b.TenantID==re.TenantID && b.TotalRent <= re.totalRent)
+                                {
+                                    paid = true;
+                                    <td >Paid</td>
+                                    break;
+                                }
+                            }
+                            @if (paid == false)
+                            {
+                                <td>Unpaid</td>
+                            }
+
                             <td>
                                 @if (re.StatusId == 3)
                                 {
@@ -180,9 +197,11 @@
     bool DeleteModel = false;
     bool EditModal = false;
     private int roleToDelete;
+
     private List<Tenant> unitOptions = new List<Tenant>();
     private List<Status> statusOptions = new List<Status>();
-   
+    private List<BillGenerate> bill = new List<BillGenerate>();
+
 
 
     public string userId;
@@ -191,6 +210,7 @@
         userId = await useriddecrypt.GetDecryptedUserId();
         rent = await rentservice.GetAllRent(Int32.Parse(userId));
         unitOptions = await rentservice.GetRentOptionsAsync(Int32.Parse(userId));
+        bill = await rentservice.GetTotal(Int32.Parse(userId));
 
 
     }
