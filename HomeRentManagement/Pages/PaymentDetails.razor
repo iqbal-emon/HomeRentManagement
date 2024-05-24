@@ -84,7 +84,7 @@
                         <select class="form-control" @bind="newRent" required>
                             @foreach (var unit in unitOptions)
                             {
-                                <option value="@unit.UnitID">@unit.unitName</option>
+                                <option value="@unit.TenantID">@unit.TenantName</option>
                             }
                         </select>
                     </div>
@@ -121,10 +121,11 @@
                     <form @onsubmit="UpdatedRent">
                         <div class="form-group">
                             <label for="Tenant">Tenant:</label>
-                            <select class="form-control" @bind="@newUnitId" required>
+                            <select class="form-control" @bind="updateRent.TenantID" required>
+
                                 @foreach (var unit in unitOptions)
                                 {
-                                    <option value="@unit.UnitID">@unit.unitName</option>
+                                    <option value="@unit.TenantID">@unit.TenantName</option>
                                 }
                             </select>
                         </div>
@@ -179,7 +180,7 @@
     bool DeleteModel = false;
     bool EditModal = false;
     private int roleToDelete;
-    private List<Unit> unitOptions = new List<Unit>();
+    private List<Tenant> unitOptions = new List<Tenant>();
     private List<Status> statusOptions = new List<Status>();
    
 
@@ -204,7 +205,7 @@
 
         if (newRent == 0)
         {
-            newRent = unitOptions[0].UnitID;
+            newRent = unitOptions[0].TenantID;
         }
 
       
@@ -248,7 +249,7 @@
     {
         // Call the service method with the parsed memberId
         var billMember = await rentservice.GetRentById(rentId);
-        newUnitId = billMember.Tenant.Unit.UnitID;
+       
 
         EditModal = true;
         if (billMember != null)
@@ -256,6 +257,7 @@
             updateRent = new Rental()
                 {
                     RentID = billMember.RentID,
+                    TenantID=billMember.TenantID,
                     totalRent = billMember.totalRent,
                   RentDate=billMember.RentDate,
                    

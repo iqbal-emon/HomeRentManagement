@@ -14,18 +14,18 @@ namespace HomeRentManagement.Data
         {
             return await _dbContext.Rentals.Include(rental =>rental.Tenant.Unit).Where(rental =>rental.Tenant.OwnerId == userId).ToListAsync();
         }
-        public async Task AddRental(Rental rent, int unitId)
+        public async Task AddRental(Rental rent, int tenant)
         {
-            var tenantTo = await _dbContext.Tenants.FirstOrDefaultAsync(tenant => tenant.UnitID == unitId);
-            rent.TenantID = tenantTo.TenantID;
+  
+            rent.TenantID = tenant;
             _dbContext.Rentals.Add(rent);
             await _dbContext.SaveChangesAsync();
         }
 
 
-        public async Task<List<Unit>> GetRentOptionsAsync(int userId)
+        public async Task<List<Tenant>> GetRentOptionsAsync(int userId)
         {
-            return await _dbContext.Units.Where(unit => unit.OwnerId == userId).ToListAsync();
+            return await _dbContext.Tenants.Where(tenant => tenant.OwnerId == userId).ToListAsync();
         }
         public async Task<bool> deleteAsync(int rentToDelete)
         {
@@ -60,7 +60,7 @@ namespace HomeRentManagement.Data
            
 
                 existingRent.RentDate = updateRent.RentDate;
-                existingRent.TenantID = tenantTo.TenantID;
+                
                 
 
                 // Use UpdateAsync instead of Update
