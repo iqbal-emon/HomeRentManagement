@@ -7,7 +7,6 @@
 @inject UserIdDecrypt useriddecrypt
 
 
-
 <div class="container mt-5">
     <div class="d-flex justify-content-between">
         <h3>Rental Details</h3>
@@ -20,7 +19,9 @@
                     <th>Tenant Name</th>
 
                     <th>Unit Name</th>
-                    <th>Total Rent</th>
+                    <th>Total Paid</th>
+                 
+
                     <th>Paid Status</th>
                     <th>Action</th>
 
@@ -70,6 +71,7 @@
 
                                 }
                                 <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdatedRent(re.RentID)">Edit</button>
+
                             </td>
 
 
@@ -328,6 +330,7 @@
 
         await rentservice.updatedateRent(updateRent, newUnitId);
     }
+   
     string ModalStyle => showModal ? "display: block;" : "display: none;";
     string DeleteModalStyle => DeleteModel ? "display: block;" : "display: none;";
     string EditModalStyle => EditModal ? "display: block;" : "display: none;";

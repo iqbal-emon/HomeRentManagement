@@ -4,6 +4,7 @@
 @inject UserService userservice;
 @inject IJSRuntime js
 @inject UserIdDecrypt useriddecrypt
+@inject NavigationManager NavigationManager
 
 
 
@@ -57,6 +58,8 @@
 
                                 }
                                 <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdateBill(Bge.BillingID,Bge.Tenant.UnitID)">Edit</button>
+                                <button class="btn btn-secondary btn-sm m-2" @onclick="()=>DetailsRent(Bge.BillingID)">Details</button>
+
                             </td>
 
 
@@ -322,6 +325,11 @@
 
 
         await billservice.updatedateBill(updateBill, newUnitId);
+    }
+    private void DetailsRent(int rentId)
+    {
+        // Navigate to the desired page
+        NavigationManager.NavigateTo($"./BillDetails/{rentId}");
     }
     string ModalStyle => showModal ? "display: block;" : "display: none;";
     string DeleteModalStyle => DeleteModel ? "display: block;" : "display: none;";

@@ -56,6 +56,11 @@ namespace HomeRentManagement.Data
         {
             return await _dbContext.BillGenerates.FirstOrDefaultAsync(h => h.BillingID == billId);
         }
+        public async Task<BillGenerate> GetBillDetailsByIdAsync(int billId)
+        {
+            return await _dbContext.BillGenerates.FirstOrDefaultAsync(h => h.BillingID == billId);
+        }
+       
         public async Task updatedateBill(BillGenerate updateBill,int UnitId)
         {
             var tenantTo = await _dbContext.Tenants.FirstOrDefaultAsync(tenant => tenant.UnitID == UnitId);
