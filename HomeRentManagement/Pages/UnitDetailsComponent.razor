@@ -38,7 +38,7 @@
                     @foreach (var unit in units)
                     {
                         <tr>
-                            <td>@unit.House.HouseName</td>
+                            <td>@unit.House?.HouseName</td>
 
                             <td>@unit.unitName</td>
                             <td>@unit.BedRoom</td>
