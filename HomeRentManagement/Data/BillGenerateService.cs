@@ -28,7 +28,7 @@ namespace HomeRentManagement.Data
         public async Task<List<Tenant>> GetBillOptionsAsync(int userId)
         {
             return await _dbContext.Tenants
-                .Where(unit => unit.OwnerId == userId)
+                .Where(unit => unit.OwnerId == userId && unit.StatusId != 3)
                 
                 .ToListAsync();
         }

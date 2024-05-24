@@ -17,7 +17,7 @@ namespace HomeRentManagement.Data
         }
         public async Task<List<Unit>> GetUnitAllUnit(int userId,int houseId)
         {
-            return await _dbContext.Units.Where(unit => unit.OwnerId == userId&&unit.HomeId== houseId).ToListAsync();
+            return await _dbContext.Units.Where(unit => unit.OwnerId == userId&&unit.HomeId== houseId&&unit.StatusId!=3).ToListAsync();
         }
 
         public async Task AddUnit(Unit unit,int newHome)
@@ -50,7 +50,7 @@ namespace HomeRentManagement.Data
         }
         public async Task<List<House>> getAllHouse(int userId)
         {
-            return await _dbContext.Houses.Where(house=>house.OwnerId== userId).ToListAsync();
+            return await _dbContext.Houses.Where(house=>house.OwnerId== userId&&house.StatusId!=3).ToListAsync();
         }
         public async Task updatedateUnit(Unit updateUnit,int newHome)
         {

@@ -33,7 +33,7 @@ namespace HomeRentManagement.Data
 
         public async Task<List<Tenant>> GetRentOptionsAsync(int userId)
         {
-            return await _dbContext.Tenants.Where(tenant => tenant.OwnerId == userId).ToListAsync();
+            return await _dbContext.Tenants.Where(tenant => tenant.OwnerId == userId && tenant.StatusId != 3).ToListAsync();
         }
         public async Task<bool> deleteAsync(int rentToDelete)
         {
