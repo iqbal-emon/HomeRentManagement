@@ -6,7 +6,7 @@
 @inject IJSRuntime js
 @inject UserIdDecrypt useriddecrypt
 
-
+@if (load == load){
 <div class="container mt-5">
     <div class="d-flex justify-content-between">
         <h3>Rental Details</h3>
@@ -184,9 +184,13 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
 
-
+}
+else
+{
+    <h2>Loading..</h2>
+}
 
 
 
@@ -199,6 +203,7 @@
     bool DeleteModel = false;
     bool EditModal = false;
     private int roleToDelete;
+    public bool load = false;
 
     private List<Tenant> unitOptions = new List<Tenant>();
     private List<Status> statusOptions = new List<Status>();
@@ -213,7 +218,7 @@
         rent = await rentservice.GetAllRent(Int32.Parse(userId));
         unitOptions = await rentservice.GetRentOptionsAsync(Int32.Parse(userId));
         bill = await rentservice.GetTotal(Int32.Parse(userId));
-
+        load = true;
 
     }
 

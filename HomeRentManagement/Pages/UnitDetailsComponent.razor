@@ -8,7 +8,7 @@
 
 
 
-
+@if (load==true){
 <div class="container mt-5">
     <div class="d-flex justify-content-between">
         <h3>Unit Details</h3>
@@ -193,10 +193,14 @@
             </div>
         </div>
     </div>
+    }
+
+
 }
-
-
-
+else
+{
+    <h2>Loding..</h2>
+}
 
 
 
@@ -234,12 +238,14 @@
     private List<House> allhome = new List<House>();
     int updateHome;
     public string userId;
+    public bool load = false;
+
     protected override async Task OnInitializedAsync()
     {
         userId = await useriddecrypt.GetDecryptedUserId();
         units = await unitservice.GetUnit(Int32.Parse(userId));
         allhome = await unitservice.getAllHouse(Int32.Parse(userId));
-
+        load = true;
     }
 
 

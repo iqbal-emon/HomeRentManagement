@@ -7,7 +7,8 @@
 @inject IJSRuntime js
 @inject UserIdDecrypt useriddecrypt
 
-
+@if (load == true)
+{ 
 <div class="container mt-5">
     <div class="d-flex justify-content-between">
         <h3>Unit Details</h3>
@@ -230,6 +231,11 @@
         </div>
     </div>
 </div>
+}
+else
+{
+<h2>Loding..</h2>
+}
 @code {
     public List<Tenant> tenants;
     public int newHouse;
@@ -240,6 +246,7 @@
     private List<Status> statusOptions = new List<Status>();
     private List<Unit> unitOption = new List<Unit>();
     private List<House> houseOption = new List<House>();
+    public bool load = false;
 
     public string userId;
     protected override async Task OnInitializedAsync()
@@ -249,7 +256,7 @@
 
         houseOption = await unitservice.getAllHouse(Int32.Parse(userId));
         unitOption = await unitservice.GetUnitAllUnit(Int32.Parse(userId), houseOption[0].HouseID);
-
+        load = true;
 
     }
     private int selectedHouseId;
