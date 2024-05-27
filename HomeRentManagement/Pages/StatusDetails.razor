@@ -3,7 +3,7 @@
 @inject StatusService statusservice;
 @inject UserService userservice;
 
-@if(load==true){
+
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between">
@@ -44,7 +44,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="6">No members found</td>
+                        <td colspan="6">No Status Found</td>
                     </tr>
                 }
             </tbody>
@@ -107,11 +107,6 @@
         </div>
     </div>
     }
-}
-else
-{
-    <h2>Loading..</h2>
-}
 
 
 

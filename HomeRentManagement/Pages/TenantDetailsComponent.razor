@@ -7,8 +7,7 @@
 @inject IJSRuntime js
 @inject UserIdDecrypt useriddecrypt
 
-@if (load == true)
-{ 
+
 <div class="container mt-5">
     <div class="d-flex justify-content-between">
         <h3>Unit Details</h3>
@@ -64,7 +63,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="6">No members found</td>
+                        <td colspan="6">No Tenant found</td>
                     </tr>
                 }
             </tbody>
@@ -231,11 +230,7 @@
         </div>
     </div>
 </div>
-}
-else
-{
-<h2>Loding..</h2>
-}
+
 @code {
     public List<Tenant> tenants;
     public int newHouse;
