@@ -7,8 +7,7 @@
 @inject NavigationManager NavigationManager
 
 
-@if (load == true)
-{
+
     <div class="container mt-5">
         <div class="d-flex justify-content-between">
             <h3>Bill Generate</h3>
@@ -178,11 +177,7 @@
             </div>
         </div>
     }
-}
-else
-{
-    <h2>Loading..</h2>
-}
+
 
 <div class="modal" tabindex="-1" style="@DeleteModalStyle">
     <div class="modal-dialog">
@@ -227,7 +222,7 @@ else
         userId = await useriddecrypt.GetDecryptedUserId();
         Bg = await billservice.GetAllBill(Int32.Parse(userId));
         unitOptions = await billservice.GetBillOptionsAsync(Int32.Parse(userId));
-        load = true;
+    
 
     }
 
