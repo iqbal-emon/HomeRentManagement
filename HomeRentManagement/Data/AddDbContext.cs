@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Collections.Generic;
 
 namespace HomeRentManagement.Data
@@ -14,8 +15,18 @@ namespace HomeRentManagement.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DbConnectionString"));
+            string connectionString = _configuration.GetConnectionString("DbConnectionString");
+
+            optionsBuilder.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
+            {
+                sqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 5, // Maximum number of retries
+                    maxRetryDelay: TimeSpan.FromSeconds(30), // Maximum delay between retries
+                    errorNumbersToAdd: null); // SQL error numbers to retry on
+            })
+            .ConfigureWarnings(warnings => warnings.Throw()); // Optional: Configure warnings
         }
+
 
         public DbSet<User> Users { get; set; }
         public DbSet<House> Houses { get; set; }
