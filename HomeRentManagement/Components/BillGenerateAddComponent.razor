@@ -1,0 +1,59 @@
+﻿@using HomeRentManagement.Data;
+
+<div class="modal px-5" tabindex="-1" style="display: block;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Bill</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="HideModal"></button>
+            </div>
+            <div class="modal-body">
+                <form @onsubmit="SaveBill">
+                    <div class="form-group">
+                        <label for="ElectricityBill">Electricity Bill:</label>
+                        <input type="number" class="form-control" @bind="bill.ElectricityBill" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="GasBill">Gas Bill:</label>
+                        <input type="number" class="form-control" @bind="bill.GasBill" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="ServiceCharge">Service Charge:</label>
+                        <input type="number" class="form-control" @bind="bill.ServiceCharge" />
+                    </div>
+                    <div class="form-group">
+                        <label for="MonthName">Month Name:</label>
+                        <input type="text" class="form-control" @bind="bill.MonthName" />
+                    </div>
+                    <div class="form-group">
+                        <label for="UnitName">Unit Name:</label>
+                        <select class="form-control" @bind="newUnit" required>
+                            @foreach (var unit in unitOptions)
+                            {
+                                <option value="@unit.UnitID">@unit.Unit?.unitName</option>
+                            }
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+   
+
+    [Parameter]
+    public EventCallback HideModal { get; set; }
+
+    [Parameter]
+    public EventCallback SaveBill { get; set; }
+    [Parameter]
+    public BillGenerate bill { get; set; }
+
+    [Parameter]
+    public List<Tenant> unitOptions { get; set; }
+
+    private string newUnit;
+}
