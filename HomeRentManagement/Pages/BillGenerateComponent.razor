@@ -1,6 +1,5 @@
 ﻿@page "/BillGenerate"
 @using HomeRentManagement.Data;
-@using HomeRentManagement.Components.BililGenerate;
 @inject BillGenerateService billservice;
 @inject UserService userservice;
 @inject IJSRuntime js
@@ -9,100 +8,194 @@
 
 
 
-    <div class="container mt-5">
-        <div class="d-flex justify-content-between">
-            <h3>Bill Generate</h3>
-            <button class="btn btn-primary" @onclick="showModel">Add Bill</button>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Tenant Name</th>
-                        <th>Unit Name</th>
-                        <th>Month Name</th>
-                        <th>Rent</th>
-                        <th>Electricity Billl</th>
-                        <th>Gas Bill</th>
-                        <th>Service Charge</th>
-                        <th>Total</th>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between">
+        <h3>Bill Generate</h3>
+        <button class="btn btn-primary" @onclick="showModel">Add Bill</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tenant Name</th>
+                    <th>Unit Name</th>
+                    <th>Month Name</th>
+                    <th>Rent</th>
+                    <th>Electricity Billl</th>
+                    <th>Gas Bill</th>
+                    <th>Service Charge</th>
+                    <th>Total</th>
 
-                        <th>Action</th>
-
-
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Bg != null && Bg.Any())
-                    {
-                        @foreach (var Bge in Bg)
-                        {
-                            <tr>
-
-                                <td>@Bge.Tenant?.TenantName</td>
-                                <td>@Bge.Tenant?.Unit?.unitName</td>
-                                <td>@Bge.MonthName</td>
-
-                                <td>@Bge.Tenant?.Unit?.Rent</td>
-                                <td>@Bge.ElectricityBill</td>
-                                <td>@Bge.GasBill</td>
-                                <td>@Bge.ServiceCharge</td>
-                                <td>@Bge.TotalRent</td>
-
-                                <td>
-                                    @if (Bge.StatusId == 3)
-                                    {
-
-                                        <button disabled class="btn btn-danger btn-sm mr-3">Delete</button>
-                                    }
-                                    else
-                                    {
-                                        <button class="btn btn-danger btn-sm mr-3" @onclick="() =>DeleteBill(Bge.BillingID)">Delete</button>
-
-                                    }
-                                    <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdateBill(Bge.BillingID,Bge.Tenant.UnitID)">Edit</button>
-                                    <button class="btn btn-secondary btn-sm m-2" @onclick="()=>DetailsRent(Bge.BillingID)">Details</button>
-
-                                </td>
+                    <th>Action</th>
 
 
-                            </tr>
-                        }
-                    }
-                    else
+                </tr>
+            </thead>
+            <tbody>
+                @if (Bg != null && Bg.Any())
+                {
+                    @foreach (var Bge in Bg)
                     {
                         <tr>
-                            <td colspan="6">No members found</td>
+
+                            <td>@Bge.Tenant?.TenantName</td>
+                            <td>@Bge.Tenant?.Unit?.unitName</td>
+                            <td>@Bge.MonthName</td>
+
+                            <td>@Bge.Tenant?.Unit?.Rent</td>
+                            <td>@Bge.ElectricityBill</td>
+                            <td>@Bge.GasBill</td>
+                            <td>@Bge.ServiceCharge</td>
+                            <td>@Bge.TotalRent</td>
+
+                            <td>
+                                @if (Bge.StatusId == 3)
+                                {
+
+                                    <button disabled class="btn btn-danger btn-sm mr-3">Delete</button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-danger btn-sm mr-3" @onclick="() =>DeleteBill(Bge.BillingID)">Delete</button>
+
+                                }
+                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdateBill(Bge.BillingID,Bge.Tenant.UnitID)">Edit</button>
+                                <button class="btn btn-secondary btn-sm m-2" @onclick="()=>DetailsRent(Bge.BillingID)">Details</button>
+
+                            </td>
+
+
                         </tr>
                     }
-                </tbody>
-            </table>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6">No members found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal px-5" tabindex="-1" style="@ModalStyle">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Bill</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="HideModal"></button>
+            </div>
+            <div class="modal-body">
+                <form @onsubmit="SaveBill">
+                    <div class="form-group">
+                        <label for="ElectricityBill">Electricity Bill:</label>
+                        <input type="number" class="form-control" @bind="bill.ElectricityBill" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="GasBill">Gas Bill:</label>
+                        <input type="number" class="form-control" @bind="bill.GasBill" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="ServiceCharge">Service Charge:</label>
+                        <input type="number" class="form-control" @bind="bill.ServiceCharge" />
+                    </div>
+                    <div class="form-group">
+                        <label for="ServiceCharge">Month Name:</label>
+                        <input type="text" class="form-control" @bind="bill.MonthName" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Unit Name">Unit Name:</label>
+                        <select class="form-control" @bind="newUnit" required>
+                            @foreach (var unit in unitOptions)
+                            {
+                                <option value="@unit.UnitID">@unit.Unit?.unitName</option>
+                            }
+                        </select>
+                    </div>
+
+
+
+
+                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                </form>
+            </div>
         </div>
     </div>
+</div>
 
-    <div class="modal px-5" tabindex="-1" style="@ModalStyle">
-       <BillGenerateAddComponent NewHomeChanged="OnNewHomeChanged"
-    HideModal="HideModal" 
-    SaveBill="SaveBill" 
-    bill="bill"
-     unitOptions="unitOptions" />
-    </div>
+@if (updateBill != null)
+{
+    <div class="modal px-5" tabindex="-1" style="@EditModalStyle">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Bill</h5>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
+                </div>
+                <div class="modal-body">
+                    <form @onsubmit="UpdatedBill">
+                        <div class="form-group">
+                            <label for="ElectricityBill">Electricity Bill:</label>
+                            <input type="number" class="form-control" @bind="updateBill.ElectricityBill" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="GasBill">Gas Bill:</label>
+                            <input type="number" class="form-control" @bind="updateBill.GasBill" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="ServiceCharge">Service Charge:</label>
+                            <input type="number" class="form-control" @bind="updateBill.ServiceCharge" />
+                        </div>
+                        <div class="form-group">
+                            <label for="ServiceCharge">Month Name:</label>
+                            <input type="text" class="form-control" @bind="updateBill.MonthName" />
+                        </div>
+                        <div class="form-group">
+                            <label for="Tenant">Tenant:</label>
+                            <select class="form-control" @bind="newUnitId" required>
+                                @foreach (var unit in unitOptions)
+                                {
+                                    <option value="@unit.UnitID">@unit.Unit?.unitName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="Status">Status:</label>
+                            <select class="form-control" @bind="updateBill.StatusId" required>
+                                @foreach (var status in statusOptions)
+                                {
+                                    <option value="@status.Id">@status.Name</option>
+                                }
+                            </select>
+                        </div>
 
-    @if (updateBill != null)
-    {
-        <div class="modal px-5" tabindex="-1" style="@EditModalStyle">
-        <BillGenerateUpdateComponent hideUpdate="hideUpdate"
-                                     UpdatedBill="UpdatedBill"
-         updateBill="updateBill"
-                                    unitId="newUnitId" statusOptions="statusOptions" unitOptions="unitOptions" />
-
-
+                        <button type="submit" class="btn btn-primary mt-3">Update</button>
+                    </form>
+                </div>
+            </div>
         </div>
-    }
+    </div>
+}
 
 
 <div class="modal" tabindex="-1" style="@DeleteModalStyle">
-   <DeleteComponent hideDelete="hideDelete" DeleteConfirmed="DeleteConfirmed" />
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal Title</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="hideDelete"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Modal Content Goes Here -->
+                Are you sure you want to proceed?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="hideDelete">Cancel</button>
+                <button type="button" class="btn btn-danger" @onclick="DeleteConfirmed">Yes, Proceed</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -112,15 +205,15 @@
 
 
 @code {
-    public List<BillGenerate> Bg=new List<BillGenerate>();
+    public List<BillGenerate> Bg = new List<BillGenerate>();
     int newUnit;
     bool showModal = false;
     bool DeleteModel = false;
     bool EditModal = false;
     private int roleToDelete;
-    private List<Tenant>? unitOptions = new List<Tenant>();
+    private List<Tenant> unitOptions = new List<Tenant>();
     public bool load = false;
-    public List<Status> statusOptions = new List<Status>();
+    private List<Status> statusOptions = new List<Status>();
 
 
     public string userId;
@@ -129,7 +222,6 @@
         userId = await useriddecrypt.GetDecryptedUserId();
         Bg = await billservice.GetAllBill(Int32.Parse(userId));
         unitOptions = await billservice.GetBillOptionsAsync(Int32.Parse(userId));
-        statusOptions = await userservice.GetStatusOptionsAsync();
 
 
     }
@@ -158,6 +250,7 @@
     }
     async Task showModel()
     {
+        statusOptions = await userservice.GetStatusOptionsAsync();
 
         showModal = true;
     }
@@ -178,13 +271,8 @@
         bill = new BillGenerate();
 
     }
-    private void OnNewHomeChanged(int newHomeValue)
-    {
-        newUnit = newHomeValue;
-    }
-
     public int newUnitId;
-    async Task UpdateBill(int billId,int unitId)
+    async Task UpdateBill(int billId, int unitId)
     {
         // Call the service method with the parsed memberId
         var billMember = await billservice.GetBillById(billId);
@@ -199,12 +287,13 @@
                     ElectricityBill = billMember.ElectricityBill,
                     GasBill = billMember.GasBill,
                     ServiceCharge = billMember.ServiceCharge,
-                    MonthName=billMember.MonthName,
+                    MonthName = billMember.MonthName,
 
 
                     StatusId = billMember.StatusId,
 
                 };
+            statusOptions = await userservice.GetStatusOptionsAsync();
             unitOptions = await billservice.GetBillOptionsAsync(Int32.Parse(userId));
 
             // Additional code to update the user, e.g., save to the database, if necessary
