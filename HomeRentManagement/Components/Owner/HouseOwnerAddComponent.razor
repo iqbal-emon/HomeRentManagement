@@ -1,0 +1,80 @@
+﻿@using HomeRentManagement.Data;
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Add Home Owner</h5>
+            <button type="button" class="btn-close" aria-label="Close" @onclick="HideModal"></button>
+        </div>
+        <div class="modal-body">
+            <EditForm Model="@owner" OnValidSubmit="@SaveMember">
+                @if (mailCheck == true)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        Change the Email
+                    </div>
+
+                }
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-group">
+                    <label for="UserName">User Name:</label>
+                    <InputText id="UserName" class="form-control" @bind-Value="owner.Username" />
+                    <ValidationMessage For="@(() => owner.Username)" />
+                </div>
+                <div class="form-group">
+                    <label for="Password">Password:</label>
+                    <InputText id="Password" class="form-control" @bind-Value="owner.Password" />
+                    <ValidationMessage For="@(() => owner.Password)" />
+                </div>
+                <div class="form-group">
+                    <label for="Phone">Phone:</label>
+                    <InputText id="Phone" class="form-control" @bind-Value="owner.Phone" />
+                    <ValidationMessage For="@(() => owner.Phone)" />
+                </div>
+                <div class="form-group">
+                    <label for="Email">Email:</label>
+                    <InputText id="Email" type="email" class="form-control" @bind-Value="owner.Email" />
+                    <ValidationMessage For="@(() => owner.Email)" />
+                </div>
+                <div class="form-group">
+                    <label for="Address">Address:</label>
+                    <InputText id="Address" class="form-control" @bind-Value="owner.Address" />
+                    <ValidationMessage For="@(() => owner.Address)" />
+                </div>
+                <div class="form-group">
+                    <label for="Status">Status:</label>
+                    <InputSelect id="Status" class="form-control" @bind-Value="owner.StatusId">
+                        @foreach (var status in statusOptions)
+                        {
+                            <option value="@status.Id">@status.Name</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => owner.StatusId)" />
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+            </EditForm>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public User owner{ get; set; }
+    
+       [Parameter]
+    public bool mailCheck { get; set; }
+    [Parameter]
+    public EventCallback SaveMember{ get; set; }
+    
+      [Parameter]
+    public EventCallback HideModal { get; set; }
+    [Parameter]
+    public List<Status> statusOptions{ get; set; }
+
+
+}

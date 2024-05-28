@@ -2,6 +2,8 @@
 @using HomeRentManagement.Data;
 @inject UserService userservice;
 @inject IJSRuntime JS;
+@using HomeRentManagement.Components.Owner;
+@using HomeRentManagement.Components;
 @if(load==true){
 <div class="container mt-5">
         <div class="d-flex justify-content-between">
@@ -61,132 +63,15 @@
     </div>
 </div>
 <div class="modal px-5" tabindex="-1" style="@ModalStyle">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add Home Owner</h5>
-                <button type="button" class="btn-close" aria-label="Close" @onclick="HideModal"></button>
-            </div>
-            <div class="modal-body">
-               <EditForm Model="@owner" OnValidSubmit="@SaveMember">
-                    @if (mailCheck == true)
-                    {
-                        <div class="alert alert-danger" role="alert">
-                            Change the Email
-                        </div>
-
-                    }
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-
-    <div class="form-group">
-        <label for="UserName">User Name:</label>
-        <InputText id="UserName" class="form-control" @bind-Value="owner.Username" />
-        <ValidationMessage For="@(() => owner.Username)" />
-    </div>
-    <div class="form-group">
-        <label for="Password">Password:</label>
-        <InputText id="Password" class="form-control" @bind-Value="owner.Password" />
-        <ValidationMessage For="@(() => owner.Password)" />
-    </div>
-    <div class="form-group">
-        <label for="Phone">Phone:</label>
-        <InputText id="Phone" class="form-control" @bind-Value="owner.Phone" />
-        <ValidationMessage For="@(() => owner.Phone)" />
-    </div>
-    <div class="form-group">
-        <label for="Email">Email:</label>
-        <InputText id="Email" type="email" class="form-control" @bind-Value="owner.Email" />
-        <ValidationMessage For="@(() => owner.Email)" />
-    </div>
-    <div class="form-group">
-        <label for="Address">Address:</label>
-        <InputText id="Address" class="form-control" @bind-Value="owner.Address" />
-        <ValidationMessage For="@(() => owner.Address)" />
-    </div>
-    <div class="form-group">
-        <label for="Status">Status:</label>
-        <InputSelect id="Status" class="form-control" @bind-Value="owner.StatusId">
-            @foreach (var status in statusOptions)
-            {
-                <option value="@status.Id">@status.Name</option>
-            }
-        </InputSelect>
-        <ValidationMessage For="@(() => owner.StatusId)" />
-    </div>
-    <button type="submit" class="btn btn-primary mt-3">Submit</button>
-</EditForm>
-
-            </div>
-
-         
-        </div>
-    </div>
+        <HouseOwnerAddComponent HideModal="HideModal" mailCheck="mailCheck" owner="owner" SaveMember="SaveMember" statusOptions="statusOptions"  />
 </div>
 
 @if (updateUser != null )
 {
     <div class="modal px-5" tabindex="-1" style="@EditModalStyle">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Update Home Owner</h5>
-                    <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
-                </div>
-                <div class="modal-header">
-                    <h5 class="modal-title">Update Home Owner</h5>
-                    <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
-                </div>
-                <div class="modal-body">
-                    <EditForm Model="@updateUser" OnValidSubmit="@UpdateHomeOwner">
-                     
-                        <DataAnnotationsValidator />
-                        <ValidationSummary />
+            <HouseOwnerUpdateComponent hideUpdate="hideUpdate" mailCheck="mailCheck" updateUser="updateUser" UpdateHomeOwner="UpdateHomeOwner" statusOptions="statusOptions" />
 
-                        <div class="form-group">
-                            <label for="UserName">User Name:</label>
-                            <InputText id="UserName" class="form-control" @bind-Value="updateUser.Username" />
-                            <ValidationMessage For="@(() => updateUser.Username)" />
-                        </div>
-                        <div class="form-group">
-                            <label for="Password">Password:</label>
-                            <InputText id="Password" class="form-control" @bind-Value="updateUser.Password" />
-                            <ValidationMessage For="@(() => updateUser.Password)" />
-                        </div>
-                        <div class="form-group">
-                            <label for="Phone">Phone:</label>
-                            <InputText id="Phone" class="form-control" @bind-Value="updateUser.Phone" />
-                            <ValidationMessage For="@(() => updateUser.Phone)" />
-                        </div>
-                        <div class="form-group">
-                            <label for="Email">Email:</label>
-                            <InputText id="Email" type="email" class="form-control" @bind-Value="updateUser.Email" disabled />
-                            <ValidationMessage For="@(() => updateUser.Email)" />
-                        </div>
-                        <div class="form-group">
-                            <label for="Address">Address:</label>
-                            <InputText id="Address" class="form-control" @bind-Value="updateUser.Address" />
-                            <ValidationMessage For="@(() => updateUser.Address)" />
-                        </div>
-                        <div class="form-group">
-                            <label for="Status">Status:</label>
-                            <InputSelect id="Status" class="form-control" @bind-Value="updateUser.StatusId">
-                                @foreach (var status in statusOptions)
-                                {
-                                    <option value="@status.Id">@status.Name</option>
-                                }
-                            </InputSelect>
-                            <ValidationMessage For="@(() => updateUser.StatusId)" />
-                        </div>
-                        <button type="submit" class="btn btn-primary mt-3">Update</button>
-                    </EditForm>
-                </div>
-
-
-
-            </div>
         </div>
-    </div>
 }
 
 
@@ -201,22 +86,9 @@
 
 
 <div class="modal" tabindex="-1" style="@DeleteModalStyle">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Modal Title</h5>
-                <button type="button" class="btn-close" aria-label="Close" @onclick="hideDelete"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Modal Content Goes Here -->
-                Are you sure you want to proceed?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="hideDelete">Cancel</button>
-                <button type="button" class="btn btn-danger" @onclick="DeleteConfirmed">Yes, Proceed</button>
-            </div>
-        </div>
-    </div>
+     <div class="modal" tabindex="-1" style="@DeleteModalStyle">
+   <DeleteComponent hideDelete="hideDelete" DeleteConfirmed="DeleteConfirmed" />
+</div>
     </div>
 }
 else

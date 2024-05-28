@@ -1,0 +1,35 @@
+﻿@using HomeRentManagement.Data;
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Update Home Owner</h5>
+            <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
+        </div>
+        <div class="modal-body">
+            <form @onsubmit="UpdateRoles">
+                <div class="form-group">
+                    <label for="Title">Role Title:</label>
+                    <input type="text" class="form-control" @bind=@updateStatus.Name required />
+                </div>
+                <div class="form-group">
+                    <label for="ShortForm">ShortForm:</label>
+                    <input type="text" class="form-control" @bind=@updateStatus.ShorForm required />
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3">Update</button>
+            </form>
+        </div>
+
+
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public Status updateStatus { get; set; }
+    [Parameter]
+    public EventCallback UpdateRoles { get; set; }
+    [Parameter]
+    public EventCallback hideUpdate { get; set; }
+}

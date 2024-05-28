@@ -2,7 +2,7 @@
 @using HomeRentManagement.Data;
 @inject RoleService roleservice;
 @inject UserService userservice;
-
+@using HomeRentManagement.Components;
 
 
 @if (load==true){
@@ -144,24 +144,9 @@
 
 
 
-<div class="modal" tabindex="-1" style="@DeleteModalStyle">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Modal Title</h5>
-                <button type="button" class="btn-close" aria-label="Close" @onclick="hideDelete"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Modal Content Goes Here -->
-                Are you sure you want to proceed?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="hideDelete">Cancel</button>
-                <button type="button" class="btn btn-danger" @onclick="DeleteConfirmed">Yes, Proceed</button>
-            </div>
-        </div>
-    </div>
-    </div>
+ <div class="modal" tabindex="-1" style="@DeleteModalStyle">
+   <DeleteComponent hideDelete="hideDelete" DeleteConfirmed="DeleteConfirmed" />
+</div>
 }
 else
 {
