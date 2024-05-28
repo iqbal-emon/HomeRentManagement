@@ -20,7 +20,10 @@
 
                     <th>Unit Name</th>
                     <th>Total Paid</th>
-                 
+                        <th>Rent Date</th>
+
+                        <th>Rent Month</th>
+
 
                     <th>Paid Status</th>
                     <th>Action</th>
@@ -41,6 +44,10 @@
                             <td>@re.Tenant?.Unit.unitName</td>
 
                             <td>@re.totalRent</td>
+                                <td>@re.RentDate</td>
+
+                                <td>@re.RentMont</td>
+
                             @{
                                 bool paid = false;
                             }
@@ -113,7 +120,10 @@
                         <label for="TotalRent"> Total Rent:</label>
                         <input type="number" class="form-control" @bind="rental.totalRent" required />
                     </div>
-
+                        <div class="form-group">
+                            <label for="Rent Month"> Rent Month:</label>
+                            <input type="text" class="form-control" @bind="rental.RentMont" required />
+                        </div>
                     <div class="form-group">
                         <label for="rentdate">Rent Date:</label>
                         <input type="date" class="form-control" @bind="rental.RentDate" required />
@@ -152,6 +162,10 @@
                             <label for="TotalRent">Total Rent:</label>
                             <input type="number" class="form-control" @bind="updateRent.totalRent" required />
                         </div>
+                            <div class="form-group">
+                                <label for="Rent Month"> Rent Month:</label>
+                                <input type="text" class="form-control" @bind="updateRent.RentMont" required />
+                            </div>
                         <div class="form-group">
                             <label for="rendate">Rent Date:</label>
                             <input type="date" class="form-control" @bind="updateRent.RentDate" required />
@@ -287,6 +301,7 @@ else
                     TenantID=billMember.TenantID,
                     totalRent = billMember.totalRent,
                   RentDate=billMember.RentDate,
+                  RentMont=billMember.RentMont
                    
 
                 };

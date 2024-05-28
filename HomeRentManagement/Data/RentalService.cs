@@ -66,6 +66,8 @@ namespace HomeRentManagement.Data
                 // Update the properties of the existing member with the new values
                 existingRent.totalRent = updateRent.totalRent;
            existingRent.TenantID=updateRent.TenantID;
+                existingRent.RentMont = updateRent.RentMont;
+
 
                 existingRent.RentDate = updateRent.RentDate;
                 

@@ -7,6 +7,7 @@ namespace HomeRentManagement.Data
     {
         [Key]
         public int RentID { get; set; }
+        public string? RentMont { get; set; }
 
         public int TenantID { get; set; }
         [ForeignKey("TenantID")]
