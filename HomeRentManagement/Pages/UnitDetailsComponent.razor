@@ -79,13 +79,13 @@
 
 
 <div class="modal px-5" tabindex="-1" style="@ModalStyle">
-  <UnitAddComponent unit="unit" statusOptions="statusOptions" allhome="allhome" HideModal="HideModal" SaveUnit="SaveUnit"/>
+    <UnitAddComponent NewHomeChanged="OnNewHomeChanged" unit=" unit" statusOptions="statusOptions" allhome="allhome" HideModal="HideModal" SaveUnit="SaveUnit" />
 </div>
 
 @if (updateUnit != null)
 {
     <div class="modal px-5" tabindex="-1" style="@EditModalStyle">
-        <UnitUpdateComponent updateUnit="updateUnit" statusOptions="statusOptions" allhome="allhome" hideUpdate="hideUpdate" UpdateUnitBtn="UpdateUnitBtn" />
+        <UnitUpdateComponent  updateUnit="updateUnit" statusOptions="statusOptions" allhome="allhome" hideUpdate="hideUpdate" UpdateUnitBtn="UpdateUnitBtn" />
 
     </div>
     }
@@ -135,12 +135,12 @@
 
         showModal = false;
         unit.OwnerId = Int32.Parse(userId);
+        Console.WriteLine(newHome);
         if (newHome == 0)
         {
             newHome = allhome[0].HouseID;
 
         }
-
 
         units.Add(unit);
         await unitservice.AddUnit(unit,newHome);
@@ -171,13 +171,19 @@
         statusOptions = await userservice.GetStatusOptionsAsync();
         showModal = true;
     }
+    private void OnNewHomeChanged(int newHomeValue)
+    {
+        newHome = newHomeValue;
+    }
+
+   
 
     async Task UpdateUnit(int unitId)
     {
         // Call the service method with the parsed memberId
         var roleMember = await unitservice.GetUnitById(unitId);
         updateHome = roleMember.HomeId;
-
+      
         EditModal = true;
         if (roleMember != null)
         {
@@ -188,7 +194,7 @@
                     WashRoom = roleMember.WashRoom,
                     BedRoom=roleMember.BedRoom,
                     Rent = roleMember.Rent,
-
+                    HomeId = roleMember.HomeId,
                     StatusId = roleMember.StatusId,
 
                 };
@@ -232,7 +238,7 @@
         EditModal = false;
 
 
-        await unitservice.updatedateUnit(updateUnit, updateHome);
+        await unitservice.updatedateUnit(updateUnit);
     }
     string ModalStyle => showModal ? "display: block;" : "display: none;";
     string DeleteModalStyle => DeleteModel ? "display: block;" : "display: none;";

@@ -1,0 +1,77 @@
+﻿@using HomeRentManagement.Data;
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Update Unit</h5>
+            <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
+        </div>
+        <div class="modal-body">
+
+            <form @onsubmit="UpdatedTenant">
+                <div class="form-group">
+                    <label for="TenantName">Tenant Name:</label>
+                    <input type="text" class="form-control" @bind="updatetenant.TenantName" />
+                </div>
+
+                <div class="form-group">
+                    <label for="PhoneNumber">Phone Number:</label>
+                    <input type="text" class="form-control" @bind="updatetenant.PhoneNumber" />
+                </div>
+
+                <div class="form-group">
+                    <label for="IdCardNumber">ID Card Number:</label>
+                    <input type="text" class="form-control" @bind="updatetenant.IdCardNumber" />
+                </div>
+
+                <div class="form-group">
+                    <label for="Unit">Unit:</label>
+                    <select disabled class="form-control" @bind="@updatetenant.UnitID" required>
+                        @foreach (var unit in unitOption)
+                        {
+                            <option value="@unit.UnitID">@unit.unitName</option>
+                        }
+                    </select>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="Status">Status:</label>
+                    <select class="form-control" @bind="@updatetenant.StatusId">
+                        @foreach (var status in statusOptions)
+                        {
+                            <option value="@status.Id">@status.Name</option>
+                        }
+                    </select>
+                </div>
+
+
+
+
+
+
+
+                <button type="submit" class="btn btn-primary mt-3">Update</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public Tenant updatetenant { get; set; }
+    [Parameter]
+    public List<Unit> unitOption { get; set; }
+  
+    [Parameter]
+    public List<Status> statusOptions { get; set; }
+  
+
+    [Parameter]
+    public EventCallback UpdatedTenant { get; set; }
+    [Parameter]
+    public EventCallback hideUpdate { get; set; }
+  
+}

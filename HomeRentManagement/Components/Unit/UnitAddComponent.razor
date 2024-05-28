@@ -30,7 +30,7 @@
 
                 <div class="form-group">
                     <label for="Status">Status:</label>
-                    <select class="form-control" @bind="@newHome" required>
+                    <select class="form-control" @bind="newHome"  required>
                         @foreach (var home in allhome)
                         {
                             <option value="@home.HouseID">@home.HouseName</option>
@@ -68,5 +68,22 @@
 
     [Parameter]
     public List<Status> statusOptions { get; set; }
-    public string newHome;
+
+    private int _newHome;
+    [Parameter]
+    public int newHome
+    {
+        get => _newHome;
+        set
+        {
+            if (_newHome != value)
+            {
+                _newHome = value;
+                NewHomeChanged.InvokeAsync(value);
+            }
+        }
+    }
+
+    [Parameter]
+    public EventCallback<int> NewHomeChanged { get; set; }
 }

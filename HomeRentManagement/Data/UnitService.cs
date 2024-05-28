@@ -52,7 +52,7 @@ namespace HomeRentManagement.Data
         {
             return await _dbContext.Houses.Where(house=>house.OwnerId== userId&&house.StatusId!=3).ToListAsync();
         }
-        public async Task updatedateUnit(Unit updateUnit,int newHome)
+        public async Task updatedateUnit(Unit updateUnit)
         {
             var existingUnit = await _dbContext.Units.FindAsync(updateUnit.UnitID);
 
@@ -64,7 +64,7 @@ namespace HomeRentManagement.Data
                 existingUnit.WashRoom = updateUnit.WashRoom;
                 existingUnit.BedRoom = updateUnit.BedRoom;
                 existingUnit.Rent = updateUnit.Rent;
-                existingUnit.HomeId = newHome;
+                existingUnit.HomeId = updateUnit.HomeId;
                 existingUnit.StatusId = updateUnit.StatusId;
 
 
