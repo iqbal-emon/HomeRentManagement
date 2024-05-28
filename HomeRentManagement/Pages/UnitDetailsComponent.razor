@@ -5,7 +5,7 @@
 @inject IJSRuntime js
 @inject UserIdDecrypt useriddecrypt
 @using HomeRentManagement.Components;
-
+@using HomeRentManagement.Components.Unit;
 
 
 
@@ -79,120 +79,14 @@
 
 
 <div class="modal px-5" tabindex="-1" style="@ModalStyle">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add Unit</h5>
-                <button type="button" class="btn-close" aria-label="Close" @onclick="HideModal"></button>
-            </div>
-            <div class="modal-body">
-                <form @onsubmit="SaveUnit">
-                    <div class="form-group">
-                        <label for="UnitName">Unit Name:</label>
-                        <input type="text" class="form-control" @bind="unit.unitName" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="BedRoom">Bed Room:</label>
-                        <input type="number" class="form-control" @bind="unit.BedRoom" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="WashRoom">Wash Room:</label>
-                        <input type="number" class="form-control" @bind="unit.WashRoom" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="Rent">Rent:</label>
-                        <input type="number" class="form-control" @bind="unit.Rent" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="FloorNu">Floor Number:</label>
-                        <input type="number" class="form-control" @bind="unit.FlolorNu" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="Status">Status:</label>
-                        <select class="form-control" @bind="@newHome" required>
-                            @foreach (var home in allhome)
-                            {
-                                <option value="@home.HouseID">@home.HouseName</option>
-                            }
-                        </select>
-                    </div>
-
-
-
-
-                    <div class="form-group">
-                        <label for="Status">Status:</label>
-                        <select class="form-control" @bind="@unit.StatusId" required>
-                            @foreach (var status in statusOptions)
-                            {
-                                <option value="@status.Id">@status.Name</option>
-                            }
-                        </select>
-                    </div>
-                 
-                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
-                </form>
-            </div>
-        </div>
-    </div>
+  <UnitAddComponent unit="unit" statusOptions="statusOptions" allhome="allhome" HideModal="HideModal" SaveUnit="SaveUnit"/>
 </div>
 
 @if (updateUnit != null)
 {
     <div class="modal px-5" tabindex="-1" style="@EditModalStyle">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Update Unit</h5>
-                    <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
-                </div>
-                <div class="modal-body">
-                    <form @onsubmit="UpdateUnitBtn">
-                        <div class="form-group">
-                            <label for="UnitName">Unit Name:</label>
-                            <input type="text" class="form-control" @bind="updateUnit.unitName" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="BedRoom">Bed Room:</label>
-                            <input type="number" class="form-control" @bind="updateUnit.BedRoom" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="WashRoom">Wash Room:</label>
-                            <input type="number" class="form-control" @bind="updateUnit.WashRoom" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="Rent">Rent:</label>
-                            <input type="number" class="form-control" @bind="updateUnit.Rent" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="FloorNu">Floor Number:</label>
-                            <input type="number" class="form-control" @bind="updateUnit.FlolorNu" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="Status">Status:</label>
-                            <select class="form-control" @bind="@updateHome" required>
-                                @foreach (var home in allhome)
-                                {
-                                    <option value="@home.HouseID">@home.HouseName</option>
-                                }
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="Status">Status:</label>
-                            <select class="form-control" @bind="updateUnit.StatusId" required>
-                                @foreach (var status in statusOptions)
-                                {
-                                    <option value="@status.Id">@status.Name</option>
-                                }
-                            </select>
-                        </div>
-                   
-                        <button type="submit" class="btn btn-primary mt-3">Update</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+        <UnitUpdateComponent updateUnit="updateUnit" statusOptions="statusOptions" allhome="allhome" hideUpdate="hideUpdate" UpdateUnitBtn="UpdateUnitBtn" />
+
     </div>
     }
 
