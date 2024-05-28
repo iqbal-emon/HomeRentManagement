@@ -81,7 +81,7 @@
     </div>
 
     <div class="modal px-5" tabindex="-1" style="@ModalStyle">
-       <BillGenerateAddComponent 
+       <BillGenerateAddComponent NewHomeChanged="OnNewHomeChanged"
     HideModal="HideModal" 
     SaveBill="SaveBill" 
     bill="bill"
@@ -94,7 +94,7 @@
         <BillGenerateUpdateComponent hideUpdate="hideUpdate"
                                      UpdatedBill="UpdatedBill"
          updateBill="updateBill"
-                        statusOptions="statusOptions"             unitOptions="unitOptions" />
+                                    unitId="newUnitId" statusOptions="statusOptions" unitOptions="unitOptions" />
 
 
         </div>
@@ -178,6 +178,11 @@
         bill = new BillGenerate();
 
     }
+    private void OnNewHomeChanged(int newHomeValue)
+    {
+        newUnit = newHomeValue;
+    }
+
     public int newUnitId;
     async Task UpdateBill(int billId,int unitId)
     {
