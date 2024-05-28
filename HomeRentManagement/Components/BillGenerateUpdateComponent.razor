@@ -1,0 +1,76 @@
+﻿@using HomeRentManagement.Data;
+
+@if (updateBill != null  && statusOptions != null)
+{
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Bill</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
+            </div>
+            <div class="modal-body">
+                <form @onsubmit="UpdatedBill">
+                    <div class="form-group">
+                        <label for="ElectricityBill">Electricity Bill:</label>
+                        <input type="number" class="form-control" @bind="updateBill.ElectricityBill" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="GasBill">Gas Bill:</label>
+                        <input type="number" class="form-control" @bind="updateBill.GasBill" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="ServiceCharge">Service Charge:</label>
+                        <input type="number" class="form-control" @bind="updateBill.ServiceCharge" />
+                    </div>
+                    <div class="form-group">
+                        <label for="MonthName">Month Name:</label>
+                        <input type="text" class="form-control" @bind="updateBill.MonthName" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Tenant">Tenant:</label>
+                        <select class="form-control" @bind="newUnit" required>
+                            @foreach (var unit in unitOptions)
+                            {
+                                <option value="@unit.UnitID">@unit.Unit?.unitName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Status">Status:</label>
+                        <select class="form-control" @bind="updateBill.StatusId" required>
+                            @foreach (var status in statusOptions)
+                            {
+                                <option value="@status.Id">@status.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div>Loading...</div>
+}
+
+@code {
+    [Parameter]
+    public EventCallback hideUpdate { get; set; }
+
+    [Parameter]
+    public EventCallback UpdatedBill { get; set; }
+
+    [Parameter]
+    public BillGenerate updateBill { get; set; }
+
+    [Parameter]
+    public List<Tenant> unitOptions { get; set; }
+
+    [Parameter]
+    public List<Status> statusOptions { get; set; }
+
+    private string newUnit;
+}
