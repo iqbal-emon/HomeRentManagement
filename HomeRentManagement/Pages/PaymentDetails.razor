@@ -122,7 +122,21 @@
                     </div>
                         <div class="form-group">
                             <label for="Rent Month"> Rent Month:</label>
-                            <input type="text" class="form-control" @bind="rental.RentMont" required />
+                            <select class="form-control" @bind="rental.RentMont" required>
+                                <option value="">Select a month</option>
+                                <option value="January">January</option>
+                                <option value="February">February</option>
+                                <option value="March">March</option>
+                                <option value="April">April</option>
+                                <option value="May">May</option>
+                                <option value="June">June</option>
+                                <option value="July">July</option>
+                                <option value="August">August</option>
+                                <option value="September">September</option>
+                                <option value="October">October</option>
+                                <option value="November">November</option>
+                                <option value="December">December</option>
+                            </select>
                         </div>
                     <div class="form-group">
                         <label for="rentdate">Rent Date:</label>
@@ -164,7 +178,21 @@
                         </div>
                             <div class="form-group">
                                 <label for="Rent Month"> Rent Month:</label>
-                                <input type="text" class="form-control" @bind="updateRent.RentMont" required />
+                                <select class="form-control" @bind="updateRent.RentMont" required>
+                                    <option value="">Select a month</option>
+                                    <option value="January">January</option>
+                                    <option value="February">February</option>
+                                    <option value="March">March</option>
+                                    <option value="April">April</option>
+                                    <option value="May">May</option>
+                                    <option value="June">June</option>
+                                    <option value="July">July</option>
+                                    <option value="August">August</option>
+                                    <option value="September">September</option>
+                                    <option value="October">October</option>
+                                    <option value="November">November</option>
+                                    <option value="December">December</option>
+                                </select>
                             </div>
                         <div class="form-group">
                             <label for="rendate">Rent Date:</label>
