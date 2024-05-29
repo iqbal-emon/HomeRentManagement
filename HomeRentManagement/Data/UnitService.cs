@@ -62,7 +62,7 @@ namespace HomeRentManagement.Data
                 existingUnit.unitName = updateUnit.unitName;
                 existingUnit.BedRoom = updateUnit.BedRoom;
                 existingUnit.WashRoom = updateUnit.WashRoom;
-                existingUnit.BedRoom = updateUnit.BedRoom;
+                existingUnit.FlolorNu = updateUnit.FlolorNu;
                 existingUnit.Rent = updateUnit.Rent;
                 existingUnit.HomeId = updateUnit.HomeId;
                 existingUnit.StatusId = updateUnit.StatusId;
