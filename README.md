@@ -7,7 +7,17 @@ The HomeRentManagement system is a software platform designed to assist property
 ## Demo
 
  ![](Home/Capture.PNG) ![](Home/dfas.PNG) ![](Home/Add%20Owner.PNG)
-
+ ![](Home/Screenshot%20(5).png)
+ ![](Home/Screenshot%20(6).png)
+ ![](Home/Screenshot%20(7).png)
+ ![](Home/Screenshot%20(8).png)
+ ![](Home/Screenshot%20(9).png)
+ ![](Home/Screenshot%20(10).png)
+ ![](Home/Screenshot%20(11).png)
+ 
+ 
+ 
+ 
 ## 🗝 Features
 
 - ✅ There are 2 stakeholders in this project: Admin and House Owner.
