@@ -45,7 +45,7 @@
     {
         var memberAccount = UserService.GetByUserName(model.Name);
 
-        if (memberAccount == null || memberAccount.StatusId != 1 ||
+        if (memberAccount == null || memberAccount.StatusId != 1 || memberAccount.Role.StatusId != 1 ||
      (memberAccount.Password != model.Password ||
      (memberAccount.Email != model.Name && memberAccount.Username != model.Name)))
         {
@@ -57,7 +57,8 @@
         await customAuthStateProvider.UpdateAuthenticationState(new UserSession
             {
                 Id = memberAccount.UserId.ToString(),
-                Role = memberAccount.Role.Title
+                Role = memberAccount.Role.Title,
+                
             });
 
         var userId = memberAccount.UserId.ToString();
