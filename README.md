@@ -31,7 +31,7 @@ The HomeRentManagement system is a software platform designed to assist property
 - ✅ Owners can track the bill status.
 
 ## 💻  Installation Steps
-Clone or download this project in your working directory, Open using android studio, Sync the project, build & run the project.
+Clone or download this project in your working directory, Open using Visual studio, Sync the project, build & run the project.
 ## 🧑 Author
 Mohammad Iqbal Hossain Emon
 - [@github](https://github.com/iqbal-emon)
