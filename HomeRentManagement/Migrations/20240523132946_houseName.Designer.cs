@@ -4,6 +4,7 @@ using HomeRentManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeRentManagement.Migrations
 {
     [DbContext(typeof(addDbContex))]
-    partial class addDbContexModelSnapshot : ModelSnapshot
+    [Migration("20240523132946_houseName")]
+    partial class houseName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,9 +38,6 @@ namespace HomeRentManagement.Migrations
 
                     b.Property<decimal>("GasBill")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("MonthName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ServiceCharge")
                         .HasColumnType("decimal(18,2)");
@@ -123,9 +123,6 @@ namespace HomeRentManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentID"));
 
-                    b.Property<string>("PaymentMonth")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("TenantID")
                         .HasColumnType("int");
 
@@ -151,9 +148,6 @@ namespace HomeRentManagement.Migrations
 
                     b.Property<DateTime>("RentDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("RentMont")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("int");

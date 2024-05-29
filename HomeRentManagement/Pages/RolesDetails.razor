@@ -2,10 +2,10 @@
 @using HomeRentManagement.Data;
 @inject RoleService roleservice;
 @inject UserService userservice;
+@using HomeRentManagement.Components;
 
 
-
-
+@if (load==true){
 <div class="container mt-5">
     <div class="d-flex justify-content-between">
         <h3>RolesDetails</h3>
@@ -44,7 +44,7 @@
                                     <button class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteRole(role.Id)">Delete</button>
 
                                 }
-                                <button class="btn btn-primary btn-sm" @onclick="()=>UpdateRole(role.Id)">Edit</button>
+                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdateRole(role.Id)">Edit</button>
                             </td>
                         </tr>
                     }
@@ -144,24 +144,14 @@
 
 
 
-<div class="modal" tabindex="-1" style="@DeleteModalStyle">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Modal Title</h5>
-                <button type="button" class="btn-close" aria-label="Close" @onclick="hideDelete"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Modal Content Goes Here -->
-                Are you sure you want to proceed?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="hideDelete">Cancel</button>
-                <button type="button" class="btn btn-danger" @onclick="DeleteConfirmed">Yes, Proceed</button>
-            </div>
-        </div>
-    </div>
+ <div class="modal" tabindex="-1" style="@DeleteModalStyle">
+   <DeleteComponent hideDelete="hideDelete" DeleteConfirmed="DeleteConfirmed" />
 </div>
+}
+else
+{
+    <h2>Loading..</h2>
+}
 @code {
     public List<Role> roles;
     bool showModal = false;
@@ -169,13 +159,13 @@
     bool EditModal = false;
     private int roleToDelete;
     private List<Status> statusOptions = new List<Status>();
-
+    public bool load = false;
 
 
     protected override async Task OnInitializedAsync()
     {
         roles = await roleservice.GetRoles();
-
+        load = true;
     }
 
 
@@ -197,6 +187,7 @@
     void HideModal()
     {
         showModal = false;
+        role = new Role();
     }
     void hideDelete()
     {

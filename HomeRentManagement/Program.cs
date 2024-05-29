@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
+builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddSingleton<addDbContex>();
 builder.Services.AddSingleton<UserService>();
@@ -16,6 +16,12 @@ builder.Services.AddSingleton<RoleService>();
 builder.Services.AddSingleton<StatusService>();
 builder.Services.AddSingleton<HomeService>();
 builder.Services.AddScoped<UserIdDecrypt>();
+builder.Services.AddScoped<UnitService>();
+builder.Services.AddScoped<TenantService>();
+builder.Services.AddScoped<BillGenerateService>();
+builder.Services.AddScoped<RentalService>();
+
+
 
 
 

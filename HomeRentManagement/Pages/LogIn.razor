@@ -9,6 +9,13 @@
 
 <div class="row">
     <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border mt-5">
+    @if (mailCheck == true)
+    {
+        <div class="alert alert-danger" role="alert">
+            Invalid Email & Password
+        </div>
+
+    }
         <div class="mb-3 text-center">
             <h3>LOGIN</h3>
         </div>
@@ -26,7 +33,7 @@
     </div>
 </div>
 @code {
-
+    public bool mailCheck=false;
     public class Login
     {
         public string Name { get; set; }
@@ -37,10 +44,12 @@
     private async Task Authenticate()
     {
         var memberAccount = UserService.GetByUserName(model.Name);
-        
-        if (memberAccount == null || (memberAccount.Password != model.Password && (memberAccount.Email != model.Name || memberAccount.Username != model.Name)))
+
+        if (memberAccount == null || memberAccount.StatusId != 1 ||
+     (memberAccount.Password != model.Password ||
+     (memberAccount.Email != model.Name && memberAccount.Username != model.Name)))
         {
-            await js.InvokeVoidAsync("alert", "Invalid User Name or Password");
+            mailCheck = true;
             return;
         }
 
@@ -61,7 +70,7 @@
         }
         else
         {
-            navManager.NavigateTo("/", true);
+            navManager.NavigateTo("/HomeDetails", true);
 
         }
 

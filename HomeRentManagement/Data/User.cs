@@ -33,6 +33,7 @@ namespace HomeRentManagement.Data
         [ForeignKey("StatusId")]
         public virtual Status? Status { get; set; }
         public virtual ICollection<House> Houses { get; set; }
+
     }
 
 }

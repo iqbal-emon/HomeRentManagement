@@ -1,0 +1,82 @@
+﻿@using HomeRentManagement.Data;
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Add Unit</h5>
+            <button type="button" class="btn-close" aria-label="Close" @onclick="HideModal"></button>
+        </div>
+        <div class="modal-body">
+            <form @onsubmit="SaveTenant">
+                <div class="form-group">
+                    <label for="TenantName">Tenant Name:</label>
+                    <input type="text" class="form-control" @bind="tenant.TenantName" required />
+                </div>
+                <div class="form-group">
+                    <label for="PhoneNumber">Phone Number:</label>
+                    <input type="text" class="form-control" @bind="tenant.PhoneNumber" required />
+                </div>
+                <div class="form-group">
+                    <label for="IdCardNumber">ID Card Number:</label>
+                    <input type="text" class="form-control" @bind="tenant.IdCardNumber" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="Home">Home:</label>
+                    <select class="form-control" id="Home" @onchange="OnHouseChanged">
+                        @foreach (var house in houseOption)
+                        {
+                            <option value="@house.HouseID">@house.HouseName</option>
+                        }
+                    </select>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="Unit">Unit:</label>
+                    <select class="form-control" @bind="@newHomeId" required>
+                        @foreach (var unit in unitOption)
+                        {
+                            <option value="@unit.UnitID">@unit.unitName</option>
+                        }
+                    </select>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="Status">Status:</label>
+                    <select class="form-control" @bind="@tenant.StatusId" required>
+                        @foreach (var status in statusOptions)
+                        {
+                            <option value="@status.Id">@status.Name</option>
+                        }
+                    </select>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public Tenant tenant{ get; set; }
+    [Parameter]
+    public List<Unit> unitOption{ get; set; }
+    [Parameter]
+    public List<House> houseOption { get; set; }
+    [Parameter]
+    public List<Status> statusOptions{ get; set; }
+        [Parameter]
+    public EventCallback<ChangeEventArgs> OnHouseChanged { get; set; }
+
+    [Parameter]
+    public EventCallback SaveTenant { get; set; }
+    [Parameter]
+    public EventCallback HideModal { get; set; }
+  
+    public int  newHomeId {get;set;}
+}

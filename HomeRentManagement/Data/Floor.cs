@@ -14,7 +14,6 @@ namespace HomeRentManagement.Data
         [ForeignKey("HouseID")]
         public virtual House House { get; set; }
 
-        public virtual Unit Units { get; set; }
     }
 
 }

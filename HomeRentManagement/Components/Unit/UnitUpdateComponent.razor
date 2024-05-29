@@ -1,0 +1,66 @@
+﻿@using HomeRentManagement.Data;
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Update Unit</h5>
+            <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
+        </div>
+        <div class="modal-body">
+            <form @onsubmit="UpdateUnitBtn">
+                <div class="form-group">
+                    <label for="UnitName">Unit Name:</label>
+                    <input type="text" class="form-control" @bind="updateUnit.unitName" required />
+                </div>
+                <div class="form-group">
+                    <label for="BedRoom">Bed Room:</label>
+                    <input type="number" class="form-control" @bind="updateUnit.BedRoom" required />
+                </div>
+                <div class="form-group">
+                    <label for="WashRoom">Wash Room:</label>
+                    <input type="number" class="form-control" @bind="updateUnit.WashRoom" required />
+                </div>
+                <div class="form-group">
+                    <label for="Rent">Rent:</label>
+                    <input type="number" class="form-control" @bind="updateUnit.Rent" required />
+                </div>
+                <div class="form-group">
+                    <label for="FloorNu">Floor Number:</label>
+                    <input type="number" class="form-control" @bind="updateUnit.FlolorNu" required />
+                </div>
+                <div class="form-group">
+                    <label for="Home">Home:</label>
+                    <select class="form-control" @bind="updateUnit.HomeId" required>
+                        @foreach (var home in allhome)
+                        {
+                            <option value="@home.HouseID">@home.HouseName</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Status">Status:</label>
+                    <select class="form-control" @bind="updateUnit.StatusId" required>
+                        @foreach (var status in statusOptions)
+                        {
+                            <option value="@status.Id">@status.Name</option>
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Update</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Unit updateUnit { get; set; }
+    [Parameter]
+    public EventCallback hideUpdate { get; set; }
+    [Parameter]
+    public EventCallback UpdateUnitBtn { get; set; }
+    [Parameter]
+    public List<House> allhome { get; set; }
+    [Parameter]
+    public List<Status> statusOptions { get; set; }
+}

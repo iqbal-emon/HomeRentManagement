@@ -55,6 +55,9 @@ namespace HomeRentManagement.Data
                 existingHouse.HouseName = updateHouse.HouseName;
                 existingHouse.HouseAddress = updateHouse.HouseAddress;
                 existingHouse.StatusId = updateHouse.StatusId;
+                existingHouse.floorNumber = updateHouse.floorNumber;
+
+
 
 
                 // Use UpdateAsync instead of Update

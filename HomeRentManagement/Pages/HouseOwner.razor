@@ -2,7 +2,9 @@
 @using HomeRentManagement.Data;
 @inject UserService userservice;
 @inject IJSRuntime JS;
-
+@using HomeRentManagement.Components.Owner;
+@using HomeRentManagement.Components;
+@if(load==true){
 <div class="container mt-5">
         <div class="d-flex justify-content-between">
    <h3>HouseOwner</h3>
@@ -45,7 +47,7 @@
                                     <button class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteOwner(user.UserId)">Delete</button>
 
                                 }
-                                <button class="btn btn-primary btn-sm" @onclick="()=>UpdateOwnerAsync(user.UserId)">Edit</button>
+                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdateOwnerAsync(user.UserId)">Edit</button>
                             </td>
                         </tr>
                     }
@@ -61,117 +63,15 @@
     </div>
 </div>
 <div class="modal px-5" tabindex="-1" style="@ModalStyle">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add Home Owner</h5>
-                <button type="button" class="btn-close" aria-label="Close" @onclick="HideModal"></button>
-            </div>
-            <div class="modal-body">
-                <EditForm Model="@owner" OnValidSubmit="@SaveMember">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary />
-                    @if (mailCheck == true)
-                    {
-                        <div class="alert alert-danger" role="alert">
-                            Change the Email
-                        </div>
-
-                    }
-
-                    <div class="form-group">
-                        <label for="UserName">User Name:</label>
-                        <InputText id="UserName" class="form-control" @bind-Value="owner.Username" />
-                        <ValidationMessage For="@(() => owner.Username)" />
-                    </div>
-                    <div class="form-group">
-                        <label for="Password">Password:</label>
-                        <InputText id="Password" class="form-control" @bind-Value="owner.Password" />
-                        <ValidationMessage For="@(() => owner.Password)" />
-                    </div>
-                    <div class="form-group">
-                        <label for="Phone">Phone:</label>
-                        <InputText id="Phone" class="form-control" @bind-Value="owner.Phone" />
-                        <ValidationMessage For="@(() => owner.Phone)" />
-                    </div>
-                    <div class="form-group">
-                        <label for="Email">Email:</label>
-                        <InputText id="Email" type="email" class="form-control" @bind-Value="owner.Email" />
-                        <ValidationMessage For="@(() => owner.Email)" />
-                    </div>
-                    <div class="form-group">
-                        <label for="Address">Address:</label>
-                        <InputText id="Address" class="form-control" @bind-Value="owner.Address" />
-                        <ValidationMessage For="@(() => owner.Address)" />
-                    </div>
-                    <div class="form-group">
-                        <label for="Status">Status:</label>
-                        <InputSelect id="Status" class="form-control" @bind-Value="owner.StatusId">
-                            @foreach (var status in statusOptions)
-                            {
-                                <option value="@status.Id">@status.Name</option>
-                            }
-                        </InputSelect>
-                        <ValidationMessage For="@(() => owner.StatusId)" />
-                    </div>
-    <button type="submit" class="btn btn-primary mt-3">Submit</button>
-</EditForm>
-
-            </div>
-
-         
-        </div>
-    </div>
+        <HouseOwnerAddComponent HideModal="HideModal" mailCheck="mailCheck" owner="owner" SaveMember="SaveMember" statusOptions="statusOptions"  />
 </div>
 
 @if (updateUser != null )
 {
     <div class="modal px-5" tabindex="-1" style="@EditModalStyle">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Update Home Owner</h5>
-                    <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
-                </div>
-                <div class="modal-body">
-                    <form @onsubmit="UpdateHomeOwner">
-                        <div class="form-group">
-                            <label for="UserName">User Name:</label>
-                            <input type="text" class="form-control" @bind=@updateUser.Username required />
-                        </div>
-                        <div class="form-group">
-                            <label for="Password">Password:</label>
-                            <input type="text" class="form-control" @bind=@updateUser.Password required />
-                        </div>
-                        <div class="form-group">
-                            <label for="Phone">Phone:</label>
-                            <input type="text" class="form-control" id="Phone" @bind=@updateUser.Phone required />
-                        </div>
-                        <div class="form-group">
-                            <label for="Email">Email:</label>
-                            <input type="email" class="form-control" id="Email" @bind="@updateUser.Email" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="Address">Address:</label>
-                            <input type="text" class="form-control" id="Address" @bind="@updateUser.Address" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="Status">Status:</label>
-                            <select class="form-control" @bind="@updateUser.StatusId" required>
-                                @foreach (var status in statusOptions)
-                                {
-                                    <option value="@status.Id">@status.Name</option>
-                                }
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary mt-3">Update</button>
-                    </form>
-                </div>
+            <HouseOwnerUpdateComponent hideUpdate="hideUpdate" mailCheck="mailCheck" updateUser="updateUser" UpdateHomeOwner="UpdateHomeOwner" statusOptions="statusOptions" />
 
-
-            </div>
         </div>
-    </div>
 }
 
 
@@ -186,23 +86,15 @@
 
 
 <div class="modal" tabindex="-1" style="@DeleteModalStyle">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Modal Title</h5>
-                <button type="button" class="btn-close" aria-label="Close" @onclick="hideDelete"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Modal Content Goes Here -->
-                Are you sure you want to proceed?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="hideDelete">Cancel</button>
-                <button type="button" class="btn btn-danger" @onclick="DeleteConfirmed">Yes, Proceed</button>
-            </div>
-        </div>
-    </div>
+     <div class="modal" tabindex="-1" style="@DeleteModalStyle">
+   <DeleteComponent hideDelete="hideDelete" DeleteConfirmed="DeleteConfirmed" />
 </div>
+    </div>
+}
+else
+{
+   <h2>Loading..</h2>
+}
 @code {
     public List<User> Users;
     bool showModal = false;
@@ -211,11 +103,13 @@
     private int userIdToDelete;
     private List<Status> statusOptions = new List<Status>();
     bool mailCheck;
+    bool updatedMailCheck;
+    public bool load = false;
 
     protected override async Task OnInitializedAsync()
     {
         Users = await userservice.GetActiveMembersAsync();
-
+        load = true;
     }
 
 
@@ -248,6 +142,7 @@
     void HideModal()
     {
         showModal = false;
+        owner = new User();
     }
     void hideDelete()
     {
@@ -284,9 +179,9 @@
                     Address = dbMember.Address,
                     StatusId=dbMember.StatusId
                 };
-          
+
             statusOptions = await userservice.GetStatusOptionsAsync();
-  
+
             // Additional code to update the user, e.g., save to the database, if necessary
         }
         else
@@ -297,7 +192,7 @@
         }
     }
 
-  
+
 
 
 
@@ -322,10 +217,11 @@
 
     private async Task UpdateHomeOwner()
     {
-        EditModal = false;
-       
+            EditModal = false;
 
-        await userservice.updatedateUser(updateUser);
+
+            await userservice.updatedateUser(updateUser);
+       
     }
     string ModalStyle => showModal ? "display: block;" : "display: none;";
     string DeleteModalStyle => DeleteModel ? "display: block;" : "display: none;";

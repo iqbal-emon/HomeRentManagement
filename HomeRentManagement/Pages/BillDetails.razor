@@ -1,0 +1,187 @@
+﻿@page "/BillGenerate/{Id}"
+@using HomeRentManagement.Data;
+@inject NavigationManager NavigationManager
+
+@inject BillGenerateService billservice;
+@inject UserService userservice;
+@inject IJSRuntime js
+ <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+    }
+    .receipt-container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    .receipt-header {
+      border-bottom: 2px solid #ccc;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+    }
+    .receipt-header h1 {
+      font-size: 24px;
+      margin-bottom: 0;
+    }
+    .receipt-header h3 {
+      font-size: 18px;
+      margin-top: 5px;
+    }
+    .receipt-info {
+      margin-bottom: 20px;
+    }
+    .receipt-info p {
+      font-size: 16px;
+    }
+    .receipt-total {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .download-button {
+      margin-top: 20px;
+    }
+  </style>
+
+
+
+ <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+    }
+    .receipt-container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    .receipt-header {
+      border-bottom: 2px solid #ccc;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+    }
+    .receipt-header h1 {
+      font-size: 24px;
+      margin-bottom: 0;
+    }
+    .receipt-header h3 {
+      font-size: 18px;
+      margin-top: 5px;
+    }
+    .receipt-info {
+      margin-bottom: 20px;
+    }
+    .receipt-info p {
+      font-size: 16px;
+    }
+    .receipt-total {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .download-button {
+      margin-top: 20px;
+    }
+    /* Center content horizontally */
+    .receipt-container {
+      margin: auto;
+      width: 80%;
+    }
+  </style>
+
+@if (Bill!=null){
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 receipt-container">
+      <div class="receipt-header text-center">
+        <h1>Owner's Name: @Bill.Tenant?.TenantName</h1>
+        <h3>RENT RECEIPT</h3>
+      </div>
+      <div class="receipt-info">
+        <div class="row mb-3">
+          <div class="col">Receipt No:</div>
+          <div class="col text-end"><span id="receipt_no"></span>@Bill.BillingID</div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">Date:</div>
+          <div class="col text-end"><span id="date">@now</span></div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">Unit Name:</div>
+          <div class="col text-end" id="tenant_address">@Bill.Tenant?.Unit?.unitName</div>
+        </div>
+                <div class="row mb-3">
+                    <div class="col">Month Name:</div>
+                    <div class="col text-end" id="tenant_address">@Bill.MonthName</div>
+                </div>
+        <div class="row mb-3">
+          <div class="col">Monthly Rent:</div>
+          <div class="col text-end" id="monthly_rent">@Bill.Tenant?.Unit?.Rent ৳</div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">Gas Bill:</div>
+          <div class="col text-end" id="gas_bill">@Bill.GasBill ৳</div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">Electricity Charges:</div>
+          <div class="col text-end" id="electricity_charges">@Bill.ElectricityBill ৳</div>
+        </div>
+                <div class="row mb-3">
+                    <div class="col">Service Charges:</div>
+                    <div class="col text-end" id="electricity_charges">@Bill.ServiceCharge ৳</div>
+                </div>
+        <div class="row mb-3">
+          <div class="col">Total:</div>
+          <div class="col text-end receipt-total" id="total">10500 ৳</div>
+        </div>
+      </div>
+      <div class="download-button text-center">
+        <button id="downloadBtn" class="btn btn-primary" onclick="downloadReceipt()">Download Receipt as PDF</button>
+      </div>
+    </div>
+  </div>
+</div>
+}
+<script>
+  function downloadReceipt() {
+    // Hide the download button before generating PDF
+    var downloadBtn = document.getElementById('downloadBtn');
+    downloadBtn.style.display = 'none';
+
+    // Function to handle downloading receipt as PDF
+    var element = document.getElementsByClassName('receipt-container')[0];
+    html2pdf(element, {
+      margin: 0.5,
+      filename: 'rent_receipt.pdf',
+      jsPDF: { format: 'letter', orientation: 'portrait' },
+      html2canvas: { scale: 2, letterRendering: true }
+    });
+
+    // Show the download button after PDF is generated (optional)
+    setTimeout(function() {
+      downloadBtn.style.display = 'block';
+    }, 3000); // Adjust the delay as needed
+  }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    DateTime now = DateTime.Now;
+    private BillGenerate Bill = new BillGenerate();
+    protected override async Task OnInitializedAsync()
+    {
+
+        // Call the service method with the parsed memberId
+        Bill = await billservice.GetBillDetailsByIdAsync(int.Parse(Id));
+        if (Bill==null)
+        {
+            
+            NavigationManager.NavigateTo("./BillGenerate");
+        }
+
+      
+
+    }
+}

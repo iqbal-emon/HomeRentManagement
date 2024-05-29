@@ -7,13 +7,21 @@ namespace HomeRentManagement.Data
     {
         [Key]
         public int UnitID { get; set; }
-        public string unitName { get; set; }
+        public string? unitName { get; set; }
         public int  BedRoom{ get; set; }
         public int WashRoom { get; set; }
         public int Rent { get; set; }
         public int FlolorNu { get; set; }
 
-
+        public int StatusId { get; set; } = 1;
+        [ForeignKey("StatusId")]
+        public virtual Status? Status { get; set; }
+        public int OwnerId { get; set; }
+        [ForeignKey("OwnerId")]
+        public virtual User Owner { get; set; }
+        public int HomeId { get; set; }
+        [ForeignKey("HomeId")]
+        public virtual House? House { get; set; }
 
         public virtual ICollection<Tenant> Tenants { get; set; }
     }

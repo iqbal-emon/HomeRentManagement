@@ -1,0 +1,72 @@
+﻿@using HomeRentManagement.Data;
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Update Home Owner</h5>
+            <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
+        </div>
+       
+        <div class="modal-body">
+            <EditForm Model="@updateUser" OnValidSubmit="@UpdateHomeOwner">
+
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-group">
+                    <label for="UserName">User Name:</label>
+                    <InputText id="UserName" class="form-control" @bind-Value="updateUser.Username" />
+                    <ValidationMessage For="@(() => updateUser.Username)" />
+                </div>
+                <div class="form-group">
+                    <label for="Password">Password:</label>
+                    <InputText id="Password" class="form-control" @bind-Value="updateUser.Password" />
+                    <ValidationMessage For="@(() => updateUser.Password)" />
+                </div>
+                <div class="form-group">
+                    <label for="Phone">Phone:</label>
+                    <InputText id="Phone" class="form-control" @bind-Value="updateUser.Phone" />
+                    <ValidationMessage For="@(() => updateUser.Phone)" />
+                </div>
+                <div class="form-group">
+                    <label for="Email">Email:</label>
+                    <InputText id="Email" type="email" class="form-control" @bind-Value="updateUser.Email" disabled />
+                    <ValidationMessage For="@(() => updateUser.Email)" />
+                </div>
+                <div class="form-group">
+                    <label for="Address">Address:</label>
+                    <InputText id="Address" class="form-control" @bind-Value="updateUser.Address" />
+                    <ValidationMessage For="@(() => updateUser.Address)" />
+                </div>
+                <div class="form-group">
+                    <label for="Status">Status:</label>
+                    <InputSelect id="Status" class="form-control" @bind-Value="updateUser.StatusId">
+                        @foreach (var status in statusOptions)
+                        {
+                            <option value="@status.Id">@status.Name</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => updateUser.StatusId)" />
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Update</button>
+            </EditForm>
+        </div>
+
+
+
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public User updateUser { get; set; }
+
+    [Parameter]
+    public bool mailCheck { get; set; }
+    [Parameter]
+    public EventCallback UpdateHomeOwner { get; set; }
+
+    [Parameter]
+    public EventCallback hideUpdate { get; set; }
+    [Parameter]
+    public List<Status> statusOptions { get; set; }
+}

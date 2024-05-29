@@ -2,6 +2,7 @@
 @using HomeRentManagement.Data;
 @inject StatusService statusservice;
 @inject UserService userservice;
+@using HomeRentManagement.Components.Status;
 
 
 <div class="container mt-5">
@@ -33,9 +34,9 @@
 
                             <td>
                              
-                                    <button class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteRole(role.Id)">Delete</button>
+                                    @* <button class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteRole(role.Id)">Delete</button> *@
 
-                                <button class="btn btn-primary btn-sm" @onclick="()=>UpdateRole(role.Id)">Edit</button>
+                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdateRole(role.Id)">Edit</button>
                             </td>
                         </tr>
                     }
@@ -43,7 +44,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="6">No members found</td>
+                        <td colspan="6">No Status Found</td>
                     </tr>
                 }
             </tbody>
@@ -51,62 +52,16 @@
     </div>
 </div>
 <div class="modal px-5" tabindex="-1" style="@ModalStyle">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add Status</h5>
-                <button type="button" class="btn-close" aria-label="Close" @onclick="HideModal"></button>
-            </div>
-            <div class="modal-body">
-                <form @onsubmit="SaveRole">
-                    <div class="form-group">
-                        <label for="Title">Name:</label>
-                        <input type="text" class="form-control" @bind="status.Name" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="ShortForm">ShortForm:</label>
-                        <input type="text" class="form-control" @bind="status.ShorForm" required />
-                    </div>
-                 
-                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
-                </form>
-            </div>
-
-
-        </div>
-    </div>
+    <StatusAddComponent SaveRole="SaveRole" HideModal="HideModal" status="status"  />
 </div>
 
 @if (updateStatus != null)
 {
     <div class="modal px-5" tabindex="-1" style="@EditModalStyle">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Update Home Owner</h5>
-                    <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
-                </div>
-                <div class="modal-body">
-                    <form @onsubmit="UpdateRoles">
-                        <div class="form-group">
-                            <label for="Title">Role Title:</label>
-                            <input type="text" class="form-control" @bind=@updateStatus.Name required />
-                        </div>
-                        <div class="form-group">
-                            <label for="ShortForm">ShortForm:</label>
-                            <input type="text" class="form-control" @bind=@updateStatus.ShorForm required />
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary mt-3">Update</button>
-                    </form>
-                </div>
+        <StatusUpdateComponent UpdateRoles="UpdateRoles" hideUpdate="hideUpdate" updateStatus="updateStatus" />
 
-
-            </div>
-        </div>
     </div>
-}
-
+    }
 
 
 
@@ -143,13 +98,12 @@
     bool EditModal = false;
     private int roleToDelete;
     private List<Status> statusOptions = new List<Status>();
-
-
+    public bool load = false;  
 
     protected override async Task OnInitializedAsync()
     {
         statusss = await statusservice.GetStatus();
-
+        load = true;
     }
 
 
@@ -171,6 +125,8 @@
     void HideModal()
     {
         showModal = false;
+        status = new Status();
+
     }
     void hideDelete()
     {
@@ -227,6 +183,7 @@
     private async Task DeleteConfirmed()
     {
         await statusservice.deleteAsync(roleToDelete);
+        Console.WriteLine(roleToDelete);
         statusss = await statusservice.GetStatus();
 
 

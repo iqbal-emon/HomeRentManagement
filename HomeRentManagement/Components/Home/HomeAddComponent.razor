@@ -1,0 +1,52 @@
+﻿@using HomeRentManagement.Data;
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Add House</h5>
+            <button type="button" class="btn-close" aria-label="Close" @onclick="HideModal"></button>
+        </div>
+        <div class="modal-body">
+            <form @onsubmit="SaveHouse">
+                <div class="form-group">
+                    <label for="HouseName">HouseName:</label>
+                    <input type="text" class="form-control" @bind="house.HouseName" required />
+                </div>
+                <div class="form-group">
+                    <label for="HouseAddress">HouseAddress:</label>
+                    <input type="text" class="form-control" @bind="house.HouseAddress" required />
+                </div>
+                <div class="form-group">
+                    <label for="Floor ">Floor:</label>
+                    <input type="number" class="form-control" @bind="house.floorNumber" required />
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="Status">Status:</label>
+                    <select class="form-control" @bind="@house.StatusId" required>
+                        @foreach (var status in statusOptions)
+                        {
+                            <option value="@status.Id">@status.Name</option>
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+            </form>
+        </div>
+
+
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public House house{ get; set; }
+    [Parameter]
+    public List<Status> statusOptions{ get; set; }
+    [Parameter]
+    public EventCallback SaveHouse{ get; set; }
+    [Parameter]
+    public EventCallback HideModal{ get; set; }
+
+}

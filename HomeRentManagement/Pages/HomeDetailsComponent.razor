@@ -1,5 +1,6 @@
 ﻿@page "/HomeDetails"
-
+@using HomeRentManagement.Components.Home;
+@using HomeRentManagement.Components;
 
 @using HomeRentManagement.Data;
 @inject HomeService homeservice;
@@ -8,12 +9,12 @@
 @inject UserIdDecrypt useriddecrypt
 
 
-
+@if(load==true){
 
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between">
-        <h3>Home Details</h3>"
+        <h3>Home Details</h3>
         <button class="btn btn-primary" @onclick="showModel">Add House</button>
     </div>
     <div class="table-responsive">
@@ -39,7 +40,7 @@
                             <td>@house.HouseName</td>
                             <td>@house.HouseAddress</td>
                             <td>@house.Status?.Name </td>
-                            <td>@house.Floors?.FloorNumber</td>
+                            <td>@house.floorNumber</td>
 
                             <td>
                                 @if (house.StatusId == 3)
@@ -52,7 +53,7 @@
                                     <button class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteHouse(house.HouseID)">Delete</button>
 
                                 }
-                                <button class="btn btn-primary btn-sm" @onclick="()=>UpdateHouse(house.HouseID)">Edit</button>
+                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdateHouse(house.HouseID)">Edit</button>
                             </td>
                         </tr>
                     }
@@ -60,7 +61,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="6">No members found</td>
+                        <td colspan="8">No Details found</td>
                     </tr>
                 }
             </tbody>
@@ -68,87 +69,20 @@
     </div>
 </div>
 <div class="modal px-5" tabindex="-1" style="@ModalStyle">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add House</h5>
-                <button type="button" class="btn-close" aria-label="Close" @onclick="HideModal"></button>
-            </div>
-            <div class="modal-body">
-                <form @onsubmit="SaveHouse">
-                    <div class="form-group">
-                        <label for="HouseName">HouseName:</label>
-                        <input type="text" class="form-control" @bind="house.HouseName" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="HouseAddress">HouseAddress:</label>
-                        <input type="text" class="form-control" @bind="house.HouseAddress" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="Floor ">Floor:</label>
-                        <input type="text" class="form-control" @bind="newFloor.FloorNumber" required />
-                    </div>
-
-
-
-                    <div class="form-group">
-                        <label for="Status">Status:</label>
-                        <select class="form-control" @bind="@house.StatusId" required>
-                            @foreach (var status in statusOptions)
-                            {
-                                <option value="@status.Id">@status.Name</option>
-                            }
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
-                </form>
-            </div>
-
-
-        </div>
-    </div>
+ <HomeAddComponent house="house" SaveHouse="SaveHouse" HideModal="HideModal" statusOptions="statusOptions" />
 </div>
 
 @if (UpdateHouse != null)
 {
     <div class="modal px-5" tabindex="-1" style="@EditModalStyle">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Update Home Owner</h5>
-                    <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
-                </div>
-                <div class="modal-body">
-                    <form @onsubmit="UpdateHouseBtn">
-                        <div class="form-group">
-                            <label for="HouseName">HouseName:</label>
-                            <input type="text" class="form-control" @bind=@updateHouse.HouseName required />
-                        </div>
-                        <div class="form-group">
-                            <label for="HouseAddress">HouseAddress:</label>
-                            <input type="text" class="form-control" @bind=@updateHouse.HouseAddress required />
-                        </div>
-
-
-
-                        <div class="form-group">
-                            <label for="Status">Status:</label>
-                            <select class="form-control" @bind="@updateHouse.StatusId" required>
-                                @foreach (var status in statusOptions)
-                                {
-                                    <option value="@status.Id">@status.Name</option>
-                                }
-                            </select>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary mt-3">Update</button>
-                    </form>
-                </div>
-
-
-            </div>
-        </div>
+  <HomeUpdateComponent updateHouse="updateHouse" statusOptions="statusOptions" UpdateHouseBtn="UpdateHouseBtn" hideUpdate="hideUpdate"/>
     </div>
+    }
+
+}
+else
+{
+    <h1>Loading..</h1>
 }
 
 
@@ -160,25 +94,8 @@
 
 
 
-
-
 <div class="modal" tabindex="-1" style="@DeleteModalStyle">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Modal Title</h5>
-                <button type="button" class="btn-close" aria-label="Close" @onclick="hideDelete"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Modal Content Goes Here -->
-                Are you sure you want to proceed?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="hideDelete">Cancel</button>
-                <button type="button" class="btn btn-danger" @onclick="DeleteConfirmed">Yes, Proceed</button>
-            </div>
-        </div>
-    </div>
+   <DeleteComponent hideDelete="hideDelete" DeleteConfirmed="DeleteConfirmed" />
 </div>
 @code {
     public List<House> houses;
@@ -190,10 +107,12 @@
     private List<Status> statusOptions = new List<Status>();
 
     public string userId;
+    public bool load = false;
     protected override async Task OnInitializedAsync()
     {
         userId = await useriddecrypt.GetDecryptedUserId();
         houses = await homeservice.GetHouses(Int32.Parse(userId));
+        load = true;
 
     }
 
@@ -201,17 +120,15 @@
     public House house = new House();
     private House updateHouse = new House();
     public Floor newFloor = new Floor();
+    public Floor updatedFloor = new Floor();
+
 
     public async void SaveHouse()
     {
 
         showModal = false;
         house.OwnerId = Int32.Parse(userId);
-        house.Floors = new Floor
-            {
-                FloorNumber = newFloor.FloorNumber,
-                HouseID = house.HouseID
-    };
+
 
         houses.Add(house);
         await homeservice.AddHouse(house);
@@ -224,6 +141,8 @@
     void HideModal()
     {
         showModal = false;
+        house = new House();
+
     }
     void hideDelete()
     {
@@ -256,6 +175,7 @@
                     HouseName = roleMember.HouseName,
                     HouseAddress = roleMember.HouseAddress,
                     StatusId = roleMember.StatusId,
+                    floorNumber = roleMember.floorNumber
 
                 };
             statusOptions = await userservice.GetStatusOptionsAsync();

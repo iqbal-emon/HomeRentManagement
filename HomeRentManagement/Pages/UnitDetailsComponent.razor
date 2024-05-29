@@ -1,8 +1,249 @@
 ﻿@page "/Unit"
-<h3>Unit Details</h3>
+@using HomeRentManagement.Data;
+@inject UnitService unitservice;
+@inject UserService userservice;
+@inject IJSRuntime js
+@inject UserIdDecrypt useriddecrypt
+@using HomeRentManagement.Components;
+@using HomeRentManagement.Components.Unit;
 
+
+
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between">
+        <h3>Unit Details</h3>
+        <button class="btn btn-primary" @onclick="showModel">Add Unit</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>House Name</th>
+                    <th>Unit Name</th>
+                    <th>BedRoom</th>
+                    <th>WashRoom</th>
+                    <th>Rent</th>
+                    <th>Floor</th>
+                    <th>Status</th>
+
+
+                    <th>Action</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @if (units != null && units.Any())
+                {
+                    @foreach (var unit in units)
+                    {
+                        <tr>
+                            <td>@unit.House?.HouseName</td>
+
+                            <td>@unit.unitName</td>
+                            <td>@unit.BedRoom</td>
+                            <td>@unit.WashRoom</td>
+                            <td>@unit.Rent</td>
+                            <td>@unit.FlolorNu</td>
+                            <td>@unit.Status?.Name</td>
+
+
+
+                            <td>
+                                @if (unit.StatusId == 3)
+                                {
+
+                                    <button disabled class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteUnit(unit.UnitID)">Delete</button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-danger btn-sm mr-3" @onclick="() =>DeleteUnit(unit.UnitID)">Delete</button>
+
+                                }
+                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdateUnit(unit.UnitID)">Edit</button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6">No members found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="modal px-5" tabindex="-1" style="@ModalStyle">
+    <UnitAddComponent NewHomeChanged="OnNewHomeChanged" unit=" unit" statusOptions="statusOptions" allhome="allhome" HideModal="HideModal" SaveUnit="SaveUnit" />
+</div>
+
+@if (updateUnit != null)
+{
+    <div class="modal px-5" tabindex="-1" style="@EditModalStyle">
+        <UnitUpdateComponent  updateUnit="updateUnit" statusOptions="statusOptions" allhome="allhome" hideUpdate="hideUpdate" UpdateUnitBtn="UpdateUnitBtn" />
+
+    </div>
+    }
+
+
+
+
+
+
+
+
+
+
+
+ <div class="modal" tabindex="-1" style="@DeleteModalStyle">
+   <DeleteComponent hideDelete="hideDelete" DeleteConfirmed="DeleteConfirmed" />
+</div>
 @code {
+    public List<Unit> units;
+    int newHome;
+    bool showModal = false;
+    bool DeleteModel = false;
+    bool EditModal = false;
+    private int roleToDelete;
+    private List<Status> statusOptions = new List<Status>();
+    private List<House> allhome = new List<House>();
+    int updateHome;
+    public string userId;
+    public bool load = false;
 
+    protected override async Task OnInitializedAsync()
+    {
+        userId = await useriddecrypt.GetDecryptedUserId();
+        units = await unitservice.GetUnit(Int32.Parse(userId));
+        allhome = await unitservice.getAllHouse(Int32.Parse(userId));
+        load = true;
+    }
+
+
+    public Unit unit = new Unit();
+    private Unit updateUnit = new Unit();
+
+
+
+    public async void SaveUnit()
+    {
+
+        showModal = false;
+        unit.OwnerId = Int32.Parse(userId);
+        Console.WriteLine(newHome);
+        if (newHome == 0)
+        {
+            newHome = allhome[0].HouseID;
+
+        }
+
+        units.Add(unit);
+        await unitservice.AddUnit(unit,newHome);
+
+        unit = new Unit();
+
+
+    }
+
+    void HideModal()
+    {
+        showModal = false;
+        unit = new Unit();
+
+    }
+    void hideDelete()
+    {
+        DeleteModel = false;
+    }
+
+    void hideUpdate()
+    {
+        EditModal = false;
+
+    }
+    async Task showModel()
+    {
+        statusOptions = await userservice.GetStatusOptionsAsync();
+        showModal = true;
+    }
+    private void OnNewHomeChanged(int newHomeValue)
+    {
+        newHome = newHomeValue;
+    }
+
+   
+
+    async Task UpdateUnit(int unitId)
+    {
+        // Call the service method with the parsed memberId
+        var roleMember = await unitservice.GetUnitById(unitId);
+        updateHome = roleMember.HomeId;
+      
+        EditModal = true;
+        if (roleMember != null)
+        {
+            updateUnit = new Unit()
+                {
+                    UnitID = roleMember.UnitID,
+                    unitName = roleMember.unitName,
+                    WashRoom = roleMember.WashRoom,
+                    BedRoom=roleMember.BedRoom,
+                    Rent = roleMember.Rent,
+                    FlolorNu=roleMember.FlolorNu,
+                    HomeId = roleMember.HomeId,
+                    StatusId = roleMember.StatusId,
+
+                };
+            statusOptions = await userservice.GetStatusOptionsAsync();
+
+            // Additional code to update the user, e.g., save to the database, if necessary
+        }
+        else
+        {
+            // Handle the case where the member with the given ID is not found
+            // For example, you can log the error, redirect the user to an error page, or display a message
+            // This depends on your application's requirements
+        }
+    }
+
+
+
+
+
+
+
+    protected async Task DeleteUnit(int roleId)
+    {
+        roleToDelete = roleId;
+        DeleteModel = true;
+    }
+
+    private async Task DeleteConfirmed()
+    {
+        await unitservice.deleteAsync(roleToDelete);
+        units = await unitservice.GetUnit(Int32.Parse(userId));
+
+
+        // Reset variables
+        roleToDelete = 0;
+        DeleteModel = false;
+    }
+
+    private async Task UpdateUnitBtn()
+    {
+        EditModal = false;
+
+
+        await unitservice.updatedateUnit(updateUnit);
+    }
+    string ModalStyle => showModal ? "display: block;" : "display: none;";
+    string DeleteModalStyle => DeleteModel ? "display: block;" : "display: none;";
+    string EditModalStyle => EditModal ? "display: block;" : "display: none;";
 
 
 
