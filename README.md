@@ -1,5 +1,5 @@
 
-# HomeRentManageMent
+# HomeRentManagement
 
 The HomeRentManagement system is a software platform designed to assist property owners, and tenants in efficiently handling various aspects of rental property management
 
