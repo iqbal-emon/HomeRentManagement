@@ -6,7 +6,7 @@ The HomeRentManagement system is a software platform designed to assist property
 
 ## Demo
 
-![](Home/dfas.PNG) ![](picture/activity/2.jpg) ![](picture/activity/3.jpg)
+ ![](Home/Capture.PNG) ![](Home/dfas.PNG) ![](Home/Add%20Owner.PNG)
 
 ## 🗝 Features
 
