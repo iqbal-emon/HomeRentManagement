@@ -10,71 +10,42 @@
 
 
 
-<div class="container mt-5">
+<div class=" mt-5">
     <div class="d-flex justify-content-between">
         <h3>Unit Details</h3>
-        <button class="btn btn-primary" @onclick="showModel">Add Unit</button>
+
+        <RadzenButton Text="Add Unit" Click="showModel" />
+
     </div>
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>House Name</th>
-                    <th>Unit Name</th>
-                    <th>BedRoom</th>
-                    <th>WashRoom</th>
-                    <th>Rent</th>
-                    <th>Floor</th>
-                    <th>Status</th>
+    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="12" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@units" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedUnit>
+        <Columns>
+            <RadzenDataGridColumn Property="UnitID" Filterable="false" Title="ID" Width="80px" TextAlign="TextAlign.Center" />
 
+           <RadzenDataGridColumn Property="House.HouseName" Title="House Name" Width="160px" />
 
-                    <th>Action</th>
-
-
-                </tr>
-            </thead>
-            <tbody>
-                @if (units != null && units.Any())
-                {
-                    @foreach (var unit in units)
+            <RadzenDataGridColumn Property="unitName" Title="Unit Name" Width="160px" />
+            <RadzenDataGridColumn Property="BedRoom" Title="BedRoom" Width="120px" />
+            <RadzenDataGridColumn Property="WashRoom" Title="WashRoom" Width="120px" />
+            <RadzenDataGridColumn Property="Rent" Title="Rent" Width="120px" />
+            <RadzenDataGridColumn Property="FlolorNu" Title="Floor" Width="120px" />
+            <RadzenDataGridColumn Property="Status.Name" Title="Status" Width="160px" />
+            <RadzenDataGridColumn Title="Action" Width="300px">
+                <Template Context="unit">
+                    @if (unit.StatusId == 3)
                     {
-                        <tr>
-                            <td>@unit.House?.HouseName</td>
-
-                            <td>@unit.unitName</td>
-                            <td>@unit.BedRoom</td>
-                            <td>@unit.WashRoom</td>
-                            <td>@unit.Rent</td>
-                            <td>@unit.FlolorNu</td>
-                            <td>@unit.Status?.Name</td>
-
-
-
-                            <td>
-                                @if (unit.StatusId == 3)
-                                {
-
-                                    <button disabled class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteUnit(unit.UnitID)">Delete</button>
-                                }
-                                else
-                                {
-                                    <button class="btn btn-danger btn-sm mr-3" @onclick="() =>DeleteUnit(unit.UnitID)">Delete</button>
-
-                                }
-                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdateUnit(unit.UnitID)">Edit</button>
-                            </td>
-                        </tr>
+                        <RadzenButton Disabled="true" Text="Delete" Icon="delete" Style="margin-right: 10px;" Click="@(args => DeleteUnit(unit.UnitID))" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" />
                     }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="6">No members found</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                    else
+                    {
+                        <RadzenButton Text="Delete" Icon="delete" Style="margin-right: 10px;" Click="@(args => DeleteUnit(unit.UnitID))" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" />
+                    }
+                    <RadzenButton Text="Edit" Icon="edit" Click="@(args => UpdateUnit(unit.UnitID))" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+
 </div>
 
 
@@ -115,6 +86,7 @@
     int updateHome;
     public string userId;
     public bool load = false;
+    IList<Unit> selectedUnit;
 
     protected override async Task OnInitializedAsync()
     {
@@ -122,6 +94,8 @@
         units = await unitservice.GetUnit(Int32.Parse(userId));
         allhome = await unitservice.getAllHouse(Int32.Parse(userId));
         load = true;
+        selectedUnit = new List<Unit>() { units.FirstOrDefault() };
+
     }
 
 
@@ -142,9 +116,10 @@
 
         }
 
-        units.Add(unit);
-        await unitservice.AddUnit(unit,newHome);
 
+        await unitservice.AddUnit(unit,newHome);
+        units = await unitservice.GetUnit(Int32.Parse(userId));
+        StateHasChanged();
         unit = new Unit();
 
 

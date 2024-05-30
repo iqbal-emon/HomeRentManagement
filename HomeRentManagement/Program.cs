@@ -3,6 +3,7 @@ using HomeRentManagement.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
+using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,7 @@ builder.Services.AddScoped<UnitService>();
 builder.Services.AddScoped<TenantService>();
 builder.Services.AddScoped<BillGenerateService>();
 builder.Services.AddScoped<RentalService>();
-
+builder.Services.AddRadzenComponents();
 
 
 

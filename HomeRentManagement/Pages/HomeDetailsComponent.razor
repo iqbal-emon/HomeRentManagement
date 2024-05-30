@@ -12,61 +12,35 @@
 @if(load==true){
 
 
-<div class="container mt-5">
+<div class=" mt-5">
     <div class="d-flex justify-content-between">
         <h3>Home Details</h3>
-        <button class="btn btn-primary" @onclick="showModel">Add House</button>
-    </div>
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Home Name</th>
-                    <th>Home Details</th>
-                    <th>Status</th>
-                    <th>Floors</th>
-
-                    <th>Action</th>
-
-
-                </tr>
-            </thead>
-            <tbody>
-                @if (houses != null && houses.Any())
-                {
-                    @foreach (var house in houses)
-                    {
-                        <tr>
-                            <td>@house.HouseName</td>
-                            <td>@house.HouseAddress</td>
-                            <td>@house.Status?.Name </td>
-                            <td>@house.floorNumber</td>
-
-                            <td>
-                                @if (house.StatusId == 3)
-                                {
-
-                                    <button disabled class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteHouse(house.HouseID)">Delete</button>
-                                }
-                                else
-                                {
-                                    <button class="btn btn-danger btn-sm mr-3" @onclick="() => DeleteHouse(house.HouseID)">Delete</button>
-
-                                }
-                                <button class="btn btn-primary btn-sm m-2" @onclick="()=>UpdateHouse(house.HouseID)">Edit</button>
-                            </td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="8">No Details found</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+        @* <button class="btn btn-primary" @onclick="showModel">Add House</button> *@
+            <RadzenButton Text="Add House"  Click="showModel" />
+        </div>
+        <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="12" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                        Data="@houses" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedHoues>
+            <Columns>
+                <RadzenDataGridColumn Property="HouseID" Filterable="false" Title="ID"   Width="80px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn Property="HouseName" Title="Home Name" Width="160px" />
+                <RadzenDataGridColumn Property="HouseAddress" Title="Home Details" Width="200px" />
+                <RadzenDataGridColumn Property="Status.Name" Title="Status" Width="160px" />
+                <RadzenDataGridColumn Property="floorNumber" Title="Floors" Width="100px" />
+                <RadzenDataGridColumn Title="Action" Width="300px" Filterable="false">
+                    <Template Context="house">
+                        @if (house.StatusId == 3)
+                        {
+                            <RadzenButton Disabled="true" Text="Delete" Icon="delete" Style="margin-right: 10px;" Click="@(args => DeleteHouse(house.HouseID))" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" />
+                        }
+                        else
+                        {
+                            <RadzenButton Text="Delete" Icon="delete" Style="margin-right: 10px;" Click="@(args => DeleteHouse(house.HouseID))" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" />
+                        }
+                        <RadzenButton Text="Edit" Icon="edit" Click="@(args => UpdateHouse(house.HouseID))" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" />
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>
 </div>
 <div class="modal px-5" tabindex="-1" style="@ModalStyle">
  <HomeAddComponent house="house" SaveHouse="SaveHouse" HideModal="HideModal" statusOptions="statusOptions" />
@@ -107,13 +81,14 @@ else
     private List<Status> statusOptions = new List<Status>();
 
     public string userId;
+    IList<House> selectedHoues;
     public bool load = false;
     protected override async Task OnInitializedAsync()
     {
         userId = await useriddecrypt.GetDecryptedUserId();
         houses = await homeservice.GetHouses(Int32.Parse(userId));
         load = true;
-
+        selectedHoues = new List<House>() { houses.FirstOrDefault() };
     }
 
 
@@ -130,8 +105,11 @@ else
         house.OwnerId = Int32.Parse(userId);
 
 
-        houses.Add(house);
+       
         await homeservice.AddHouse(house);
+        houses = await homeservice.GetHouses(Int32.Parse(userId));
+
+        StateHasChanged();
 
         house = new House();
 

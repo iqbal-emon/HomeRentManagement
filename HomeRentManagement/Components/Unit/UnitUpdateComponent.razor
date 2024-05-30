@@ -7,47 +7,46 @@
             <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
         </div>
         <div class="modal-body">
-            <form @onsubmit="UpdateUnitBtn">
-                <div class="form-group">
-                    <label for="UnitName">Unit Name:</label>
-                    <input type="text" class="form-control" @bind="updateUnit.unitName" required />
+            <RadzenTemplateForm Data="@updateUnit" TItem="Unit" Submit="@UpdateUnitBtn">
+                <div class="rz-p-0 rz-p-md-12">
+                    <RadzenRow Gap="1rem">
+                        <RadzenColumn Size="12">
+                            <RadzenStack>
+                                <RadzenFormField Text="Unit Name:" Variant="Variant.Filled">
+                                    <RadzenTextBox @bind-Value="updateUnit.unitName" Required="true" Style="width: 100%;" />
+                                </RadzenFormField>
+
+                                <RadzenFormField Text="Bed Room:" Variant="Variant.Filled">
+                                    <RadzenNumeric @bind-Value="updateUnit.BedRoom" Required="true" Style="width: 100%;" />
+                                </RadzenFormField>
+
+                                <RadzenFormField Text="Wash Room:" Variant="Variant.Filled">
+                                    <RadzenNumeric @bind-Value="updateUnit.WashRoom" Required="true" Style="width: 100%;" />
+                                </RadzenFormField>
+
+                                <RadzenFormField Text="Rent:" Variant="Variant.Filled">
+                                    <RadzenNumeric @bind-Value="updateUnit.Rent" Required="true" Style="width: 100%;" />
+                                </RadzenFormField>
+
+                                <RadzenFormField Text="Floor Number:" Variant="Variant.Filled">
+                                    <RadzenNumeric @bind-Value="updateUnit.FlolorNu" Required="true" Style="width: 100%;" />
+                                </RadzenFormField>
+
+                                <RadzenFormField Text="Home:" Variant="Variant.Filled">
+                                    <RadzenDropDown @bind-Value="updateUnit.HomeId" Data="@allhome" TextProperty="HouseName" ValueProperty="HouseID" Style="width: 100%;" Required="true" />
+                                </RadzenFormField>
+
+                                <RadzenFormField Text="Status:" Variant="Variant.Filled">
+                                    <RadzenDropDown @bind-Value="updateUnit.StatusId" Data="@statusOptions" TextProperty="Name" ValueProperty="Id" Style="width: 100%;" Required="true" />
+                                </RadzenFormField>
+
+                                <RadzenButton Text="Update" ButtonStyle="ButtonStyle.Primary" Type="Submit" Class="mt-3" />
+                            </RadzenStack>
+                        </RadzenColumn>
+                    </RadzenRow>
                 </div>
-                <div class="form-group">
-                    <label for="BedRoom">Bed Room:</label>
-                    <input type="number" class="form-control" @bind="updateUnit.BedRoom" required />
-                </div>
-                <div class="form-group">
-                    <label for="WashRoom">Wash Room:</label>
-                    <input type="number" class="form-control" @bind="updateUnit.WashRoom" required />
-                </div>
-                <div class="form-group">
-                    <label for="Rent">Rent:</label>
-                    <input type="number" class="form-control" @bind="updateUnit.Rent" required />
-                </div>
-                <div class="form-group">
-                    <label for="FloorNu">Floor Number:</label>
-                    <input type="number" class="form-control" @bind="updateUnit.FlolorNu" required />
-                </div>
-                <div class="form-group">
-                    <label for="Home">Home:</label>
-                    <select class="form-control" @bind="updateUnit.HomeId" required>
-                        @foreach (var home in allhome)
-                        {
-                            <option value="@home.HouseID">@home.HouseName</option>
-                        }
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="Status">Status:</label>
-                    <select class="form-control" @bind="updateUnit.StatusId" required>
-                        @foreach (var status in statusOptions)
-                        {
-                            <option value="@status.Id">@status.Name</option>
-                        }
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary mt-3">Update</button>
-            </form>
+            </RadzenTemplateForm>
+
         </div>
     </div>
 </div>

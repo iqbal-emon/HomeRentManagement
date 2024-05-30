@@ -6,33 +6,35 @@
             <button type="button" class="btn-close" aria-label="Close" @onclick="hideUpdate"></button>
         </div>
         <div class="modal-body">
-            <form @onsubmit="UpdateHouseBtn">
-                <div class="form-group">
-                    <label for="HouseName">HouseName:</label>
-                    <input type="text" class="form-control" @bind=@updateHouse.HouseName required />
-                </div>
-                <div class="form-group">
-                    <label for="HouseAddress">HouseAddress:</label>
-                    <input type="text" class="form-control" @bind=@updateHouse.HouseAddress required />
-                </div>
-                <div class="form-group">
-                    <label for="Floor ">Floor:</label>
-                    <input type="number" class="form-control" @bind="updateHouse.floorNumber" required />
-                </div>
+            <RadzenTemplateForm Data="@updateHouse" TItem="House" Submit="@UpdateHouseBtn">
+                <div class="rz-p-0 rz-p-md-12">
+                  
 
+                    <RadzenRow Gap="1rem">
+                        <RadzenColumn Size="12">
+                            <RadzenStack>
+                                <RadzenFormField Text="House Name:" Variant="Variant.Filled">
+                                    <RadzenTextBox @bind-Value="updateHouse.HouseName" Required="true" Style="width: 100%;" />
+                                </RadzenFormField>
 
-                <div class="form-group">
-                    <label for="Status">Status:</label>
-                    <select class="form-control" @bind="@updateHouse.StatusId" required>
-                        @foreach (var status in statusOptions)
-                        {
-                            <option value="@status.Id">@status.Name</option>
-                        }
-                    </select>
+                                <RadzenFormField Text="House Address:" Variant="Variant.Filled">
+                                    <RadzenTextBox @bind-Value="updateHouse.HouseAddress" Required="true" Style="width: 100%;" />
+                                </RadzenFormField>
+
+                                <RadzenFormField Text="Floor:" Variant="Variant.Filled">
+                                    <RadzenNumeric @bind-Value="updateHouse.floorNumber" Required="true" Style="width: 100%;" />
+                                </RadzenFormField>
+
+                                <RadzenFormField Text="Status:" Variant="Variant.Filled">
+                                    <RadzenDropDown @bind-Value="updateHouse.StatusId" Data="@statusOptions" TextProperty="Name" ValueProperty="Id" Style="width: 100%;" Required="true" />
+                                </RadzenFormField>
+
+                                <RadzenButton Text="Update" ButtonStyle="ButtonStyle.Primary" Type="Submit" Class="mt-3" />
+                            </RadzenStack>
+                        </RadzenColumn>
+                    </RadzenRow>
                 </div>
-
-                <button type="submit" class="btn btn-primary mt-3">Update</button>
-            </form>
+            </RadzenTemplateForm>
         </div>
 
 
